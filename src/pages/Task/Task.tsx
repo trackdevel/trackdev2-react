@@ -1,5 +1,8 @@
 import React from "react";
 import {useParams} from "react-router-dom";
+import TaskMainLayout from "../../components/Task/TaskMainLayout";
+
+
 
 const Task = () => {
 
@@ -9,7 +12,7 @@ const Task = () => {
 
     return (
         <div>
-            <h1>Task {taskId}</h1>
+            <TaskMainLayout />
         </div>
     )
 

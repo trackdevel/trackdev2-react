@@ -1,7 +1,7 @@
 import {Link, Outlet} from "react-router-dom";
 import React from "react";
 import {MainNav} from "../components/main-nav";
-import {Search} from "../components/Search";
+import {Search} from "../components/ui/search";
 import {UserNav} from "../components/user-nav";
 
 const RootLayout = () => {
