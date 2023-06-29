@@ -16,6 +16,9 @@ export function MainNav() {
             <Link to="/task/15" className="text-sm font-medium transition-colors hover:text-primary" >
                 Task
             </Link>
+            <Link to="/settings" className="text-sm font-medium transition-colors hover:text-primary" >
+                Settings
+            </Link>
             <Link to="/auth/login" className="text-sm font-medium transition-colors hover:text-primary" >
                 Login
             </Link>

@@ -12,6 +12,10 @@ import RootLayout from "./layouts/RootLayout";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
+import SettingsLayout from "./pages/Settings/SettingsLayout";
+import SettingsAccountPage from "./pages/Settings/accout/SettingsAccountPage";
+import {ProfileForm} from "./pages/Settings/profile/ProfileForm";
+import SettingsProfilePage from "./pages/Settings/profile/SettingsProfilePage";
 
 function Auth() {
     return null;
@@ -23,13 +27,18 @@ export function App() {
         createRoutesFromElements(
             <>
                 <Route path="/" element={<RootLayout/>}>
-                    <Route index path="/" element={<Dashboard/>}/>
+                    <Route path="/" element={<Dashboard/>}/>
                     <Route path="/agile" element={<Agile/>}/>
                     <Route path="/task/:taskId" element={<Task/>}/>
+                    <Route path="/settings" element={<SettingsLayout/>}>
+                        <Route path="/settings/" element={<SettingsProfilePage/>}/>
+                        <Route path="/settings/profile" element={<SettingsProfilePage/>}/>
+                        <Route path="/settings/account" element={<SettingsAccountPage/>}/>
+                    </Route>
                 </Route>
                 <Route path="/auth" element={<AuthLayout/>}>
-                    <Route index path="/auth/login" element={<Login/>}/>
-                    <Route index path="/auth/register" element={<Register/>}/>
+                    <Route path="/auth/login" element={<Login/>}/>
+                    <Route path="/auth/register" element={<Register/>}/>
                 </Route>
             </>
         )
