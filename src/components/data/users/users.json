@@ -1,0 +1,10 @@
+[
+  {
+    "id": "1",
+    "name": "Marc Got",
+    "email": "gotcritgmarc@gmail.com",
+    "group": "group_1",
+    "role": "admin",
+    "created": "true"
+  }
+]

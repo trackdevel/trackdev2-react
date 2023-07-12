@@ -3,8 +3,8 @@
 import React from "react";
 import { z } from "zod"
 
-import { columns } from "../../components/data-table/columns"
-import { DataTable } from "../../components/data-table/data-table"
+import { columns } from "../../components/tasks-table/columns"
+import { DataTable } from "../../components/tasks-table/data-table"
 import {taskSchema} from "../../components/data/taskTable/schema";
 import {readFile} from "fs";
 import data from "../../components/data/taskTable/tasks.json";

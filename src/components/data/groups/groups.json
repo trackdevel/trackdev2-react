@@ -1,0 +1,48 @@
+[
+  {
+    "id": "1",
+    "name": "group_1",
+    "course": "pds22_23",
+    "users": [
+      {
+          "id": "1",
+          "name": "Marc Got",
+          "email": "gotcritgmarc@gmail.com",
+          "group": "group_1",
+          "role": "admin",
+          "created": "true"
+      },
+      {
+          "id": "2",
+          "name": "Gerard Rovellat",
+          "email": "gerard.rovellat@gmail.com",
+          "group": "group_2",
+          "role": "student",
+          "created": "true"
+        }
+    ]
+  },
+  {
+    "id": "2",
+    "name": "group_2",
+    "course": "pds23_24",
+    "users": [
+      {
+        "id": "1",
+        "name": "Marc Got",
+        "email": "gotcritgmarc@gmail.com",
+        "group": "group_1",
+        "role": "admin",
+        "created": "true"
+      },
+      {
+        "id": "2",
+        "name": "Gerard Rovellat",
+        "email": "gerard.rovellat@gmail.com",
+        "group": "group_2",
+        "role": "student",
+        "created": "true"
+      }
+    ]
+  }
+]
