@@ -15,6 +15,22 @@ const sidebarNavItems = [
         title: "Account",
         href: "/settings/account",
     },
+    {
+        title: "Users",
+        href: "/settings/users",
+    },
+    {
+        title: "Groups",
+        href: "/settings/groups",
+    },
+    {
+        title: "Courses",
+        href: "/settings/courses",
+    },
+    {
+        title: "Subjects",
+        href: "/settings/subjects",
+    },
 ]
 
 interface SettingsLayoutProps {
@@ -36,7 +52,7 @@ export default function SettingsLayout() {
                     <aside className="-mx-4 lg:w-1/5">
                         <SidebarNav items={sidebarNavItems} />
                     </aside>
-                    <div className="flex-1 lg:max-w-2xl">
+                    <div className="flex-1 w-full">
                         <Outlet/>
                     </div>
                 </div>
