@@ -7,53 +7,23 @@ import { DataTableRowActions } from "./data-table-row-actions"
 import {CourseListItem} from "../data/courses/schema";
 
 const columns: ColumnDef<CourseListItem>[] = [
-  /*{
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="User" />
-    ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },*/
   {
     accessorKey: "subject",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Soubject" />
+      <DataTableColumnHeader column={column} title="Subject" />
     ),
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("subject")}
+            {row.original.subject.name}
           </span>
         </div>
       )
     },
   },
   {
-    accessorKey: "start_year",
+    accessorKey: "startYear",
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Start Year" />
     ),
@@ -61,7 +31,7 @@ const columns: ColumnDef<CourseListItem>[] = [
       return (
           <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("start_year")}
+            {row.getValue("startYear")}
           </span>
           </div>
       )

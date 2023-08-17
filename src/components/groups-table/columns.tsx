@@ -7,6 +7,22 @@ import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
 import {courses} from "../data/groups/data";
 import {GroupListItem} from "../data/groups/schema";
+import {CardsChat} from "../CoursesConfig/UserSelect/chat";
+import React from "react";
+import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
+import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../registry/ui/tooltip";
+import {Button} from "../ui/button";
+import {CheckIcon, PlusIcon} from "@radix-ui/react-icons";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle
+} from "../../registry/ui/dialog";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "../../registry/ui/command";
+import {UsersSelect} from "./user-select";
 
 const columns: ColumnDef<GroupListItem>[] = [
   /*{
@@ -86,17 +102,24 @@ const columns: ColumnDef<GroupListItem>[] = [
     cell: ({ row }) => {
       const users = row.getValue("users") as UserListItem[]
 
+
       if (!users) {
           return null
       }
 
-      const usersString = users.map((user) => user.name).join(", ")
-      console.log('USERS',usersString)
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
-            {usersString}
-          </span>
+          <div className="flex -space-x-2 overflow-hidden">
+            {users.map((user) => (
+                <Avatar
+                    key={user.email}
+                    className="inline-block border-2 border-background"
+                >
+                  <AvatarFallback>{user.name[0]}</AvatarFallback>
+                </Avatar>
+            ))}
+            <UsersSelect row={row} users={users}/>
+          </div>
         </div>
       )
     },

@@ -7,26 +7,36 @@ import { Button } from "../../registry/ui/button"
 import { Input } from "../../registry/ui/input"
 import { Label } from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
+import Api from "../../utils/Api";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RegisterForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [username,setUsername] = React.useState<string>('')
+    const [email,setEmail] = React.useState<string>('')
     const navigate = useNavigate();
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-        setIsLoading(true)
 
+        if(username === '' || email === '') {
+            return;
+        }
 
-        setTimeout(() => {
+        var requestBody = {
+            username: username,
+            email: email
+        }
+
+        Api.post('/users/v2/register',requestBody).then((res) => {
             setIsLoading(false)
-
-            // logica de login
-
             navigate('/');
-        }, 3000)
+        }).catch((err) => {
+            setIsLoading(false)
+            console.log(err);
+        })
     }
 
     return (
@@ -38,6 +48,16 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
                             Email
                         </Label>
                         <Input
+                            id="username"
+                            placeholder="u1234567"
+                            type="text"
+                            autoCapitalize="none"
+                            autoComplete="username"
+                            autoCorrect="off"
+                            disabled={isLoading}
+                            onChange={(e) => setUsername(e.target.value)}
+                        />
+                        <Input
                             id="email"
                             placeholder="name@example.com"
                             type="email"
@@ -45,6 +65,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
                             autoComplete="email"
                             autoCorrect="off"
                             disabled={isLoading}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <Button disabled={isLoading}>

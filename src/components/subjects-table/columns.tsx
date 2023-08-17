@@ -7,36 +7,6 @@ import { DataTableRowActions } from "./data-table-row-actions"
 import {SubjectListItem} from "../data/subjects/schema";
 
 const columns: ColumnDef<SubjectListItem>[] = [
-  /*{
-    id: "select",
-    header: ({ table }) => (
-      <Checkbox
-        checked={table.getIsAllPageRowsSelected()}
-        onCheckedChange={(value) => table.toggleAllPageRowsSelected(!!value)}
-        aria-label="Select all"
-        className="translate-y-[2px]"
-      />
-    ),
-    cell: ({ row }) => (
-      <Checkbox
-        checked={row.getIsSelected()}
-        onCheckedChange={(value) => row.toggleSelected(!!value)}
-        aria-label="Select row"
-        className="translate-y-[2px]"
-      />
-    ),
-    enableSorting: false,
-    enableHiding: false,
-  },
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="User" />
-    ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
-    enableSorting: false,
-    enableHiding: false,
-  },*/
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -53,15 +23,15 @@ const columns: ColumnDef<SubjectListItem>[] = [
     },
   },
   {
-    accessorKey: "acronim",
+    accessorKey: "acronym",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Acronim" />
+        <DataTableColumnHeader column={column} title="Acronym" />
     ),
     cell: ({ row }) => {
       return (
           <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("acronim")}
+            {row.getValue("acronym")}
           </span>
           </div>
       )

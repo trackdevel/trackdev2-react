@@ -28,7 +28,7 @@ const Agile = () => {
                         </p>
                     </div>
                 </div>
-                <DataTable data={tasks} columns={columns}/>
+                <DataTable data={tasks} columns={columns} />
             </div>
         </>
     )

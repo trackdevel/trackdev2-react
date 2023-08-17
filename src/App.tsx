@@ -3,7 +3,7 @@ import './App.css';
 import {
     createBrowserRouter,
     createRoutesFromElements,
-    Route, RouterProvider
+    Route, RouterProvider, useNavigate
 } from 'react-router-dom';
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Agile from "./pages/Agile/Agile";
@@ -20,33 +20,34 @@ import SettingsUsersPage from "./pages/Settings/users/SettingsUsersPage";
 import SettingsGroupsPage from "./pages/Settings/groups/SettingsGroupsPage";
 import SettingsSubjectsPage from "./pages/Settings/subjects/SettingsSubjectsPage";
 import SettingsCoursesPage from "./pages/Settings/crouses/SettingsCoursesPage";
-
-function Auth() {
-    return null;
-}
+import Api from "./utils/Api";
+import {cookies} from "next/headers";
+import AuthGuard from "./guards/AuthGuard";
+import Password from "./pages/Auth/Password";
 
 export function App() {
 
     const router = createBrowserRouter(
         createRoutesFromElements(
             <>
-                <Route path="/" element={<RootLayout/>}>
-                    <Route path="/" element={<Dashboard/>}/>
-                    <Route path="/agile" element={<Agile/>}/>
-                    <Route path="/task/:taskId" element={<Task/>}/>
-                    <Route path="/settings" element={<SettingsLayout/>}>
-                        <Route path="/settings/" element={<SettingsProfilePage/>}/>
-                        <Route path="/settings/profile" element={<SettingsProfilePage/>}/>
-                        <Route path="/settings/account" element={<SettingsAccountPage/>}/>
-                        <Route path="/settings/users" element={<SettingsUsersPage/>}/>
-                        <Route path="/settings/groups" element={<SettingsGroupsPage/>}/>
-                        <Route path="/settings/subjects" element={<SettingsSubjectsPage/>}/>
-                        <Route path="/settings/courses" element={<SettingsCoursesPage/>}/>
+                <Route path="/" element={<AuthGuard component={<RootLayout/>}/>}>
+                    <Route path="/" element={<AuthGuard component={<Dashboard/>}/>}/>
+                    <Route path="/agile" element={<AuthGuard component={<Agile/>}/>}/>
+                    <Route path="/task/:taskId" element={<AuthGuard component={<Task/>}/>}/>
+                    <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
+                        <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
+                        <Route path="/settings/profile" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
+                        <Route path="/settings/account" element={<AuthGuard component={<SettingsAccountPage/>}/>}/>
+                        <Route path="/settings/users" element={<AuthGuard component={<SettingsUsersPage/>}/>}/>
+                        <Route path="/settings/groups" element={<AuthGuard component={<SettingsGroupsPage/>}/>}/>
+                        <Route path="/settings/subjects" element={<AuthGuard component={<SettingsSubjectsPage/>}/>}/>
+                        <Route path="/settings/courses" element={<AuthGuard component={<SettingsCoursesPage/>}/>}/>
                     </Route>
                 </Route>
                 <Route path="/auth" element={<AuthLayout/>}>
                     <Route path="/auth/login" element={<Login/>}/>
                     <Route path="/auth/register" element={<Register/>}/>
+                    <Route path="/auth/password" element={<AuthGuard component={<Password/>}/>}/>
                 </Route>
             </>
         )
