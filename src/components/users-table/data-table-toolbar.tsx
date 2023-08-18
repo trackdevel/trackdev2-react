@@ -7,7 +7,7 @@ import { Button } from "../../registry/ui/button"
 import { Input } from "../../registry/ui/input"
 import { DataTableViewOptions } from "./data-table-view-options"
 
-import {created, groups, roles} from "../data/users/data"
+import {enabled, groups, roles} from "../data/users/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 
 interface DataTableToolbarProps<TData> {
@@ -24,17 +24,17 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
       <Input
           placeholder="Filter users..."
-          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("nicename")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-              table.getColumn("name")?.setFilterValue(event.target.value)
+              table.getColumn("nicename")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
       />
-        {table.getColumn("group") && (
+        {table.getColumn("roles") && (
           <DataTableFacetedFilter
-            column={table.getColumn("group")}
-            title="Group"
-            options={groups}
+            column={table.getColumn("roles")}
+            title="Roles"
+            options={roles}
           />
         )}
           {table.getColumn("role") && (
@@ -44,11 +44,11 @@ export function DataTableToolbar<TData>({
                   options={roles}
               />
           )}
-          {table.getColumn("created") && (
+          {table.getColumn("enabled") && (
               <DataTableFacetedFilter
-                  column={table.getColumn("created")}
-                  title="Created"
-                  options={created}
+                  column={table.getColumn("enabled")}
+                  title="Enabled"
+                  options={enabled}
               />
           )}
         {isFiltered && (

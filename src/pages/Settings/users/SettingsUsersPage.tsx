@@ -21,17 +21,32 @@ import {Input} from "../../../registry/ui/input";
 import {Icons} from "../../../registry/ui/icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Api from "../../../utils/Api";
+import {subjectSchema} from "../../../components/data/subjects/schema";
 
-function getUsers() {
-    return z.array(userSchema).parse(data)
-}
+
 export default function SettingsUsersPage() {
     const [state, setState] = React.useState<boolean>(false)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [username,setUsername] = React.useState<string>('')
     const [email,setEmail] = React.useState<string>('')
 
-    const tasks = getUsers()
+    const [tasks, setTasks] = React.useState<Array<any>>([])
+    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
+
+
+    if(tasks.length === 0 && !istasksloaded) {
+        getUsers()
+    }
+    async function getUsers() {
+        setIsTasksLoaded(true)
+        Api.get('/users/all').then((res) => {
+            console.log('res',res)
+            console.log('parsed res',z.array(userSchema).parse(res))
+            setTasks(z.array(userSchema).parse(res))
+        }).catch((err) => {
+        })
+        return;
+    }
 
     function toogleState() {
         setState(!state)
