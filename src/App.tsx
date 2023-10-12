@@ -6,7 +6,7 @@ import {
     Route, RouterProvider, useNavigate
 } from 'react-router-dom';
 import Dashboard from "./pages/Dashboard/Dashboard";
-import Agile from "./pages/Agile/Agile";
+import Project from "./pages/Project/Project";
 import Task from "./pages/Task/Task";
 import RootLayout from "./layouts/RootLayout";
 import AuthLayout from "./layouts/AuthLayout";
@@ -32,7 +32,7 @@ export function App() {
             <>
                 <Route path="/" element={<AuthGuard component={<RootLayout/>}/>}>
                     <Route path="/" element={<AuthGuard component={<Dashboard/>}/>}/>
-                    <Route path="/agile" element={<AuthGuard component={<Agile/>}/>}/>
+                    <Route path="/project/:projectId" element={<AuthGuard component={<Project/>}/>}/>
                     <Route path="/task/:taskId" element={<AuthGuard component={<Task/>}/>}/>
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>

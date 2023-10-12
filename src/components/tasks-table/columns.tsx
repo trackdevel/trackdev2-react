@@ -9,6 +9,8 @@ import { labels, priorities, statuses } from "../data/taskTable/data"
 import { Task } from "../data/taskTable/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
+import {Link} from "react-router-dom";
+import React from "react";
 
 const columns: ColumnDef<Task>[] = [
   {
@@ -35,25 +37,38 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "id",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Task" />
+      <DataTableColumnHeader column={column} title="Tasca" />
     ),
-    cell: ({ row }) => <div className="w-[80px]">{row.getValue("id")}</div>,
+    cell: ({ row }) => {
+      const to = `/task/${row.getValue("id")}`
+
+      return (
+        <div className="w-[80px]">
+          <Link to={to} >
+            {row.getValue("id")}
+          </Link>
+        </div>
+      )
+    },
     enableSorting: false,
     enableHiding: false,
   },
   {
     accessorKey: "title",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Title" />
+      <DataTableColumnHeader column={column} title="Títol" />
     ),
     cell: ({ row }) => {
       const label = labels.find((label) => label.value === row.original.label)
+      const to = `/task/${row.getValue("id")}`
 
       return (
         <div className="flex space-x-2">
           {label && <Badge variant="outline">{label.label}</Badge>}
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("title")}
+            <Link to={to} >
+              {row.getValue("title")}
+            </Link>
           </span>
         </div>
       )
@@ -62,7 +77,7 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "status",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Status" />
+      <DataTableColumnHeader column={column} title="Estat" />
     ),
     cell: ({ row }) => {
       const status = statuses.find(
@@ -89,7 +104,7 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "priority",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Priority" />
+      <DataTableColumnHeader column={column} title="Prioritat" />
     ),
     cell: ({ row }) => {
       const priority = priorities.find(
