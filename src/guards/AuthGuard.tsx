@@ -7,7 +7,7 @@ interface AuthGuardProps {
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ component }) => {
-    return <React.Fragment>{component}</React.Fragment>;
+    // return <React.Fragment>{component}</React.Fragment>;
     const [status, setStatus] = useState(false);
     const navigate = useNavigate();
     const auth = true;
