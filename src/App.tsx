@@ -17,7 +17,7 @@ import SettingsAccountPage from "./pages/Settings/accout/SettingsAccountPage";
 import {ProfileForm} from "./pages/Settings/profile/ProfileForm";
 import SettingsProfilePage from "./pages/Settings/profile/SettingsProfilePage";
 import SettingsUsersPage from "./pages/Settings/users/SettingsUsersPage";
-import SettingsGroupsPage from "./pages/Settings/groups/SettingsGroupsPage";
+import SettingsProjectsPage from "./pages/Settings/projects/SettingsProjectsPage";
 import SettingsSubjectsPage from "./pages/Settings/subjects/SettingsSubjectsPage";
 import SettingsCoursesPage from "./pages/Settings/crouses/SettingsCoursesPage";
 import Api from "./utils/Api";
@@ -33,13 +33,13 @@ export function App() {
                 <Route path="/" element={<AuthGuard component={<RootLayout/>}/>}>
                     <Route path="/" element={<AuthGuard component={<Dashboard/>}/>}/>
                     <Route path="/project/:projectId" element={<AuthGuard component={<Project/>}/>}/>
-                    <Route path="/task/:taskId" element={<AuthGuard component={<Task/>}/>}/>
+                    <Route path="/project/:projectId/:taskId" element={<AuthGuard component={<Task/>}/>}/>
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
                         <Route path="/settings/profile" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
                         <Route path="/settings/account" element={<AuthGuard component={<SettingsAccountPage/>}/>}/>
                         <Route path="/settings/users" element={<AuthGuard component={<SettingsUsersPage/>}/>}/>
-                        <Route path="/settings/groups" element={<AuthGuard component={<SettingsGroupsPage/>}/>}/>
+                        <Route path="/settings/projects" element={<AuthGuard component={<SettingsProjectsPage/>}/>}/>
                         <Route path="/settings/subjects" element={<AuthGuard component={<SettingsSubjectsPage/>}/>}/>
                         <Route path="/settings/courses" element={<AuthGuard component={<SettingsCoursesPage/>}/>}/>
                     </Route>

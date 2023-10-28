@@ -13,6 +13,7 @@ import {
 } from "../../registry/ui/dropdown-menu"
 import Api from "../../utils/Api";
 import {toast} from "../../registry/ui/use-toast";
+import * as React from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -21,7 +22,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "../../registry/ui/alert-dialog";
-import * as React from "react";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -31,13 +31,14 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
   function deleteRow() {
     console.log('row',row)
 
     // @ts-ignore
-    Api.delete('/courses/' + row.original.id ).then((res) => {
+    Api.delete('/projects/' + row.original.id ).then((res) => {
       console.log('res',res)
       setShowDeleteDialog(false)
       toast({
@@ -48,7 +49,6 @@ export function DataTableRowActions<TData>({
       console.log('err',err)
     })
   }
-
   return (
     <>
       <DropdownMenu>
@@ -96,6 +96,6 @@ export function DataTableRowActions<TData>({
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-  </>
+    </>
   )
 }

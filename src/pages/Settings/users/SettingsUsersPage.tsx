@@ -1,7 +1,6 @@
 import { Separator } from "../../../registry/ui/separator"
 import {z} from "zod";
 import {userSchema} from "../../../components/data/users/schema";
-import data from "../../../components/data/users/users.json";
 import {columns} from "../../../components/users-table/columns";
 import React from "react";
 import {UsersTable} from "../../../components/users-table/data-table";
@@ -16,12 +15,10 @@ import {
     DialogTitle,
     DialogTrigger
 } from "../../../registry/ui/dialog";
-import {Label} from "../../../registry/ui/label";
 import {Input} from "../../../registry/ui/input";
 import {Icons} from "../../../registry/ui/icons";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import Api from "../../../utils/Api";
-import {subjectSchema} from "../../../components/data/subjects/schema";
 
 
 export default function SettingsUsersPage() {
@@ -36,15 +33,15 @@ export default function SettingsUsersPage() {
 
     if(tasks.length === 0 && !istasksloaded) {
         getUsers()
+        console.log('tasks',tasks)
     }
     async function getUsers() {
         setIsTasksLoaded(true)
-        Api.get('/users/all').then((res) => {
+        Api.get('/users').then((res) => {
             console.log('res',res)
             console.log('parsed res',z.array(userSchema).parse(res))
             setTasks(z.array(userSchema).parse(res))
-        }).catch((err) => {
-        })
+        }).catch((err) => {})
         return;
     }
 

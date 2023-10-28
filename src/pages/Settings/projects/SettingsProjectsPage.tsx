@@ -1,17 +1,15 @@
 import { Separator } from "../../../registry/ui/separator"
 import {z} from "zod";
-import data from "../../../components/data/courses/course.json";
-import {columns} from "../../../components/courses-table/columns";
+import data from "../../../components/data/projects/groups.json";
+import {columns} from "../../../components/projects-table/columns";
 import React from "react";
-import {courseSchema} from "../../../components/data/courses/schema";
-import {CrousesTable} from "../../../components/courses-table/data-table";
-import { Button } from "../../../registry/ui/button"
+import {GroupsTable} from "../../../components/projects-table/data-table";
+import {Button} from "../../../registry/ui/button";
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
-import Api from "../../../utils/Api";
 import {
     Dialog,
     DialogContent,
-    DialogDescription, DialogFooter,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger
@@ -19,69 +17,69 @@ import {
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Input} from "../../../registry/ui/input";
 import {Icons} from "../../../registry/ui/icons";
-import {pullRequests} from "../../../components/data/task/Sprints";
-import {subjectSchema} from "../../../components/data/subjects/schema";
+import Api from "../../../utils/Api";
+import {projectSchema} from "../../../components/data/projects/schema";
 import {Popover, PopoverContent, PopoverTrigger} from "../../../registry/ui/popover";
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../../registry/ui/command";
 import {cn} from "../../../lib/utils";
-import { PopoverProps } from "@radix-ui/react-popover"
+import {Courses, Subjects} from "../crouses/SettingsCoursesPage";
+import {subjectSchema} from "../../../components/data/subjects/schema";
+import {courseSchema} from "../../../components/data/courses/schema";
 
-
-export interface Subjects {
-    id: string
-    name: string
+function getGroups() {
+    return z.array(projectSchema).parse(data)
 }
-
-export interface Courses {
-    id: string
-    startYear: number
-    subject: {
-        id: string
-        name: string
-    }
-}
-
-export default function SettingsCoursesPage() {
+export default function SettingsProjectsPage() {
     const [state, setState] = React.useState<boolean>(false)
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [subjectId,setSubjectId] = React.useState<string>('')
-    const [year,setYear] = React.useState<number>()
-    const [subjects, setSubjects] = React.useState<Array<any>>([])
-    const [issubjectsloaded, setIsSubjectsLoaded] = React.useState<boolean>(false)
-
-    const [tasks, setCourses] = React.useState<Array<any>>([])
-    const [iscourseloaded, setIsCourseLoaded] = React.useState<boolean>(false)
-
-
-    const [open, setOpen] = React.useState(false)
-    const [selectedPullRequest, setSelectedPullRequest] = React.useState<Subjects>()
-
+    const [username,setUsername] = React.useState<string>('')
+    const [email,setEmail] = React.useState<string>('')
+    const [name,setName] = React.useState<string>('')
     const current_year = new Date().getFullYear()
 
-    if(subjects.length === 0 && !issubjectsloaded) {
-        getSubjects()
-    }
-    async function getSubjects() {
-        setIsSubjectsLoaded(true)
-        Api.get('/subjects').then((res) => {
-            setSubjects(z.array(subjectSchema).parse(res))
-        }).catch((err) => {})
-        return;
-    }
 
-    if(tasks.length === 0 && !iscourseloaded) {
+    const [projects, setProjects] = React.useState<Array<any>>([])
+    const [projectsloaded, setProjectsloaded] = React.useState<boolean>(false)
+
+    const [subjectId,setSubjectId] = React.useState<string>('')
+    const [year,setYear] = React.useState<number>()
+    const [courses, setCourses] = React.useState<Array<any>>([])
+    const [iscoursesloaded, setIscoursesloaded] = React.useState<boolean>(false)
+    const [open, setOpen] = React.useState(false)
+    const [selectedCourse, setSelectedCourse] = React.useState<Courses>()
+
+    const tasks = getGroups()
+
+
+    if(courses.length === 0 && !iscoursesloaded) {
         getCourses()
     }
 
     async function getCourses() {
-        setIsCourseLoaded(true)
+        setIscoursesloaded(true)
         Api.get('/courses').then((res) => {
             setCourses(z.array(courseSchema).parse(res))
-            console.log(tasks)
         }).catch((err) => {})
         return;
     }
+
+
+    if(projects.length === 0 && !projectsloaded) {
+        getProjects()
+    }
+    else {
+        console.log('projects',projects)
+    }
+    async function getProjects() {
+        setProjectsloaded(true)
+        Api.get('/projects').then((res) => {
+            console.log('res',res)
+            setProjects(z.array(projectSchema).parse(res))
+        }).catch((err) => {})
+        return;
+    }
+
 
     function toogleState() {
         setState(!state)
@@ -89,26 +87,24 @@ export default function SettingsCoursesPage() {
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-        console.log(subjectId,year)
 
-        if(!subjectId|| !year) {
+        if(!selectedCourse || name === '' || name === undefined || name === null || selectedCourse === undefined || selectedCourse === null) {
             setIsLoading(false)
             return;
         }
 
         var requestBody = {
-            startYear: year
+            name: name,
+            members: []
         }
 
-        console.log(requestBody)
 
-        Api.post('/subjects/' + subjectId + '/courses',requestBody).then((res) => {
+        Api.post(`/courses/${selectedCourse!.id}/projects`,requestBody).then((res) => {
+            getProjects()
             setIsLoading(false)
             toogleState()
-            getCourses()
         }).catch((err) => {
             setIsLoading(false)
-            console.log(err);
         })
     }
 
@@ -117,16 +113,16 @@ export default function SettingsCoursesPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Courses</h3>
+                    <h3 className="text-lg font-medium">Groups</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update courses list settings
+                        Update groups list settings
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add Course
+                            Add Project
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -136,7 +132,7 @@ export default function SettingsCoursesPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add Course</DialogTitle>
+                                <DialogTitle>Add Project</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
@@ -149,7 +145,7 @@ export default function SettingsCoursesPage() {
                                                 aria-expanded={open}
                                                 className="flex-1 justify-between w-full"
                                             >
-                                                {selectedPullRequest ? selectedPullRequest.name : "Subject"}
+                                                {selectedCourse ? selectedCourse.subject.name + ' ' + selectedCourse.startYear.toString().slice(-2) + '/' + (selectedCourse.startYear+1).toString().slice(-2) : 'Select subject'}
                                                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                                             </Button>
                                         </PopoverTrigger>
@@ -158,19 +154,19 @@ export default function SettingsCoursesPage() {
                                                 <CommandInput placeholder="Search subject..." />
                                                 <CommandEmpty>No presets found.</CommandEmpty>
                                                 <CommandGroup heading="Subjects">
-                                                    {subjects.map((request) => (
+                                                    {courses.map((request) => (
                                                         <CommandItem key={request.id}
                                                                      onSelect={() => {
-                                                                         setSelectedPullRequest(request)
+                                                                         setSelectedCourse(request)
                                                                          setOpen(false)
                                                                          setSubjectId(request.id)
                                                                      }}
                                                         >
-                                                            {request.name}
+                                                            {request.subject.name} {request.startYear.toString().slice(-2)}/{(request.startYear+1).toString().slice(-2)}
                                                             <Check
                                                                 className={cn(
                                                                     "ml-auto h-4 w-4",
-                                                                    selectedPullRequest?.id === request.id
+                                                                    selectedCourse?.id === request.id
                                                                         ? "opacity-100"
                                                                         : "opacity-0"
                                                                 )}
@@ -182,14 +178,14 @@ export default function SettingsCoursesPage() {
                                         </PopoverContent>
                                     </Popover>
                                     <Input
-                                        id="year"
-                                        placeholder={current_year.toString()}
-                                        type="number"
+                                        id="name"
+                                        placeholder={name ? name : "Name"}
+                                        type="text"
                                         autoCapitalize="none"
-                                        autoComplete="year"
+                                        autoComplete="Name"
                                         autoCorrect="off"
                                         disabled={isLoading}
-                                        onChange={(e) => setYear(parseInt(e.target.value))}
+                                        onChange={(e) => setName(e.target.value)}
                                     />
                                 </div>
                             </div>
@@ -198,7 +194,7 @@ export default function SettingsCoursesPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Import User
+                                    Create Project
                                 </Button>
                             </DialogFooter>
                         </form>
@@ -207,7 +203,7 @@ export default function SettingsCoursesPage() {
             </div>
             <Separator />
             <div className="hidden h-full flex-1 flex-col md:flex">
-                <CrousesTable data={tasks} columns={columns}/>
+                <GroupsTable data={projects} columns={columns}/>
             </div>
         </div>
     )

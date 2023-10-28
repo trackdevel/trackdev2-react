@@ -36,8 +36,7 @@ export default function SettingsSubjectsPage() {
         setIsTasksLoaded(true)
         Api.get('/subjects').then((res) => {
             setTasks(z.array(subjectSchema).parse(res))
-        }).catch((err) => {
-        })
+        }).catch((err) => {})
         return;
     }
 

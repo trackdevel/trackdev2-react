@@ -27,7 +27,17 @@ import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
 
 export function UsersSelect(props: any) {
 
-    const users = props.users
+    var users = props.users
+    const users_new = props.users
+    // array merge users and users_new as a new array
+    users = [...users, ...users_new]
+    users = [...users, ...users_new]
+    users = [...users, ...users_new]
+    users = [...users, ...users_new]
+    users = [...users, ...users_new]
+    users = [...users, ...users_new]
+
+
     const groupId = props.row.original.id
 
     type User = (typeof users)[number]
@@ -67,7 +77,7 @@ export function UsersSelect(props: any) {
                         <CommandList>
                             <CommandEmpty>No users found.</CommandEmpty>
                             <CommandGroup className="p-2">
-                                {users.map((user: { email: any; avatar: any; name: any; }) => (
+                                {users.map((user: { email: any; avatar: any; username: any; }) => (
                                     <CommandItem
                                         key={user.email}
                                         className="flex items-center px-2"
@@ -89,11 +99,11 @@ export function UsersSelect(props: any) {
                                     >
                                         <Avatar>
                                             <AvatarImage src={user.avatar} alt="Image" />
-                                            <AvatarFallback>{user.name[0]}</AvatarFallback>
+                                            <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
                                         </Avatar>
                                         <div className="ml-2">
                                             <p className="text-sm font-medium leading-none">
-                                                {user.name}
+                                                {user.username}
                                             </p>
                                             <p className="text-sm text-muted-foreground">
                                                 {user.email}
@@ -116,7 +126,7 @@ export function UsersSelect(props: any) {
                                         className="inline-block border-2 border-background"
                                     >
                                         <AvatarImage src={user.avatar} />
-                                        <AvatarFallback>{user.name[0]}</AvatarFallback>
+                                        <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 ))}
                             </div>

@@ -32,14 +32,42 @@ import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
 import {Input} from "../../registry/ui/input";
 import {CardsChat} from "./chat";
 import {Card, CardContent, CardHeader} from "../../registry/ui/card";
+import {useParams} from "react-router-dom";
+import {z} from "zod";
+import {taskSchema} from "../data/task/schema";
 
 
-export default function TaskMainLayout(...props : any) {
+export default function TaskMainLayout(...props: any) {
     const [tab, setTab] = React.useState<string>('Information')
+
     const [title, setTitle] = React.useState<string>('Full task name')
-    const [sprintopen, setSprintopen] = React.useState(false)
-    const [sprint, setSprint] = React.useState<Sprints>()
+    const [estimationpoints, setEstimationpoints] = React.useState<number>()
     const [date, setDate] = React.useState<Date>()
+
+    const [sprint, setSprint] = React.useState<Sprints>()
+    const [sprintopen, setSprintopen] = React.useState(false)
+
+    // task use state object
+    const [task, setTask] = React.useState<any>({})
+    const [taskloaded, setTaskloaded] = React.useState<boolean>(false)
+
+    const [taskId, setTaskId] = React.useState<any>(props[0].taskId)
+
+    if(Object.keys(task).length === 0 && !taskloaded) {
+        getTask(taskId)
+    }
+    async function getTask(taskId: string|undefined) {
+        setTaskloaded(true)
+        Api.get('/tasks/' + taskId).then((res) => {
+            console.log('res',res)
+            setTask(taskSchema.parse(res))
+            setTitle(taskSchema.parse(res).name)
+            setDate(new Date(taskSchema.parse(res).createdAt))
+            setEstimationpoints(taskSchema.parse(res).estimationPoints)
+        }).catch((err) => {})
+        return;
+    }
+
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
         console.log(date)
@@ -52,7 +80,7 @@ export default function TaskMainLayout(...props : any) {
             <div className="hidden h-full flex-col md:flex">
                 <form onSubmit={onCreate}>
                     <div className="flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-30">
-                        {/* <h2 className="text-3xl font-bold tracking-tight w-full ">Full task name</h2> */}
+                        { /* <h2 className="text-3xl font-bold tracking-tight w-full ">Full task name</h2> */ }
                         <div className="w-full space-y-4">
                             <h2 className="text-2xl font-bold tracking-tight w-full">{tab}</h2>
                             <Input
@@ -164,7 +192,16 @@ export default function TaskMainLayout(...props : any) {
                                     <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Estimation Points
                                     </span>
-                                    <TaskEstimation />
+                                    <Input
+                                        id="estimationpoints"
+                                        placeholder="Estimation Points"
+                                        value={estimationpoints}
+                                        type="number"
+                                        autoCapitalize="none"
+                                        autoComplete="name"
+                                        autoCorrect="off"
+                                        onChange={(e) => setEstimationpoints(parseInt(e.target.value))}
+                                    />
                                     <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Reporter
                                     </span>

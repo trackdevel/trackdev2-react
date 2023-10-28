@@ -20,8 +20,8 @@ const sidebarNavItems = [
         href: "/settings/users",
     },
     {
-        title: "Groups",
-        href: "/settings/groups",
+        title: "Projects",
+        href: "/settings/projects",
     },
     {
         title: "Courses",
@@ -30,7 +30,7 @@ const sidebarNavItems = [
     {
         title: "Subjects",
         href: "/settings/subjects",
-    },
+    }
 ]
 
 interface SettingsLayoutProps {
