@@ -1,4 +1,4 @@
-import { Metadata } from "next"
+
 import {Calendar as CalendarIcon, Check, ChevronsUpDown, History} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
@@ -12,13 +12,9 @@ import {
 import { Textarea } from "../../registry/ui/textarea"
 
 import { Icons } from "../ui/icons"
-import { MaxLengthSelector } from "../ui/maxlength-selector"
 import { TaskActions } from "./task-actions"
-import { SprintSelector } from "./SprintSelector"
 import "./styles.css"
 import {pullRequests, Sprints} from "../data/task/Sprints";
-import {TaskDatePicker} from "./TaskDatePicker";
-import {TaskEstimation} from "./TaskEstimation";
 import TaskReporter from "./TaskReporter";
 import TaskAssignee from "./TaskAssignee";
 import React from "react";
@@ -32,9 +28,8 @@ import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
 import {Input} from "../../registry/ui/input";
 import {CardsChat} from "./chat";
 import {Card, CardContent, CardHeader} from "../../registry/ui/card";
-import {useParams} from "react-router-dom";
-import {z} from "zod";
 import {taskSchema} from "../data/task/schema";
+import {TaskHistory} from "./history";
 
 
 export default function TaskMainLayout(...props: any) {
@@ -59,7 +54,6 @@ export default function TaskMainLayout(...props: any) {
     async function getTask(taskId: string|undefined) {
         setTaskloaded(true)
         Api.get('/tasks/' + taskId).then((res) => {
-            console.log('res',res)
             setTask(taskSchema.parse(res))
             setTitle(taskSchema.parse(res).name)
             setDate(new Date(taskSchema.parse(res).createdAt))
@@ -70,9 +64,6 @@ export default function TaskMainLayout(...props: any) {
 
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
-        console.log(date)
-        console.log(sprint)
-        console.log(title)
     }
 
     return (
@@ -221,47 +212,11 @@ export default function TaskMainLayout(...props: any) {
                                         </div>
                                     </TabsContent>
                                     <TabsContent value="history" className="mt-0 border-0 p-0">
-                                        <Card>
-                                            <CardHeader className="flex flex-row items-center">
-                                            </CardHeader>
-                                            <CardContent>
-                                                <div className="flex h-full flex-col space-y-4">
-                                                    <div className="space-y-8">
-                                                        <div className="flex items-center">
-                                                            <Avatar className="h-9 w-9">
-                                                                <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                                                                <AvatarFallback>GR</AvatarFallback>
-                                                            </Avatar>
-                                                            <div className="ml-4 space-y-1">
-                                                                <p className="text-sm font-medium leading-none">Estimation Points</p>
-                                                                <p className="text-sm text-muted-foreground">
-                                                                    changed
-                                                                </p>
-                                                            </div>
-                                                            <div className="ml-auto font-medium">5 to 10</div>
-                                                        </div>
-                                                        <Separator />
-                                                        <div className="flex items-center">
-                                                            <Avatar className="h-9 w-9">
-                                                                <AvatarImage src="/avatars/04.png" alt="Avatar" />
-                                                                <AvatarFallback>MG</AvatarFallback>
-                                                            </Avatar>
-                                                            <div className="ml-4 space-y-1">
-                                                                <p className="text-sm font-medium leading-none">Data de creació</p>
-                                                                <p className="text-sm text-muted-foreground">
-                                                                    added
-                                                                </p>
-                                                            </div>
-                                                            <div className="ml-auto font-medium">October 9th, 2023</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </CardContent>
-                                        </Card>
+                                        <TaskHistory taskId={taskId} />
                                     </TabsContent>
                                     <TabsContent value="comments" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
-                                            <CardsChat />
+                                            <CardsChat taskId={taskId} />
                                         </div>
                                     </TabsContent>
                                     {/*<TabsContent value="debate" className="mt-0 border-0 p-0">

@@ -10,7 +10,7 @@ const columns: ColumnDef<SubjectListItem>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Nom" />
     ),
     cell: ({ row }) => {
       return (
@@ -25,7 +25,7 @@ const columns: ColumnDef<SubjectListItem>[] = [
   {
     accessorKey: "acronym",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Acronym" />
+        <DataTableColumnHeader column={column} title="Acronim" />
     ),
     cell: ({ row }) => {
       return (

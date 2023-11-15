@@ -8,27 +8,23 @@ import {Outlet} from "react-router-dom";
 
 const sidebarNavItems = [
     {
-        title: "Profile",
+        title: "Perfil",
         href: "/settings/profile",
     },
     {
-        title: "Account",
-        href: "/settings/account",
-    },
-    {
-        title: "Users",
+        title: "Usuaris",
         href: "/settings/users",
     },
     {
-        title: "Projects",
+        title: "Projectes",
         href: "/settings/projects",
     },
     {
-        title: "Courses",
+        title: "Cursos",
         href: "/settings/courses",
     },
     {
-        title: "Subjects",
+        title: "Assignatures",
         href: "/settings/subjects",
     }
 ]
@@ -42,9 +38,9 @@ export default function SettingsLayout() {
         <>
             <div className="hidden space-y-6 p-10 pb-16 md:block">
                 <div className="space-y-0.5">
-                    <h2 className="text-2xl font-bold tracking-tight">Settings</h2>
+                    <h2 className="text-2xl font-bold tracking-tight">Configuració</h2>
                     <p className="text-muted-foreground">
-                        Manage your account settings
+                        Gestiona la teva informació personal i les teves preferències.
                     </p>
                 </div>
                 <Separator className="my-6" />

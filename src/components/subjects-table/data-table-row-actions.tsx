@@ -22,6 +22,13 @@ import {
 import {toast} from "../../registry/ui/use-toast";
 import * as React from "react";
 import Api from "../../utils/Api";
+import * as DialogPrimitive from "@radix-ui/react-dialog/dist";
+import {Cross2Icon} from "@radix-ui/react-icons";
+import {DialogContent, DialogFooter, DialogHeader, DialogTitle} from "../../registry/ui/dialog";
+import {Input} from "../../registry/ui/input";
+import {Icons} from "../../registry/ui/icons";
+import {z} from "zod";
+import {subjectSchema} from "../data/subjects/schema";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -30,6 +37,14 @@ interface DataTableRowActionsProps<TData> {
 
 export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TData>) {
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+  const [showEditDialog, setShowEditDialog] = React.useState(false)
+
+  const [isLoading, setIsLoading] = React.useState<boolean>(false)
+  const [name, setName] = React.useState<string>('')
+  const [acronym, setAcronym] = React.useState<string>('')
+
+  const [tasks, setTasks] = React.useState<Array<any>>([])
+  const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
   function deleteRow() {
     console.log('row',row)
@@ -47,6 +62,41 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     })
   }
 
+  async function getSubject() {
+    // @ts-ignore
+    Api.get('/subjects/' + row.original.id).then((res) => {
+      setName(res.name)
+      setAcronym(res.acronym)
+    }).catch((err) => {
+        console.log('err',err)
+    })
+  }
+
+  async function onCreate(event: React.SyntheticEvent) {
+    event.preventDefault()
+    setIsLoading(true)
+
+    if (name === '' || acronym === '') {
+      setIsLoading(false)
+      return;
+    }
+
+    var requestBody = {
+      name: name,
+      acronym: acronym
+    }
+
+    // @ts-ignore
+    Api.patch('/subjects/' + row.original.id, requestBody).then((res) => {
+      setIsLoading(false)
+      setShowEditDialog(false)
+      window.location.reload()
+    }).catch((err) => {
+      setIsLoading(false)
+    })
+
+  }
+
   return (
     <>
       <DropdownMenu>
@@ -60,7 +110,13 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" className="w-[160px]">
-          <DropdownMenuItem>
+          <DropdownMenuItem
+              onSelect={
+                () => {
+                  setShowEditDialog(true); // @ts-ignore
+                  getSubject()
+                }
+              }>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
             Edit
           </DropdownMenuItem>
@@ -94,8 +150,50 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
+      <AlertDialog open={showEditDialog} onOpenChange={setShowEditDialog}>
+        <AlertDialogContent>
+          <form onSubmit={onCreate}>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+            </AlertDialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Input
+                    id="name"
+                    placeholder="Projecte de Desenvolupament de Software"
+                    value={name}
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="name"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    onChange={(e) => setName(e.target.value)}
+                />
+                <Input
+                    id="acronym"
+                    placeholder="PDS"
+                    value={acronym}
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="acronym"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    onChange={(e) => setAcronym(e.target.value)}
+                />
+              </div>
+            </div>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <Button disabled={isLoading}>
+                {isLoading && (
+                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
+                )}
+                Crear Assignatura
+              </Button>
+            </AlertDialogFooter>
+          </form>
+        </AlertDialogContent>
+      </AlertDialog>
     </>
-
-
   )
 }

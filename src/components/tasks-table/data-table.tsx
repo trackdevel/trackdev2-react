@@ -31,6 +31,7 @@ import {TasksAgileView} from "./agile-view";
 import {Tabs,TabsContent,TabsList, TabsTrigger} from "../../registry/ui/tabs";
 import {Icons} from "../ui/icons";
 import {Textarea} from "../../registry/ui/textarea";
+import {TasksAgileViewDND} from "./agile-view-dnd";
 
 
 interface DataTableProps<TData, TValue> {
@@ -94,8 +95,11 @@ export function DataTable<TData, TValue>({
         <TabsContent value="information" className="mt-0 border-0 p-0">
           <TasksListView table={table} />
         </TabsContent>
-        <TabsContent value="history" className="mt-0 border-0 p-0">
+        {/*<TabsContent value="history" className="mt-0 border-0 p-0">
           <TasksAgileView table={table} />
+        </TabsContent>*/}
+        <TabsContent value="history" className="mt-0 border-0 p-0">
+          <TasksAgileViewDND table={table} />
         </TabsContent>
       </Tabs>
       <DataTablePagination table={table} />

@@ -35,33 +35,32 @@ const columns: ColumnDef<Task>[] = [
   //  enableSorting: false,
   //  enableHiding: false,
   //},
-  {
-    accessorKey: "id",
-    header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Tasca" />
-    ),
-    cell: ({ row }) => {
-      const to = `/project/project_slug/${row.getValue("id")}`
-
-      return (
-        <div className="w-[80px]">
-          <Link to={to} >
-            {row.getValue("id")}
-          </Link>
-        </div>
-      )
-    },
-    enableSorting: false,
-    enableHiding: false,
-  },
+  //{
+  //  accessorKey: "id",
+  //  header: ({ column }) => (
+  //    <DataTableColumnHeader column={column} title="Tasca" />
+  //  ),
+  //  cell: ({ row }) => {
+  //    const to = `/project/project_slug/${row.getValue("id")}`
+//
+  //    return (
+  //      <div className="w-[80px]">
+  //        <Link to={to} >
+  //          {row.getValue("id")}
+  //        </Link>
+  //      </div>
+  //    )
+  //  },
+  //  enableSorting: false,
+  //  enableHiding: false,
+  //},
   {
     accessorKey: "title",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Títol" />
     ),
     cell: ({ row }) => {
-      const label = labels.find((label) => label.value === row.original.label)
-      const to = `/project/project_slug/${row.getValue("id")}`
+      const to = `/project/project_slug/${row?.original?.id}`
       const name = row?.original?.name ? row?.original?.name : ''
 
       return (
@@ -85,8 +84,6 @@ const columns: ColumnDef<Task>[] = [
       const status = statuses.find(
         (status) => status.value === row.getValue("status")
       )
-
-      console.log(row.getValue('status'))
 
       if (!status) {
         return null

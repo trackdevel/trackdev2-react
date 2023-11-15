@@ -33,13 +33,10 @@ export default function SettingsUsersPage() {
 
     if(tasks.length === 0 && !istasksloaded) {
         getUsers()
-        console.log('tasks',tasks)
     }
     async function getUsers() {
         setIsTasksLoaded(true)
         Api.get('/users').then((res) => {
-            console.log('res',res)
-            console.log('parsed res',z.array(userSchema).parse(res))
             setTasks(z.array(userSchema).parse(res))
         }).catch((err) => {})
         return;
@@ -69,7 +66,6 @@ export default function SettingsUsersPage() {
             toogleState()
         }).catch((err) => {
             setIsLoading(false)
-            console.log(err);
         })
     }
 

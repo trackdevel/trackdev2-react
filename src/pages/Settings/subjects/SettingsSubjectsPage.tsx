@@ -72,16 +72,16 @@ export default function SettingsSubjectsPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Subjects</h3>
+                    <h3 className="text-lg font-medium">Assignatures</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update subjects list settings
+                        Gestionar les assignatures
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4"/>
-                            Add Subject
+                            Nova Assignatura
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -92,7 +92,7 @@ export default function SettingsSubjectsPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onCreate}>
                             <DialogHeader>
-                                <DialogTitle>Add Subject</DialogTitle>
+                                <DialogTitle>Nova Assignatura</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
@@ -123,7 +123,7 @@ export default function SettingsSubjectsPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                                     )}
-                                    Import Subject
+                                    Crear Assignatura
                                 </Button>
                             </DialogFooter>
                         </form>

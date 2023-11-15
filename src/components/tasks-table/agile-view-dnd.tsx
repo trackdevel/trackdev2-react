@@ -11,7 +11,7 @@ interface DataTableProps<TData> {
   table: TableLayout<TData>
 }
 
-export function TasksAgileView<TData, TValue>({ table }: DataTableProps<TData>) {
+export function TasksAgileViewDND<TData, TValue>({ table }: DataTableProps<TData>) {
 
   /*
   table.getRowModel().rows.map((row) => (

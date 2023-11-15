@@ -3,7 +3,7 @@ import './App.css';
 import {
     createBrowserRouter,
     createRoutesFromElements,
-    Route, RouterProvider, useNavigate
+    Route, RouterProvider
 } from 'react-router-dom';
 import Dashboard from "./pages/Dashboard/Dashboard";
 import Project from "./pages/Project/Project";
@@ -13,15 +13,11 @@ import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Auth/Login";
 import Register from "./pages/Auth/Register";
 import SettingsLayout from "./pages/Settings/SettingsLayout";
-import SettingsAccountPage from "./pages/Settings/accout/SettingsAccountPage";
-import {ProfileForm} from "./pages/Settings/profile/ProfileForm";
 import SettingsProfilePage from "./pages/Settings/profile/SettingsProfilePage";
 import SettingsUsersPage from "./pages/Settings/users/SettingsUsersPage";
 import SettingsProjectsPage from "./pages/Settings/projects/SettingsProjectsPage";
 import SettingsSubjectsPage from "./pages/Settings/subjects/SettingsSubjectsPage";
 import SettingsCoursesPage from "./pages/Settings/crouses/SettingsCoursesPage";
-import Api from "./utils/Api";
-import {cookies} from "next/headers";
 import AuthGuard from "./guards/AuthGuard";
 import Password from "./pages/Auth/Password";
 
@@ -37,7 +33,6 @@ export function App() {
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
                         <Route path="/settings/profile" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
-                        <Route path="/settings/account" element={<AuthGuard component={<SettingsAccountPage/>}/>}/>
                         <Route path="/settings/users" element={<AuthGuard component={<SettingsUsersPage/>}/>}/>
                         <Route path="/settings/projects" element={<AuthGuard component={<SettingsProjectsPage/>}/>}/>
                         <Route path="/settings/subjects" element={<AuthGuard component={<SettingsSubjectsPage/>}/>}/>
