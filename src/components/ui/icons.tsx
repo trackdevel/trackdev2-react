@@ -22,6 +22,9 @@ import {
     User,
     X,
     History,
+    FolderKanban,
+    Table,
+    List,
     type Icon as LucideIcon, Info, MessagesSquare, Megaphone,
 } from "lucide-react"
 
@@ -53,6 +56,9 @@ export const Icons = {
     messagesSquare: MessagesSquare,
     Megaphone: Megaphone,
     History: History,
+    FolderKanban: FolderKanban,
+    Table: Table,
+    List: List,
     gitHub: (props: LucideProps) => (
         <svg viewBox="0 0 438.549 438.549" {...props}>
 <path

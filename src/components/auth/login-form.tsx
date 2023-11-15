@@ -7,24 +7,36 @@ import { Button } from "../../registry/ui/button"
 import { Input } from "../../registry/ui/input"
 import { Label } from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
+import Api from "../../utils/Api";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function LoginForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
+    const [username,setUsername] = React.useState<string>('')
+    const [password,setPassword] = React.useState<string>('')
     const navigate = useNavigate();
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
 
-        setTimeout(() => {
+        if(username === '' || password === '') {
+            return;
+        }
+
+        var requestBody = {
+            username: username,
+            password: password
+        }
+
+        Api.post('/auth/login',requestBody).then((res) => {
+            localStorage.setItem('userdata',JSON.stringify(res.userdata))
             setIsLoading(false)
-
-            // logica de login
-
             navigate('/');
-        }, 3000)
+        }).catch((err) => {
+            setIsLoading(false)
+        })
     }
 
     return (
@@ -36,13 +48,14 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                             Email
                         </Label>
                         <Input
-                            id="email"
-                            placeholder="name@example.com"
-                            type="email"
+                            id="username"
+                            placeholder="u1234567"
+                            type="text"
                             autoCapitalize="none"
-                            autoComplete="email"
+                            autoComplete="username"
                             autoCorrect="off"
                             disabled={isLoading}
+                            onChange={(e) => setUsername(e.target.value)}
                         />
                         <Input
                             id="password"
@@ -52,6 +65,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                             autoComplete="current-password"
                             autoCorrect="off"
                             disabled={isLoading}
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                     </div>
                     <Button disabled={isLoading}>
@@ -67,9 +81,9 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                     <span className="w-full border-t" />
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
-          <span className="bg-background px-2 text-muted-foreground">
-            Or continue with
-          </span>
+                    <span className="bg-background px-2 text-muted-foreground">
+                        Or continue with
+                    </span>
                 </div>
             </div>
             <Button variant="outline" type="button" disabled={isLoading}>
@@ -88,7 +102,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                 )}{" "}
                 Google
             </Button>
-
         </div>
     )
 }

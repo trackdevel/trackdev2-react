@@ -5,7 +5,6 @@ import { ColumnDef } from "@tanstack/react-table"
 import { Badge } from "../../registry/ui/badge"
 import { Checkbox } from "../../registry/ui/checkbox"
 
-import { groups, roles, created } from "../data/users/data"
 import { UserListItem } from "../data/users/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
@@ -42,15 +41,30 @@ const columns: ColumnDef<UserListItem>[] = [
     enableHiding: false,
   },*/
   {
-    accessorKey: "name",
+    accessorKey: "nicename",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+        <DataTableColumnHeader column={column} title="Name" />
+    ),
+    cell: ({ row }) => {
+      return (
+          <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("nicename")}
+          </span>
+          </div>
+      )
+    },
+  },
+  {
+    accessorKey: "username",
+    header: ({ column }) => (
+      <DataTableColumnHeader column={column} title="Username" />
     ),
     cell: ({ row }) => {
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            {row.getValue("name")}
+            {row.getValue("username")}
           </span>
         </div>
       )
@@ -72,75 +86,58 @@ const columns: ColumnDef<UserListItem>[] = [
     },
   },
   {
-    accessorKey: "group",
+    accessorKey: "roles",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Group" />
+        <DataTableColumnHeader column={column} title="Roles" />
     ),
     cell: ({ row }) => {
-      const group = groups.find(
-          (group) => group.value === row.getValue("group")
-      )
-
-      if (!group) {
-        return null
+      let roles:any = row.getValue("roles")
+      let rolesString = ""
+      for (let i = 0; i < roles.length; i++) {
+          rolesString += roles[i]
+          if (i < roles.length - 1) rolesString += ", "
       }
-
       return (
-          <div className="flex w-[100px] items-center">
-            <span>{group.label}</span>
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+            {rolesString}
+          </span>
           </div>
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   {
-    accessorKey: "role",
+    accessorKey: "enabled",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Role" />
+        <DataTableColumnHeader column={column} title="Enabled" />
     ),
     cell: ({ row }) => {
-      const role = roles.find(
-          (role) => role.value === row.getValue("role")
-      )
-
-      if (!role) {
-        return null
-      }
-
       return (
-          <div className="flex w-[100px] items-center">
-            <span>{role.label}</span>
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+            {
+              (row.getValue("enabled") == true) ? <Badge color="green">Enabled</Badge> : <Badge color="red">Disabled</Badge>
+            }
+          </span>
           </div>
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   {
-    accessorKey: "created",
+    accessorKey: "changePassword",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Created" />
+        <DataTableColumnHeader column={column} title="Change Password" />
     ),
     cell: ({ row }) => {
-      const created_ = created.find(
-          (created_) => created_.value === row.getValue("created")
-      )
-
-      if (!created_) {
-        return null
-      }
-
       return (
-          <div className="flex w-[100px] items-center">
-            <span>{created_.label}</span>
+          <div className="flex space-x-2">
+            <span className="max-w-[500px] truncate font-medium">
+            {
+              (row.getValue("changePassword") == true) ? <Badge color="green">Enabled</Badge> : <Badge color="red">Disabled</Badge>
+            }
+          </span>
           </div>
       )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
     },
   },
   {

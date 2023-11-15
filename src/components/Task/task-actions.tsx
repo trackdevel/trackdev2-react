@@ -40,7 +40,7 @@ export function TaskActions() {
                         className="text-red-600"
                     >
                         <Trash className="mr-2 h-4 w-4" />
-                        Delete preset
+                        Delete task
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>

@@ -8,14 +8,11 @@ const Task = () => {
 
     const { taskId } = useParams();
 
-    console.log(taskId)
-
     return (
         <div>
-            <TaskMainLayout />
+            <TaskMainLayout taskId={taskId}/>
         </div>
     )
-
 }
 
 export default Task;

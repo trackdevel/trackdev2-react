@@ -9,7 +9,7 @@ import { DataTableViewOptions } from "./data-table-view-options"
 
 import {created, groups, roles} from "../data/users/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
-import {courses} from "../data/groups/data";
+import {courses} from "../data/projects/data";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>

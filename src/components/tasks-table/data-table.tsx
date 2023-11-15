@@ -26,6 +26,12 @@ import {
 } from "../../registry/ui/table"
 import {DataTableToolbar} from "./data-table-toolbar";
 import {DataTablePagination} from "./data-table-pagination";
+import {TasksListView} from "./list-view";
+import {TasksAgileView} from "./agile-view";
+import {Tabs,TabsContent,TabsList, TabsTrigger} from "../../registry/ui/tabs";
+import {Icons} from "../ui/icons";
+import {Textarea} from "../../registry/ui/textarea";
+import {TasksAgileViewDND} from "./agile-view-dnd";
 
 
 interface DataTableProps<TData, TValue> {
@@ -37,6 +43,7 @@ export function DataTable<TData, TValue>({
   columns,
   data,
 }: DataTableProps<TData, TValue>) {
+  const [tab, setTab] = React.useState<string>('Information')
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] =
     React.useState<VisibilityState>({})
@@ -67,59 +74,34 @@ export function DataTable<TData, TValue>({
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
 
+
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
-      <div className="rounded-md border">
-        <Table>
-          <TableHeader>
-            {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
-                {headerGroup.headers.map((header) => {
-                  return (
-                    <TableHead key={header.id}>
-                      {header.isPlaceholder
-                        ? null
-                        : flexRender(
-                            header.column.columnDef.header,
-                            header.getContext()
-                          )}
-                    </TableHead>
-                  )
-                })}
-              </TableRow>
-            ))}
-          </TableHeader>
-          <TableBody>
-            {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
-                  key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
-                >
-                  {row.getVisibleCells().map((cell) => (
-                    <TableCell key={cell.id}>
-                      {flexRender(
-                        cell.column.columnDef.cell,
-                        cell.getContext()
-                      )}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              ))
-            ) : (
-              <TableRow>
-                <TableCell
-                  colSpan={columns.length}
-                  className="h-24 text-center"
-                >
-                  No results.
-                </TableCell>
-              </TableRow>
-            )}
-          </TableBody>
-        </Table>
-      </div>
+
+      <Tabs defaultValue="information" className="space-y-4" >
+        <div className="flex justify-between items-center items-center ">
+          <DataTableToolbar table={table} />
+          <TabsList className="grid grid-cols-2 w-max">
+            <TabsTrigger className="flex-1 space-x-4" value="information" onClick={() => setTab('Information')}>
+              <Icons.List className="h-5 w-5" />
+              <span>List</span>
+            </TabsTrigger>
+            <TabsTrigger className="flex-1 space-x-4" value="history" onClick={() => setTab('History')}>
+              <Icons.Table className="h-5 w-5" />
+              <span>Agile</span>
+            </TabsTrigger>
+          </TabsList>
+        </div>
+        <TabsContent value="information" className="mt-0 border-0 p-0">
+          <TasksListView table={table} />
+        </TabsContent>
+        {/*<TabsContent value="history" className="mt-0 border-0 p-0">
+          <TasksAgileView table={table} />
+        </TabsContent>*/}
+        <TabsContent value="history" className="mt-0 border-0 p-0">
+          <TasksAgileViewDND table={table} />
+        </TabsContent>
+      </Tabs>
       <DataTablePagination table={table} />
     </div>
   )

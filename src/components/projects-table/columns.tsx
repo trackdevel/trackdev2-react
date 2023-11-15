@@ -5,10 +5,13 @@ import { ColumnDef } from "@tanstack/react-table"
 import { UserListItem } from "../data/users/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
-import {courses} from "../data/groups/data";
-import {GroupListItem} from "../data/groups/schema";
+import {courses} from "../data/projects/data";
+import {ProjectListItem} from "../data/projects/schema";
+import React from "react";
+import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
+import {UsersSelect} from "./user-select";
 
-const columns: ColumnDef<GroupListItem>[] = [
+const columns: ColumnDef<ProjectListItem>[] = [
   /*{
     id: "select",
     header: ({ table }) => (
@@ -60,17 +63,12 @@ const columns: ColumnDef<GroupListItem>[] = [
         <DataTableColumnHeader column={column} title="Coruse" />
     ),
     cell: ({ row }) => {
-      const course = courses.find(
-          (course) => course.value === row.getValue("course")
-      )
-
-      if (!course) {
-        return null
-      }
-
       return (
           <div className="flex w-[100px] items-center">
-            <span>{course.label}</span>
+            <span>{
+              // @ts-ignore
+              row.getValue("course").subject.name
+            }</span>
           </div>
       )
     },
@@ -84,19 +82,26 @@ const columns: ColumnDef<GroupListItem>[] = [
         <DataTableColumnHeader column={column} title="Users" />
     ),
     cell: ({ row }) => {
-      const users = row.getValue("users") as UserListItem[]
+      const users = row?.original?.members
+      console.log('users',users)
 
-      if (!users) {
+      if (!users || !users.length) {
           return null
       }
 
-      const usersString = users.map((user) => user.name).join(", ")
-      console.log('USERS',usersString)
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
-            {usersString}
-          </span>
+          <div className="flex -space-x-2 overflow-hidden">
+            {users.map((user: UserListItem) => (
+                <Avatar
+                    key={user.username}
+                    className="inline-block border-2 border-background"
+                >
+                  <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                </Avatar>
+            ))}
+            <UsersSelect row={row} users={users}/>
+          </div>
         </div>
       )
     },

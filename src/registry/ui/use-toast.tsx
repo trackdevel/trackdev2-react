@@ -143,6 +143,7 @@ type Toast = Omit<ToasterToast, "id">
 function toast({ ...props }: Toast) {
     const id = genId()
 
+    console.log("toast", id, props)
     const update = (props: ToasterToast) =>
         dispatch({
             type: "UPDATE_TOAST",
@@ -172,8 +173,10 @@ function toast({ ...props }: Toast) {
 function useToast() {
     const [state, setState] = React.useState<State>(memoryState)
 
+
     React.useEffect(() => {
         listeners.push(setState)
+
         return () => {
             const index = listeners.indexOf(setState)
             if (index > -1) {

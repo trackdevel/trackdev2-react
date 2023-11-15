@@ -16,9 +16,12 @@ import {
 import { Input } from "../../../registry/ui/input"
 import { Textarea } from "../../../registry/ui/textarea"
 import { toast } from "../../../registry/ui/use-toast"
+import Api from "../../../utils/Api";
+import React from "react";
+import {subjectSchema} from "../../../components/data/subjects/schema";
 
 const profileFormSchema = z.object({
-    username: z
+    nicename: z
         .string()
         .min(2, {
             message: "Username must be at least 2 characters.",
@@ -31,14 +34,24 @@ const profileFormSchema = z.object({
             required_error: "Please select an email to display.",
         })
         .email(),
-    bio: z.string().max(160).min(4),
-    urls: z
-        .array(
-            z.object({
-                value: z.string().url({ message: "Please enter a valid URL." }),
-            })
-        )
-        .optional(),
+    capitalLetters: z
+        .string()
+        .min(2, {
+            message: "Must be 2 characters.",
+        })
+        .max(2, {
+            message: "Must be 2 characters.",
+        }),
+    githubToken: z
+        .string(),
+    color: z
+        .string()
+        .min(7, {
+            message: "Must be 7 characters.",
+        })
+        .max(7, {
+            message: "Must be 7 characters.",
+        }),
 })
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>
@@ -50,12 +63,39 @@ export function ProfileForm() {
         mode: "onChange",
     })
 
-    const { fields, append } = useFieldArray({
-        name: "urls",
-        control: form.control,
-    })
+    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
+
+    if(!istasksloaded) {
+        getUserData()
+    }
+    async function getUserData() {
+        setIsTasksLoaded(true)
+        Api.get('/auth/self').then((res) => {
+            console.log(res)
+            form.setValue("nicename", res.nicename)
+            form.setValue("email", res.email)
+            form.setValue("capitalLetters", res.capitalLetters)
+            form.setValue("githubToken", res.githubToken)
+            form.setValue("color", res.color)
+        }).catch((err) => {})
+        return;
+    }
 
     function onSubmit(data: ProfileFormValues) {
+        console.log(data)
+
+        var requestBody = {
+            nicename: data.nicename,
+            email: data.email
+        }
+
+        Api.patch('/users', requestBody).then((res) => {
+            console.log(res)
+        }).catch((err) => {
+            console.log(err)
+        })
+
+
         toast({
             title: "You submitted the following values:",
             description: (
@@ -69,44 +109,46 @@ export function ProfileForm() {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField
-                    control={form.control}
-                    name="username"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Username</FormLabel>
-                            <FormControl>
-                                <Input placeholder="qu1tus" {...field} />
-                            </FormControl>
-                            <FormDescription>
-                                This is your public display name. It can be your real name or a
-                                pseudonym. You can only change this once every 30 days.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="bio"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Bio</FormLabel>
-                            <FormControl>
-                                <Textarea
-                                    placeholder="Tell us a little bit about yourself"
-                                    className="resize-none"
-                                    {...field}
-                                />
-                            </FormControl>
-                            <FormDescription>
-                                You can <span>@mention</span> other users and organizations to
-                                link to them.
-                            </FormDescription>
-                            <FormMessage />
-                        </FormItem>
-                    )}
-                />
+                <FormField control={form.control} name="nicename" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Nicename</FormLabel>
+                        <FormControl><Input placeholder="nicename" {...field} /></FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )}/>
+                <FormField control={form.control} name="email" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Correu Electronic</FormLabel>
+                        <FormControl><Input placeholder="email@domain.com" {...field} /></FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )} />
+                <FormField control={form.control} name="capitalLetters" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Acronym</FormLabel>
+                        <FormControl><Input placeholder="NC" {...field} /></FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )} />
+                <FormField control={form.control} name="githubToken" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Github Token</FormLabel>
+                        <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )} />
+                <FormField control={form.control} name="color" render={({ field }) => (
+                    <FormItem>
+                        <FormLabel>Color</FormLabel>
+                        <FormControl><Input type="color" placeholder="#000000" {...field} /></FormControl>
+                        <FormDescription></FormDescription>
+                        <FormMessage />
+                    </FormItem>
+                )} />
                 <Button type="submit">Update profile</Button>
             </form>
         </Form>

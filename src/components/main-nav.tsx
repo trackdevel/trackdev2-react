@@ -10,11 +10,8 @@ export function MainNav() {
             <Link to="/" className="text-sm font-medium transition-colors hover:text-primary" >
                 Home
             </Link>
-            <Link to="/agile" className="text-sm font-medium transition-colors hover:text-primary" >
-                Agile
-            </Link>
-            <Link to="/task/15" className="text-sm font-medium transition-colors hover:text-primary" >
-                Task
+            <Link to="/project/1" className="text-sm font-medium transition-colors hover:text-primary" >
+                Project
             </Link>
             <Link to="/settings" className="text-sm font-medium transition-colors hover:text-primary" >
                 Settings

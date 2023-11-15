@@ -24,46 +24,27 @@ import {
   TableHeader,
   TableRow,
 } from "../../registry/ui/table"
-import {DataTableToolbar} from "./data-table-toolbar";
 import {DataTablePagination} from "./data-table-pagination";
 
+import { Table as TableLayout} from "@tanstack/react-table"
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[]
-  data: TData[]
+
+interface DataTableProps<TData> {
+  table: TableLayout<TData>
 }
 
-export function GroupsTable<TData, TValue>({columns,data,}: DataTableProps<TData, TValue>) {
-
+export function TasksListView<TData, TValue>({ table }: DataTableProps<TData>) {
   const [rowSelection, setRowSelection] = React.useState({})
-  const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
+  const [columnVisibility, setColumnVisibility] =
+    React.useState<VisibilityState>({})
+  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
+    []
+  )
   const [sorting, setSorting] = React.useState<SortingState>([])
-  const table = useReactTable({
-    data,
-    columns,
-    state: {
-      sorting,
-      columnVisibility,
-      rowSelection,
-      columnFilters,
-    },
-    enableRowSelection: true,
-    onRowSelectionChange: setRowSelection,
-    onSortingChange: setSorting,
-    onColumnFiltersChange: setColumnFilters,
-    onColumnVisibilityChange: setColumnVisibility,
-    getCoreRowModel: getCoreRowModel(),
-    getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
-    getSortedRowModel: getSortedRowModel(),
-    getFacetedRowModel: getFacetedRowModel(),
-    getFacetedUniqueValues: getFacetedUniqueValues(),
-  })
+
 
   return (
-    <div className="space-y-4">
-      <DataTableToolbar table={table} />
+    <>
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -104,7 +85,7 @@ export function GroupsTable<TData, TValue>({columns,data,}: DataTableProps<TData
             ) : (
               <TableRow>
                 <TableCell
-                  colSpan={columns.length}
+                  colSpan={table.getHeaderGroups().length}
                   className="h-24 text-center"
                 >
                   No results.
@@ -114,7 +95,6 @@ export function GroupsTable<TData, TValue>({columns,data,}: DataTableProps<TData
           </TableBody>
         </Table>
       </div>
-      <DataTablePagination table={table} />
-    </div>
+    </>
   )
 }
