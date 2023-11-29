@@ -74,7 +74,6 @@ export default function SettingsProjectsPage() {
     async function getProjects() {
         setProjectsloaded(true)
         Api.get('/projects').then((res) => {
-            console.log('res',res)
             setProjects(z.array(projectSchema).parse(res))
         }).catch((err) => {})
         return;

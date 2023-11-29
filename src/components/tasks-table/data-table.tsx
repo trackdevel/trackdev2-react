@@ -95,12 +95,12 @@ export function DataTable<TData, TValue>({
         <TabsContent value="information" className="mt-0 border-0 p-0">
           <TasksListView table={table} />
         </TabsContent>
-        {/*<TabsContent value="history" className="mt-0 border-0 p-0">
-          <TasksAgileView table={table} />
-        </TabsContent>*/}
         <TabsContent value="history" className="mt-0 border-0 p-0">
-          <TasksAgileViewDND table={table} />
+          <TasksAgileView table={table} />
         </TabsContent>
+        {/*<TabsContent value="history" className="mt-0 border-0 p-0">
+          <TasksAgileViewDND table={table} />
+        </TabsContent>*/}
       </Tabs>
       <DataTablePagination table={table} />
     </div>

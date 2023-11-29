@@ -26,7 +26,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         }
 
         var requestBody = {
-            username: username,
+            email: username,
             password: password
         }
 

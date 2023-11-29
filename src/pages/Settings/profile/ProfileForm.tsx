@@ -19,9 +19,11 @@ import { toast } from "../../../registry/ui/use-toast"
 import Api from "../../../utils/Api";
 import React from "react";
 import {subjectSchema} from "../../../components/data/subjects/schema";
+import {Link} from "react-router-dom";
+import {ExternalLink, User} from "lucide-react";
 
 const profileFormSchema = z.object({
-    nicename: z
+    username: z
         .string()
         .min(2, {
             message: "Username must be at least 2 characters.",
@@ -72,10 +74,10 @@ export function ProfileForm() {
         setIsTasksLoaded(true)
         Api.get('/auth/self').then((res) => {
             console.log(res)
-            form.setValue("nicename", res.nicename)
+            form.setValue("username", res.username)
             form.setValue("email", res.email)
             form.setValue("capitalLetters", res.capitalLetters)
-            form.setValue("githubToken", res.githubToken)
+            form.setValue("githubToken", res.githubInfo.github_token)
             form.setValue("color", res.color)
         }).catch((err) => {})
         return;
@@ -85,12 +87,17 @@ export function ProfileForm() {
         console.log(data)
 
         var requestBody = {
-            nicename: data.nicename,
-            email: data.email
+            username: data.username,
+            capitalLetters: data.capitalLetters,
+            githubToken: data.githubToken,
+            color: data.color
         }
+
+        console.log('requestBody',requestBody)
 
         Api.patch('/users', requestBody).then((res) => {
             console.log(res)
+            window.location.reload();
         }).catch((err) => {
             console.log(err)
         })
@@ -109,10 +116,10 @@ export function ProfileForm() {
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField control={form.control} name="nicename" render={({ field }) => (
+                <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Nicename</FormLabel>
-                        <FormControl><Input placeholder="nicename" {...field} /></FormControl>
+                        <FormLabel>Username</FormLabel>
+                        <FormControl><Input placeholder="username" {...field} /></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -120,7 +127,7 @@ export function ProfileForm() {
                 <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Correu Electronic</FormLabel>
-                        <FormControl><Input placeholder="email@domain.com" {...field} /></FormControl>
+                        <FormControl><Input placeholder="email@domain.com" {...field}  disabled={true}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -128,7 +135,7 @@ export function ProfileForm() {
                 <FormField control={form.control} name="capitalLetters" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Acronym</FormLabel>
-                        <FormControl><Input placeholder="NC" {...field} /></FormControl>
+                        <FormControl><Input placeholder="NC" {...field}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -137,7 +144,12 @@ export function ProfileForm() {
                     <FormItem>
                         <FormLabel>Github Token</FormLabel>
                         <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
-                        <FormDescription></FormDescription>
+                        <FormDescription className="flex items-center">
+                            <ExternalLink className="mr-2 h-4 w-4" />
+                            <Link to="https://github.com/settings/tokens/new?description=TrackDev%20GitHub%20integration&scopes=repo%2Cgist%2Cread%3Aorg%2Cworkflow" target="_blank" >
+                                Generar Token
+                            </Link>
+                        </FormDescription>
                         <FormMessage />
                     </FormItem>
                 )} />
@@ -149,7 +161,7 @@ export function ProfileForm() {
                         <FormMessage />
                     </FormItem>
                 )} />
-                <Button type="submit">Update profile</Button>
+                <Button type="submit">Actualitzar</Button>
             </form>
         </Form>
     )

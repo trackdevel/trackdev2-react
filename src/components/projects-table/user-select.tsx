@@ -9,9 +9,6 @@ import {
     DialogHeader,
     DialogTitle
 } from "../../registry/ui/dialog";
-
-
-import {Card, CardHeader} from "../../registry/ui/card";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../registry/ui/tooltip";
 import {
     Command,
@@ -22,20 +19,16 @@ import {
     CommandList
 } from "../../registry/ui/command";
 import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
+import Api from "../../utils/Api";
+import {z} from "zod";
+import {userSchema} from "../data/users/schema";
 
 
 
 export function UsersSelect(props: any) {
 
     var users = props.users
-    const users_new = props.users
-    // array merge users and users_new as a new array
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
+
 
 
     const groupId = props.row.original.id
@@ -43,7 +36,26 @@ export function UsersSelect(props: any) {
     type User = (typeof users)[number]
 
     const [open, setOpen] = React.useState(false)
-    const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+    const [selectedUsers, setSelectedUsers] = React.useState<User[]>(users)
+    const [activeUsers, setActiveUsers] = React.useState<User[]>([])
+    const [isusersloaded, setIsUsersLoaded] = React.useState<boolean>(false)
+
+    if(activeUsers.length === 0 && !isusersloaded) {
+        getUsers()
+    }
+    else {
+        console.log('activeUsers',activeUsers)
+        console.log('users',users)
+    }
+    async function getUsers() {
+        setIsUsersLoaded(true)
+        Api.get('/users').then((res) => {
+            setActiveUsers(z.array(userSchema).parse(res))
+        }).catch((err) => {})
+        return;
+    }
+
+
 
     return (
         <>
@@ -77,7 +89,7 @@ export function UsersSelect(props: any) {
                         <CommandList>
                             <CommandEmpty>No users found.</CommandEmpty>
                             <CommandGroup className="p-2">
-                                {users.map((user: { email: any; avatar: any; username: any; }) => (
+                                {activeUsers.map((user: { email: any; avatar: any; username: any; }) => (
                                     <CommandItem
                                         key={user.email}
                                         className="flex items-center px-2"
@@ -91,7 +103,7 @@ export function UsersSelect(props: any) {
                                             }
 
                                             return setSelectedUsers(
-                                                [...users].filter((u) =>
+                                                [...activeUsers].filter((u) =>
                                                     [...selectedUsers, user].includes(u)
                                                 )
                                             )
