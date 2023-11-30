@@ -10,7 +10,7 @@ const columns: ColumnDef<CourseListItem>[] = [
   {
     accessorKey: "subject",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Subject" />
+      <DataTableColumnHeader column={column} title="Assignatura" />
     ),
     cell: ({ row }) => {
       return (
@@ -25,7 +25,7 @@ const columns: ColumnDef<CourseListItem>[] = [
   {
     accessorKey: "startYear",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Start Year" />
+        <DataTableColumnHeader column={column} title="Any d'inici" />
     ),
     cell: ({ row }) => {
       return (

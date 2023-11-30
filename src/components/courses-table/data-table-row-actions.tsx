@@ -64,34 +64,33 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Edit
+            Editar
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={() => setShowDeleteDialog(true)}>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Delete
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This preset will no longer be
-              accessible by you or others you&apos;ve shared it with.
+                Aquesta acció no es pot desfer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel>Canceler</AlertDialogCancel>
             <Button
                 variant="destructive"
                 onClick={() => {
                   deleteRow()
                 }}
             >
-              Delete
+              Eliminar
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>

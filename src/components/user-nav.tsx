@@ -22,7 +22,7 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "../registry/ui/dropdown-menu"
-import {AvatarFallback} from "../registry/ui/avatar";
+import {AvatarFallback, AvatarImage} from "../registry/ui/avatar";
 import {Avatar} from "@radix-ui/react-avatar";
 import React, {useState} from "react";
 import Api from "../utils/Api";
@@ -34,14 +34,16 @@ export function UserNav() {
     const [currentUserEmail, setCurrentUserEmail] = React.useState<string>('1')
     const [currentUserColor, setCurrentUserColor] = React.useState<string>('1')
     const [currentUserloaded, setCurrentUserloaded] = React.useState<boolean>(false)
+    const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
+
+    const [githubData, setGithubData] = React.useState<any>([])
 
 
     if(!currentUserloaded) {
         getUserData()
     }
     else {
-        console.log('currentUser',currentUser)
-        console.log('currentUserCappitalLetters',currentUserCappitalLetters)
+        console.log('githubData', githubData)
     }
     async function getUserData() {
         setCurrentUserloaded(true)
@@ -51,6 +53,24 @@ export function UserNav() {
             setCurrentUserCappitalLetter(res.capitalLetters)
             setCurrentUserEmail(res.email)
             setCurrentUserColor(res.color)
+            if( res.githubInfo.github_token != '' ) {
+                setGithubData(res.githubInfo)
+            }
+        }).catch((err) => {})
+
+        Api.get('/users/checker/admin').then((res) => {
+            setIsAdmin(true)
+        }).catch((err) => {
+            setIsAdmin(false)
+        })
+        return;
+    }
+
+    async function logout() {
+        Api.post('/auth/logout', {}).then((res) => {
+            console.log(res)
+            localStorage.removeItem('userdata')
+            window.location.href = '/auth/login'
         }).catch((err) => {})
         return;
     }
@@ -58,11 +78,19 @@ export function UserNav() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundColor: currentUserColor}}>
-                    <Avatar className="h-8 w-8">
-                        <AvatarFallback  style={{backgroundColor: currentUserColor}}>{currentUserCappitalLetters}</AvatarFallback>
-                    </Avatar>
-                </Button>
+                { ( githubData != '' ) ? (
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundImage: 'url(' + githubData.avatar_url + ') center center no-repeat', backgroundSize: 'cover'}}>
+                        <Avatar className="h-8 w-8">
+                            <AvatarImage src={githubData.avatar_url} alt="Avatar" />
+                        </Avatar>
+                    </Button>
+                ) : (
+                    <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundColor: currentUserColor}}>
+                        <Avatar className="h-8 w-8">
+                            <AvatarFallback  style={{backgroundColor: currentUserColor}}>{currentUserCappitalLetters}</AvatarFallback>
+                        </Avatar>
+                    </Button>
+                )}
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">
@@ -84,45 +112,55 @@ export function UserNav() {
                         </span>
                         <DropdownMenuShortcut></DropdownMenuShortcut>
                     </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <Users2 className="mr-2 h-4 w-4" />
-                        <span>
-                            <Link to="/settings/users" >
-                                Usuaris
-                            </Link>
-                        </span>
-                        <DropdownMenuShortcut></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <FolderKanban className="mr-2 h-4 w-4" />
-                        <span>
-                            <Link to="/settings/projects" >
-                                Projectes
-                            </Link>
-                        </span>
-                        <DropdownMenuShortcut></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <BookMarkedIcon className="mr-2 h-4 w-4" />
-                        <span>
-                            <Link to="/settings/courses" >
-                                Cursos
-                            </Link>
-                        </span>
-                        <DropdownMenuShortcut></DropdownMenuShortcut>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
-                        <GraduationCapIcon className="mr-2 h-4 w-4" />
-                        <span>
-                            <Link to="/settings/subjects" >
-                                Assignatures
-                            </Link>
-                        </span>
-                        <DropdownMenuShortcut></DropdownMenuShortcut>
-                    </DropdownMenuItem>
+                    { isAdmin ? (
+                        <DropdownMenuItem>
+                            <Users2 className="mr-2 h-4 w-4" />
+                            <span>
+                                <Link to="/settings/users" >
+                                    Usuaris
+                                </Link>
+                            </span>
+                            <DropdownMenuShortcut></DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    ) : null }
+                    { isAdmin ? (
+                        <DropdownMenuItem>
+                            <FolderKanban className="mr-2 h-4 w-4" />
+                            <span>
+                                <Link to="/settings/projects" >
+                                    Projectes
+                                </Link>
+                            </span>
+                            <DropdownMenuShortcut></DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    ) : null }
+                    { isAdmin ? (
+                        <DropdownMenuItem>
+                            <BookMarkedIcon className="mr-2 h-4 w-4" />
+                            <span>
+                                <Link to="/settings/courses" >
+                                    Cursos
+                                </Link>
+                            </span>
+                            <DropdownMenuShortcut></DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    ) : null }
+                    { isAdmin ? (
+                        <DropdownMenuItem>
+                            <GraduationCapIcon className="mr-2 h-4 w-4" />
+                            <span>
+                                <Link to="/settings/subjects" >
+                                    Assignatures
+                                </Link>
+                            </span>
+                            <DropdownMenuShortcut></DropdownMenuShortcut>
+                        </DropdownMenuItem>
+                    ) : null }
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
-                <DropdownMenuItem>
+                <DropdownMenuItem
+                    onClick={() => logout()}
+                >
                     <LogOut className="mr-2 h-4 w-4" />
                     <span>Tancar Sessió</span>
                     <DropdownMenuShortcut></DropdownMenuShortcut>

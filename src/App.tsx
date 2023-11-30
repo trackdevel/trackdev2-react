@@ -20,6 +20,7 @@ import SettingsSubjectsPage from "./pages/Settings/subjects/SettingsSubjectsPage
 import SettingsCoursesPage from "./pages/Settings/crouses/SettingsCoursesPage";
 import AuthGuard from "./guards/AuthGuard";
 import Password from "./pages/Auth/Password";
+import AdminGuard from "./guards/AdminGuard";
 
 export function App() {
 
@@ -33,10 +34,10 @@ export function App() {
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
                         <Route path="/settings/profile" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
-                        <Route path="/settings/users" element={<AuthGuard component={<SettingsUsersPage/>}/>}/>
-                        <Route path="/settings/projects" element={<AuthGuard component={<SettingsProjectsPage/>}/>}/>
-                        <Route path="/settings/subjects" element={<AuthGuard component={<SettingsSubjectsPage/>}/>}/>
-                        <Route path="/settings/courses" element={<AuthGuard component={<SettingsCoursesPage/>}/>}/>
+                        <Route path="/settings/users" element={<AuthGuard component={<AdminGuard component={<SettingsUsersPage/>}/>}/>}/>
+                        <Route path="/settings/projects" element={<AuthGuard component={<AdminGuard component={<SettingsProjectsPage/>}/>}/>}/>
+                        <Route path="/settings/subjects" element={<AuthGuard component={<AdminGuard component={<SettingsSubjectsPage/>}/>}/>}/>
+                        <Route path="/settings/courses" element={<AuthGuard component={<AdminGuard component={<SettingsCoursesPage/>}/>}/>}/>
                     </Route>
                 </Route>
                 <Route path="/auth" element={<AuthLayout/>}>

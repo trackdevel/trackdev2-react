@@ -107,7 +107,7 @@ export function CrousesTable<TData, TValue>({columns,data,}: DataTableProps<TDat
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No s'ha trobat cap curs
                 </TableCell>
               </TableRow>
             )}

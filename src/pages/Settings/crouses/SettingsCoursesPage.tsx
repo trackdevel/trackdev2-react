@@ -119,14 +119,14 @@ export default function SettingsCoursesPage() {
                 <div>
                     <h3 className="text-lg font-medium">Courses</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update courses list settings
+                        Actualitza els cursos de les assignatures
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add Course
+                            Nou curs
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -136,7 +136,7 @@ export default function SettingsCoursesPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add Course</DialogTitle>
+                                <DialogTitle>Afegir nou curs</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
@@ -155,9 +155,9 @@ export default function SettingsCoursesPage() {
                                         </PopoverTrigger>
                                         <PopoverContent className="w-[300px] p-0">
                                             <Command>
-                                                <CommandInput placeholder="Search subject..." />
-                                                <CommandEmpty>No presets found.</CommandEmpty>
-                                                <CommandGroup heading="Subjects">
+                                                <CommandInput placeholder="Buscar assignatura..." />
+                                                <CommandEmpty>No s'ha trobat cap assignatura</CommandEmpty>
+                                                <CommandGroup heading="Assignatures">
                                                     {subjects.map((request) => (
                                                         <CommandItem key={request.id}
                                                                      onSelect={() => {
@@ -198,7 +198,7 @@ export default function SettingsCoursesPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Import User
+                                    Crear nou curs
                                 </Button>
                             </DialogFooter>
                         </form>

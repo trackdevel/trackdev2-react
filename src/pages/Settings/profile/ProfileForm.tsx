@@ -21,6 +21,7 @@ import React from "react";
 import {subjectSchema} from "../../../components/data/subjects/schema";
 import {Link} from "react-router-dom";
 import {ExternalLink, User} from "lucide-react";
+import {Avatar, AvatarFallback, AvatarImage} from "../../../registry/ui/avatar";
 
 const profileFormSchema = z.object({
     username: z
@@ -66,6 +67,7 @@ export function ProfileForm() {
     })
 
     const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
+    const [githubData, setGithubData] = React.useState<any>([])
 
     if(!istasksloaded) {
         getUserData()
@@ -73,18 +75,19 @@ export function ProfileForm() {
     async function getUserData() {
         setIsTasksLoaded(true)
         Api.get('/auth/self').then((res) => {
-            console.log(res)
             form.setValue("username", res.username)
             form.setValue("email", res.email)
             form.setValue("capitalLetters", res.capitalLetters)
             form.setValue("githubToken", res.githubInfo.github_token)
+            if( res.githubInfo.github_token != '' ) {
+                setGithubData(res.githubInfo)
+            }
             form.setValue("color", res.color)
         }).catch((err) => {})
         return;
     }
 
     function onSubmit(data: ProfileFormValues) {
-        console.log(data)
 
         var requestBody = {
             username: data.username,
@@ -93,14 +96,10 @@ export function ProfileForm() {
             color: data.color
         }
 
-        console.log('requestBody',requestBody)
 
         Api.patch('/users', requestBody).then((res) => {
-            console.log(res)
             window.location.reload();
-        }).catch((err) => {
-            console.log(err)
-        })
+        }).catch((err) => {})
 
 
         toast({
@@ -145,8 +144,23 @@ export function ProfileForm() {
                         <FormLabel>Github Token</FormLabel>
                         <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
                         <FormDescription className="flex items-center">
-                            <ExternalLink className="mr-2 h-4 w-4" />
-                            <Link to="https://github.com/settings/tokens/new?description=TrackDev%20GitHub%20integration&scopes=repo%2Cgist%2Cread%3Aorg%2Cworkflow" target="_blank" >
+                            { ( githubData != '' ) ? (
+                                <div className="flex items-center mr-10 mt-2">
+                                    <Link to={githubData.html_url} target="_blank" >
+                                        <Avatar className="h-9 w-9">
+                                            <AvatarImage src={githubData.avatar_url} alt="Avatar" />
+                                            <AvatarFallback>MG</AvatarFallback>
+                                        </Avatar>
+                                    </Link>
+                                    <Link to={githubData.html_url} target="_blank" >
+                                        <div className="ml-4 space-y-1">
+                                            <p className="text-sm font-medium leading-none">{githubData.login}</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ) : null }
+                            <ExternalLink className="mr-2 h-4 w-4 mt-2" />
+                            <Link to="https://github.com/settings/tokens/new?description=TrackDev%20GitHub%20integration&scopes=repo%2Cgist%2Cread%3Aorg%2Cworkflow" target="_blank" className="mt-2" >
                                 Generar Token
                             </Link>
                         </FormDescription>
