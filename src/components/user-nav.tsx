@@ -42,13 +42,9 @@ export function UserNav() {
     if(!currentUserloaded) {
         getUserData()
     }
-    else {
-        console.log('githubData', githubData)
-    }
     async function getUserData() {
         setCurrentUserloaded(true)
         Api.get('/auth/self').then((res) => {
-            console.log(res)
             setCurrentUser(res.username)
             setCurrentUserCappitalLetter(res.capitalLetters)
             setCurrentUserEmail(res.email)
@@ -68,7 +64,6 @@ export function UserNav() {
 
     async function logout() {
         Api.post('/auth/logout', {}).then((res) => {
-            console.log(res)
             localStorage.removeItem('userdata')
             window.location.href = '/auth/login'
         }).catch((err) => {})

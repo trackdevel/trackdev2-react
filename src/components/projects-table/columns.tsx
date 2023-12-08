@@ -73,7 +73,8 @@ const columns: ColumnDef<ProjectListItem>[] = [
       )
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      // @ts-ignore
+      return value.includes(row.getValue(id).subject.name)
     },
   },
   {
@@ -83,11 +84,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
     ),
     cell: ({ row }) => {
       const users = row?.original?.members
-      console.log('users',users)
 
-      if (!users || !users.length) {
-          return null
-      }
 
       return (
         <div className="flex space-x-2">

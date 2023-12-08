@@ -34,7 +34,6 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function UsersTable<TData, TValue>({columns,data,}: DataTableProps<TData, TValue>) {
-  console.log(columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])

@@ -34,18 +34,15 @@ export function DataTableRowActions<TData>({
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
 
   function deleteRow() {
-    console.log('row',row)
 
     // @ts-ignore
     Api.delete('/courses/' + row.original.id ).then((res) => {
-      console.log('res',res)
       setShowDeleteDialog(false)
       toast({
         description: "This preset has been deleted.",
       })
       window.location.reload()
     }).catch((err) => {
-      console.log('err',err)
     })
   }
 

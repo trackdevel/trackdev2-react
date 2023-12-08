@@ -68,9 +68,6 @@ export default function SettingsProjectsPage() {
     if(projects.length === 0 && !projectsloaded) {
         getProjects()
     }
-    else {
-        console.log('projects',projects)
-    }
     async function getProjects() {
         setProjectsloaded(true)
         Api.get('/projects').then((res) => {
@@ -121,17 +118,17 @@ export default function SettingsProjectsPage() {
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add Project
+                            Afegir Projecte
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogPrimitive.Close  onClick={toogleState} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                             <Cross2Icon className="h-4 w-4" />
-                            <span className="sr-only">Close</span>
+                            <span className="sr-only">Tancar</span>
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add Project</DialogTitle>
+                                <DialogTitle>Afegir Projecte</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">

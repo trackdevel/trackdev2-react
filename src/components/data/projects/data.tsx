@@ -2,11 +2,11 @@
 
 export const courses = [
   {
-    value: "pds22_23",
-    label: "PDS 22/23",
+    value: "PDS2024",
+    label: "PDS2024",
   },
   {
-    value: "pds23_24",
-    label: "PDS 23/24",
+    value: "PDS2023",
+    label: "PDS2023",
   },
 ]

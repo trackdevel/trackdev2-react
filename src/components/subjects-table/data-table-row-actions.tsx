@@ -47,18 +47,15 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
   function deleteRow() {
-    console.log('row',row)
 
     // @ts-ignore
     Api.delete('/subjects/' + row.original.id ).then((res) => {
-      console.log('res',res)
       setShowDeleteDialog(false)
       toast({
         description: "This preset has been deleted.",
       })
       window.location.reload()
     }).catch((err) => {
-      console.log('err',err)
     })
   }
 
@@ -68,7 +65,6 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       setName(res.name)
       setAcronym(res.acronym)
     }).catch((err) => {
-        console.log('err',err)
     })
   }
 

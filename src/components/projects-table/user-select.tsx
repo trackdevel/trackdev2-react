@@ -31,7 +31,7 @@ export function UsersSelect(props: any) {
 
 
 
-    const groupId = props.row.original.id
+    const projectId = props.row.original.id
 
     type User = (typeof users)[number]
 
@@ -43,16 +43,32 @@ export function UsersSelect(props: any) {
     if(activeUsers.length === 0 && !isusersloaded) {
         getUsers()
     }
-    else {
-        console.log('activeUsers',activeUsers)
-        console.log('users',users)
-    }
+    // else {
+    //     console.log(activeUsers)
+    //     console.log(selectedUsers)
+    // }
     async function getUsers() {
         setIsUsersLoaded(true)
         Api.get('/users').then((res) => {
             setActiveUsers(z.array(userSchema).parse(res))
         }).catch((err) => {})
         return;
+    }
+
+    async function setUsers() {
+        console.log(projectId)
+
+        let RequestBody = {
+            name: null,
+            members: selectedUsers.map((user) => user.email),
+            courseId: null
+        }
+
+        Api.patch('/projects/' + projectId, RequestBody).then((res) => {
+            console.log(res)
+            setOpen(false)
+            window.location.reload()
+        }).catch((err) => {})
     }
 
 
@@ -69,44 +85,39 @@ export function UsersSelect(props: any) {
                             onClick={() => setOpen(true)}
                         >
                             <PlusIcon className="h-4 w-4" />
-                            <span className="sr-only">New message</span>
+                            <span className="sr-only">Afegir Usuaris</span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent sideOffset={10}>New message</TooltipContent>
+                    <TooltipContent sideOffset={10}>Afegir Usuaris</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="gap-0 p-0 outline-none">
                     <DialogHeader className="px-4 pb-4 pt-5">
-                        <DialogTitle>New message</DialogTitle>
+                        <DialogTitle>Afegir Usuaris</DialogTitle>
                         <DialogDescription>
-                            Invite a user to this thread. This will create a new group
-                            message.
+                            Sel·lecciona els usuaris que vols afegir al projecte
                         </DialogDescription>
                     </DialogHeader>
                     <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
-                        <CommandInput placeholder="Search user..." />
+                        <CommandInput placeholder="Buscar usuaris..." />
                         <CommandList>
-                            <CommandEmpty>No users found.</CommandEmpty>
+                            <CommandEmpty>Cap usuari trobat.</CommandEmpty>
                             <CommandGroup className="p-2">
-                                {activeUsers.map((user: { email: any; avatar: any; username: any; }) => (
+                                {activeUsers.map((user: { id: any; email: any; avatar: any; username: any; }) => (
                                     <CommandItem
-                                        key={user.email}
+                                        key={user.id}
                                         className="flex items-center px-2"
                                         onSelect={() => {
-                                            if (selectedUsers.includes(user)) {
+                                            //if (selectedUsers.includes(user)) {
+                                            if( selectedUsers.find( ({ id }) => id === user.id ) !== undefined) {
                                                 return setSelectedUsers(
                                                     selectedUsers.filter(
-                                                        (selectedUser) => selectedUser !== user
+                                                        (selectedUser) => selectedUser.id !== user.id
                                                     )
                                                 )
                                             }
-
-                                            return setSelectedUsers(
-                                                [...activeUsers].filter((u) =>
-                                                    [...selectedUsers, user].includes(u)
-                                                )
-                                            )
+                                            else setSelectedUsers([...selectedUsers, user])
                                         }}
                                     >
                                         <Avatar>
@@ -121,7 +132,7 @@ export function UsersSelect(props: any) {
                                                 {user.email}
                                             </p>
                                         </div>
-                                        {selectedUsers.includes(user) ? (
+                                        {( selectedUsers.find( ({ id }) => id === user.id ) !== undefined) ? (
                                             <CheckIcon className="ml-auto flex h-5 w-5 text-primary" />
                                         ) : null}
                                     </CommandItem>
@@ -148,12 +159,12 @@ export function UsersSelect(props: any) {
                             </p>
                         )}
                         <Button
-                            disabled={selectedUsers.length < 2}
+                            disabled={selectedUsers.length < 1}
                             onClick={() => {
-                                setOpen(false)
+                                setUsers()
                             }}
                         >
-                            Continue
+                            Guardar
                         </Button>
                     </DialogFooter>
                 </DialogContent>

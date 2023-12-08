@@ -29,7 +29,6 @@ export function CardsChat( ...props: any ) {
   async function getUserData() {
     setCurrentUserloaded(true)
     Api.get('/auth/self').then((res) => {
-      console.log(res)
       setCurrentUser(res.username)
     }).catch((err) => {})
     return;

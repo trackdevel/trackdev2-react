@@ -34,8 +34,7 @@ export function RegisterForm({ className, ...props }: UserAuthFormProps) {
             setIsLoading(false)
             navigate('/');
         }).catch((err) => {
-            setIsLoading(false)
-            console.log(err);
+            setIsLoading(false);
         })
     }
 

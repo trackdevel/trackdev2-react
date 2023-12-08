@@ -16,7 +16,6 @@ export function TasksAgileViewDND<TData, TValue>({ table }: DataTableProps<TData
   /*
   table.getRowModel().rows.map((row) => (
       row.getVisibleCells().map((cell) => (
-            console.log(cell.column.id)
       ))
   ))
   */

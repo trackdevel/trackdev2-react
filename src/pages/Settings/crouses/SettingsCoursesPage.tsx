@@ -78,7 +78,6 @@ export default function SettingsCoursesPage() {
         setIsCourseLoaded(true)
         Api.get('/courses').then((res) => {
             setCourses(z.array(courseSchema).parse(res))
-            console.log(tasks)
         }).catch((err) => {})
         return;
     }
@@ -89,7 +88,6 @@ export default function SettingsCoursesPage() {
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-        console.log(subjectId,year)
 
         if(!subjectId|| !year) {
             setIsLoading(false)
@@ -100,15 +98,12 @@ export default function SettingsCoursesPage() {
             startYear: year
         }
 
-        console.log(requestBody)
-
         Api.post('/subjects/' + subjectId + '/courses',requestBody).then((res) => {
             setIsLoading(false)
             toogleState()
             getCourses()
         }).catch((err) => {
             setIsLoading(false)
-            console.log(err);
         })
     }
 

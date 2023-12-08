@@ -28,15 +28,10 @@ const Project = () => {
     if(tasks.length === 0 && !istasksloaded) {
         getTasks()
     }
-    else {
-        console.log('tasks',tasks)
-    }
 
     async function getTasks() {
         setIsTasksLoaded(true)
         Api.get(`/projects/${projectId}/tasks`).then((res) => {
-            console.log('res',res)
-            console.log('parsed res',z.array(taskSchema).parse(res))
             setTasks(z.array(taskSchema).parse(res))
         }).catch((err) => {})
         return;

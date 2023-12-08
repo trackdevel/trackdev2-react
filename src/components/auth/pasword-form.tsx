@@ -39,9 +39,6 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
             username: userdataJSON.username
         }
 
-
-        console.log(requestBody)
-
         Api.post('/auth/changepassword',requestBody).then((res) => {
             setIsLoading(false)
             userdataJSON.changePassword = false

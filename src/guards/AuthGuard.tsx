@@ -20,7 +20,6 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ component }) => {
 
     const checkAuth = async () => {
         Api.get('/auth/check').then((res) => {
-            console.log('res',res)
             setStatus(true)
             var userdata = localStorage.getItem('userdata')
             var userdataJSON = JSON.parse(userdata ? userdata : '')
@@ -36,7 +35,6 @@ const AuthGuard: React.FC<AuthGuardProps> = ({ component }) => {
                 }
             }
         }).catch((err) => {
-            console.log('err',err)
             setStatus(false)
             navigate('/auth/login');
         })

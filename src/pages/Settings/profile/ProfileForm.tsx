@@ -92,7 +92,7 @@ export function ProfileForm() {
         var requestBody = {
             username: data.username,
             capitalLetters: data.capitalLetters,
-            githubToken: data.githubToken,
+            githubToken: (data.githubToken == '') ? null : data.githubToken,
             color: data.color
         }
 

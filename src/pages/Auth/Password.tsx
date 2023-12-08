@@ -1,8 +1,4 @@
 
-import { Command } from "lucide-react"
-import {LoginForm} from "../../components/auth/login-form";
-import {Button} from "../../registry/ui/button";
-import {Link} from "react-router-dom";
 import {PasswordForm} from "../../components/auth/pasword-form";
 
 export default function Password() {
