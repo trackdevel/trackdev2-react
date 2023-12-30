@@ -21,6 +21,7 @@ import SettingsCoursesPage from "./pages/Settings/crouses/SettingsCoursesPage";
 import AuthGuard from "./guards/AuthGuard";
 import Password from "./pages/Auth/Password";
 import AdminGuard from "./guards/AdminGuard";
+import SettingsProfilePageAdmin from "./pages/Settings/profile/SettingsProfilePageAdmin";
 
 export function App() {
 
@@ -34,6 +35,7 @@ export function App() {
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
                         <Route path="/settings/profile" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
+                        <Route path="/settings/profile/:userId" element={<AuthGuard component={<AdminGuard component={<SettingsProfilePageAdmin/>}/>}/>}/>
                         <Route path="/settings/users" element={<AuthGuard component={<AdminGuard component={<SettingsUsersPage/>}/>}/>}/>
                         <Route path="/settings/projects" element={<AuthGuard component={<AdminGuard component={<SettingsProjectsPage/>}/>}/>}/>
                         <Route path="/settings/subjects" element={<AuthGuard component={<AdminGuard component={<SettingsSubjectsPage/>}/>}/>}/>

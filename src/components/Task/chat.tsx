@@ -9,10 +9,10 @@ import {taskSchema} from "../data/task/schema";
 import {z} from "zod";
 import {subjectSchema} from "../data/subjects/schema";
 import {taskCommentSchema} from "../data/task/comment";
+import {useEffect} from "react";
 
 export function CardsChat( ...props: any ) {
   const [currentUser, setCurrentUser] = React.useState<string>('1')
-  const [currentUserloaded, setCurrentUserloaded] = React.useState<boolean>(false)
 
   const [input, setInput] = React.useState("")
   const inputLength = input.trim().length
@@ -23,16 +23,12 @@ export function CardsChat( ...props: any ) {
   const [taskId, setTaskId] = React.useState<any>(props[0].taskId)
 
 
-  if(!currentUserloaded) {
-    getUserData()
-  }
-  async function getUserData() {
-    setCurrentUserloaded(true)
+  useEffect(() => {
     Api.get('/auth/self').then((res) => {
       setCurrentUser(res.username)
     }).catch((err) => {})
     return;
-  }
+  }, [])
 
   function newMessage(event: React.SyntheticEvent) {
     event.preventDefault()

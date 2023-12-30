@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import {Check, ChevronsUpDown, MoreHorizontal, Pen, Trash} from "lucide-react"
+import {Check, ChevronsUpDown, EyeIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
 import {
@@ -30,6 +30,7 @@ import {cn} from "../../lib/utils";
 import {Courses} from "../../pages/Settings/crouses/SettingsCoursesPage";
 import {z} from "zod";
 import {courseSchema} from "../data/courses/schema";
+import {Link} from "react-router-dom";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -84,7 +85,6 @@ export function DataTableRowActions<TData>({
   async function getProject() {
     // @ts-ignore
     Api.get('/projects/' + row.original.id).then((res) => {
-      console.log('sjahgdgfkjasdf',res)
         setSelectedProject(res)
       setSelectedCourse(res.course)
       setName(res.name)
@@ -95,16 +95,11 @@ export function DataTableRowActions<TData>({
 
   async function onEdit(event: React.SyntheticEvent) {
     event.preventDefault()
-    console.log('sended')
-
-
 
     var requestBody = {
       name: name,
       courseId: selectedCourse?.id
     }
-
-    console.log(requestBody)
 
     // @ts-ignore
     Api.patch(`/projects/${row.original.id}`,requestBody).then((res) => {
@@ -137,13 +132,23 @@ export function DataTableRowActions<TData>({
                 }
               }>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Edit
+            Editar
+          </DropdownMenuItem>
+          <DropdownMenuItem
+              onSelect={() => setShowDeleteDialog(true)}>
+            <EyeIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Link to={
+              // @ts-ignore
+                "/project/" + row.original.id
+            } >
+              Veure
+            </Link>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={() => setShowDeleteDialog(true)}>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Delete
+            Eliminar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

@@ -61,7 +61,7 @@ export default function SettingsUsersPage() {
         }
 
 
-        Api.post('/users/v2/register',requestBody).then((res) => {
+        Api.post('/users/register',requestBody).then((res) => {
             setIsLoading(false)
             toogleState()
         }).catch((err) => {
@@ -101,7 +101,7 @@ export default function SettingsUsersPage() {
                                 <div className="grid gap-2">
                                     <Input
                                         id="username"
-                                        placeholder="u1234567"
+                                        placeholder="Nom i Cognoms"
                                         type="text"
                                         autoCapitalize="none"
                                         autoComplete="username"

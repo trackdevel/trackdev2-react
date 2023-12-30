@@ -5,6 +5,7 @@ import {Separator} from "../../registry/ui/separator";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {taskCommentSchema} from "../data/task/comment";
+import {useEffect} from "react";
 
 export function TaskHistory( ...props: any ) {
   const [taskId, setTaskId] = React.useState<any>(props[0].taskId)
@@ -12,15 +13,16 @@ export function TaskHistory( ...props: any ) {
   const [history, setHistory] = React.useState<any>([])
   const [historyloaded, setHisotryloaded] = React.useState<boolean>(false)
 
-  if(Object.keys(history).length === 0 && !historyloaded) {
-    getHistory(taskId)
-  }
-  async function getHistory(taskId: string|undefined) {
+
+  useEffect(() => {
     setHisotryloaded(true)
     Api.get('/tasks/' + taskId + '/history').then((res) => {
+      res.map((item : any) => {
+        console.log(item)
+      })
       setHistory(z.array(taskCommentSchema).parse(res))
     }).catch((err) => {})
-  }
+  }, []);
 
   return (
     <Card>

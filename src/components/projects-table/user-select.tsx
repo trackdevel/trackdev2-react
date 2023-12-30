@@ -43,10 +43,6 @@ export function UsersSelect(props: any) {
     if(activeUsers.length === 0 && !isusersloaded) {
         getUsers()
     }
-    // else {
-    //     console.log(activeUsers)
-    //     console.log(selectedUsers)
-    // }
     async function getUsers() {
         setIsUsersLoaded(true)
         Api.get('/users').then((res) => {
@@ -56,8 +52,6 @@ export function UsersSelect(props: any) {
     }
 
     async function setUsers() {
-        console.log(projectId)
-
         let RequestBody = {
             name: null,
             members: selectedUsers.map((user) => user.email),
@@ -65,7 +59,6 @@ export function UsersSelect(props: any) {
         }
 
         Api.patch('/projects/' + projectId, RequestBody).then((res) => {
-            console.log(res)
             setOpen(false)
             window.location.reload()
         }).catch((err) => {})

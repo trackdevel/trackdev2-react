@@ -9,9 +9,10 @@ import { labels, priorities, statuses } from "../data/taskTable/data"
 import { Task } from "../data/taskTable/schema"
 import { DataTableColumnHeader } from "./data-table-column-header"
 import { DataTableRowActions } from "./data-table-row-actions"
-import { Link } from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import React from "react";
 import {Avatar, AvatarFallback} from "../../registry/ui/avatar";
+import Api from "../../utils/Api";
 
 const columns: ColumnDef<Task>[] = [
   //{
@@ -55,13 +56,17 @@ const columns: ColumnDef<Task>[] = [
   //  enableHiding: false,
   //},
   {
-    accessorKey: "title",
+    accessorKey: "name",
     header: ({ column }) => (
       <DataTableColumnHeader column={column} title="Títol" />
     ),
     cell: ({ row }) => {
-      const to = `/project/project_slug/${row?.original?.id}`
+      const to = `/project/1/${row?.original?.id}`
       const name = row?.original?.name ? row?.original?.name : ''
+
+      /*Api.get(`/projects/${row?.original?.project.id}`).then((res) => {
+        console.log(res)
+      }).catch((err) => {})*/
 
       return (
         <div className="flex space-x-2">
@@ -100,6 +105,41 @@ const columns: ColumnDef<Task>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "sprint",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Sprint" />
+    ),
+    cell: ({ row }) => {
+      if (!row.original.activeSprints || row.original.activeSprints.length === 0) {
+        return null
+      }
+
+      let string = ''
+      row.original.activeSprints.forEach((sprint: { name: string }) => {
+        string += sprint.name
+        if (row.original.activeSprints.indexOf(sprint) !== row.original.activeSprints.length - 1) string += ', '
+      })
+
+      return (
+          <div className="flex w-[100px] items-center">
+            <span>{string}</span>
+          </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      if (!row.original.activeSprints || row.original.activeSprints.length === 0) {
+        return null
+      }
+
+      let string = ''
+      row.original.activeSprints.forEach((sprint: { name: string }) => {
+        string += sprint.name
+        if (row.original.activeSprints.indexOf(sprint) !== row.original.activeSprints.length - 1) string += ', '
+      })
+      return value.includes(string)
     },
   },
   // {

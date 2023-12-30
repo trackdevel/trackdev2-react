@@ -6,26 +6,44 @@ import { X } from "lucide-react"
 import { Button } from "../../registry/ui/button"
 import { Input } from "../../registry/ui/input"
 
-import { priorities, statuses } from "../data/taskTable/data"
+import {labels} from "../data/taskTable/data"
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
+import React, {useEffect} from "react";
+import Api from "../../utils/Api";
 
 interface DataTableToolbarProps<TData> {
   table: Table<TData>
+}
+
+interface Status {
+    label: string
+    value: string
 }
 
 export function DataTableToolbar<TData>({
   table,
 }: DataTableToolbarProps<TData>) {
   const isFiltered = table.getState().columnFilters.length > 0
+  const [statuses, setStatuses] = React.useState<Array<Status>>([])
+
+  useEffect(() => {
+    Api.get('/tasks/status').then((res) => {
+      let array = []
+      for (let i = 0; i < res.length; i++) {
+        array.push({label: res[i], value: res[i]})
+      }
+      setStatuses(array)
+    }).catch((err) => {})
+  }, []);
 
   return (
     <div className="flex items-center justify-between">
       <div className="flex flex-1 items-center space-x-2">
         <Input
           placeholder="Filter tasks..."
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
         />
@@ -36,11 +54,11 @@ export function DataTableToolbar<TData>({
             options={statuses}
           />
         )}
-        {table.getColumn("priority") && (
+        {table.getColumn("sprint") && (
           <DataTableFacetedFilter
-            column={table.getColumn("priority")}
-            title="Priority"
-            options={priorities}
+              column={table.getColumn("sprint")}
+              title="Sprint"
+              options={labels}
           />
         )}
         {isFiltered && (

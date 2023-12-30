@@ -60,7 +60,9 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 
-export function ProfileForm() {
+export function ProfileForm(...props: any) {
+    const [userId, setUserId] = React.useState<any>(props[0].userId)
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
         mode: "onChange",
@@ -72,18 +74,35 @@ export function ProfileForm() {
     if(!istasksloaded) {
         getUserData()
     }
+
     async function getUserData() {
         setIsTasksLoaded(true)
-        Api.get('/auth/self').then((res) => {
-            form.setValue("username", res.username)
-            form.setValue("email", res.email)
-            form.setValue("capitalLetters", res.capitalLetters)
-            form.setValue("githubToken", res.githubInfo.github_token)
-            if( res.githubInfo.github_token != '' ) {
-                setGithubData(res.githubInfo)
-            }
-            form.setValue("color", res.color)
-        }).catch((err) => {})
+        if(userId == 'self') {
+            Api.get('/auth/self').then((res) => {
+                form.setValue("username", res.username)
+                form.setValue("email", res.email)
+                form.setValue("capitalLetters", res.capitalLetters)
+                form.setValue("githubToken", res.githubInfo.github_token)
+                if (res.githubInfo.github_token != '') {
+                    setGithubData(res.githubInfo)
+                }
+                form.setValue("color", res.color)
+            }).catch((err) => {
+            })
+        }
+        else {
+            Api.get('/users/'+userId).then((res) => {
+                form.setValue("username", res.username)
+                form.setValue("email", res.email)
+                form.setValue("capitalLetters", res.capitalLetters)
+                form.setValue("githubToken", res.githubInfo.github_token)
+                if (res.githubInfo.github_token != '') {
+                    setGithubData(res.githubInfo)
+                }
+                form.setValue("color", res.color)
+            }).catch((err) => {
+            })
+        }
         return;
     }
 
@@ -96,11 +115,17 @@ export function ProfileForm() {
             color: data.color
         }
 
-
-        Api.patch('/users', requestBody).then((res) => {
-            window.location.reload();
-        }).catch((err) => {})
-
+        if(userId == 'self') {
+            Api.patch('/users', requestBody).then((res) => {
+                window.location.reload();
+            }).catch((err) => {})
+        }
+        else {
+            Api.patch('/users/'+userId, requestBody).then((res) => {
+                window.location.reload();
+            }).catch((err) => {
+            })
+        }
 
         toast({
             title: "You submitted the following values:",
@@ -118,7 +143,7 @@ export function ProfileForm() {
                 <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Username</FormLabel>
-                        <FormControl><Input placeholder="username" {...field} /></FormControl>
+                        <FormControl><Input placeholder="username" {...field} disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -126,7 +151,7 @@ export function ProfileForm() {
                 <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Correu Electronic</FormLabel>
-                        <FormControl><Input placeholder="email@domain.com" {...field}  disabled={true}/></FormControl>
+                        <FormControl><Input placeholder="email@domain.com" {...field}  disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>

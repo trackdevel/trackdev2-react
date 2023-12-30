@@ -1,3 +1,5 @@
+import {ArrowUpCircle, CheckCircle2, Circle, HelpCircle, XCircle} from "lucide-react";
+
 export interface Sprints {
     id: string
     name: string
@@ -19,5 +21,51 @@ export const pullRequests: Sprints[] = [
     {
         id: "cc198b13-4933-43aa-977e-dcd95fa30770",
         name: "Sprint4",
+    },
+]
+
+export interface Statuses {
+    id: string
+    name: string
+}
+
+export const statuseslist: Statuses[] = [
+    {
+        name: "BACKLOG",
+        id: "Backlog",
+    },
+    {
+        name: "todo",
+        id: "Todo",
+    },
+    {
+        name: "in progress",
+        id: "In Progress",
+    },
+    {
+        name: "done",
+        id: "Done",
+    },
+    {
+        name: "canceled",
+        id: "Canceled",
+    },
+]
+
+
+
+export interface Type {
+    id: string
+    name: string
+}
+
+export const typeslist: Type[] = [
+    {
+        name: "User Story",
+        id: "userstory",
+    },
+    {
+        name: "Tasca",
+        id: "task",
     },
 ]

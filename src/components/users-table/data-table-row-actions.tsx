@@ -11,6 +11,8 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
+import {Link} from "react-router-dom";
+import React from "react";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -20,6 +22,8 @@ interface DataTableRowActionsProps<TData> {
 export function DataTableRowActions<TData>({
   row,
 }: DataTableRowActionsProps<TData>) {
+
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -34,7 +38,12 @@ export function DataTableRowActions<TData>({
       <DropdownMenuContent align="end" className="w-[160px]">
         <DropdownMenuItem>
           <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-          Edit
+          <Link to={
+              // @ts-ignore
+              "/settings/profile/" + row.original.id
+          } >
+            Edit
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem>

@@ -7,10 +7,11 @@ import TaskMainLayout from "../../components/Task/TaskMainLayout";
 const Task = () => {
 
     const { taskId } = useParams();
+    const { projectId } = useParams();
 
     return (
         <div>
-            <TaskMainLayout taskId={taskId}/>
+            <TaskMainLayout taskId={taskId} projectId={projectId}/>
         </div>
     )
 }

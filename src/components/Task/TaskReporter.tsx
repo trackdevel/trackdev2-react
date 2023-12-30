@@ -42,6 +42,10 @@ import {
     SelectValue,
 } from "../../registry/ui/select"
 import {cn} from "../../lib/utils";
+import {useEffect} from "react";
+import Api from "../../utils/Api";
+import {z} from "zod";
+import {courseSchema} from "../data/courses/schema";
 
 const groups = [
     {
@@ -69,12 +73,26 @@ type PopoverTriggerProps = React.ComponentPropsWithoutRef<typeof PopoverTrigger>
 
 interface TeamSwitcherProps extends PopoverTriggerProps {}
 
-export default function TaskReporter({ className }: TeamSwitcherProps) {
+export default function TaskReporter(...props: any) {
     const [open, setOpen] = React.useState(false)
     const [showNewTeamDialog, setShowNewTeamDialog] = React.useState(false)
-    const [selectedTeam, setSelectedTeam] = React.useState<Team>(
-        groups[0].teams[0]
-    )
+    const [selectedTeam, setSelectedTeam] = React.useState<string>("")
+    const [members, setMembers] = React.useState<Array<any>>([])
+    const [projectId, setProjectId] = React.useState<any>(props[0].projectId)
+    const [taskId, setTaskId] = React.useState<any>(props[0].taskId)
+
+
+    useEffect(() => {
+        Api.get('/projects/' + projectId).then((res) => {
+            setMembers(z.array(courseSchema).parse(res.members))
+        }).catch((err) => {})
+    }, [])
+
+    useEffect(() => {
+        Api.get('/tasks/' + taskId).then((res) => {
+            setSelectedTeam(res.reporter.username)
+        }).catch((err) => {})
+    }, []);
 
     return (
         <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
@@ -85,17 +103,17 @@ export default function TaskReporter({ className }: TeamSwitcherProps) {
                         role="combobox"
                         aria-expanded={open}
                         aria-label="Select a team"
-                        className={cn("w-full justify-between", className)}
+                        className="w-full justify-between"
                     >
                         <Avatar className="mr-2 h-5 w-5">
                             <AvatarImage
-                                src={`https://avatar.vercel.sh/${selectedTeam.value}.png`}
-                                alt={selectedTeam.label}
+                                src={`https://avatar.vercel.sh/${selectedTeam}.png`}
+                                alt={selectedTeam}
                                 className="grayscale"
                             />
                             <AvatarFallback>SC</AvatarFallback>
                         </Avatar>
-                        {selectedTeam.label}
+                        {selectedTeam}
                         <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50" />
                     </Button>
                 </PopoverTrigger>
@@ -106,28 +124,28 @@ export default function TaskReporter({ className }: TeamSwitcherProps) {
                             <CommandEmpty>No team found.</CommandEmpty>
                             {groups.map((group) => (
                                 <CommandGroup key={group.label} heading={group.label}>
-                                    {group.teams.map((team) => (
+                                    {members.map((team) => (
                                         <CommandItem
-                                            key={team.value}
+                                            key={team.username}
                                             onSelect={() => {
-                                                setSelectedTeam(team)
+                                                setSelectedTeam(team.username)
                                                 setOpen(false)
                                             }}
                                             className="text-sm"
                                         >
                                             <Avatar className="mr-2 h-5 w-5">
                                                 <AvatarImage
-                                                    src={`https://avatar.vercel.sh/${team.value}.png`}
-                                                    alt={team.label}
+                                                    src={`https://avatar.vercel.sh/${team.username}.png`}
+                                                    alt={team.username}
                                                     className="grayscale"
                                                 />
                                                 <AvatarFallback>SC</AvatarFallback>
                                             </Avatar>
-                                            {team.label}
+                                            {team.username}
                                             <Check
                                                 className={cn(
                                                     "ml-auto h-4 w-4",
-                                                    selectedTeam.value === team.value
+                                                    selectedTeam === team.username
                                                         ? "opacity-100"
                                                         : "opacity-0"
                                                 )}

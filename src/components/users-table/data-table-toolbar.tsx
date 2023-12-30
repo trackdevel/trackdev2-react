@@ -24,13 +24,13 @@ export function DataTableToolbar<TData>({
       <div className="flex flex-1 items-center space-x-2">
       <Input
           placeholder="Filter users..."
-          value={(table.getColumn("nicename")?.getFilterValue() as string) ?? ""}
+          value={(table.getColumn("username")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-              table.getColumn("nicename")?.setFilterValue(event.target.value)
+              table.getColumn("username")?.setFilterValue(event.target.value)
           }
           className="h-8 w-[150px] lg:w-[250px]"
       />
-        {table.getColumn("roles") && (
+        {/*table.getColumn("roles") && (
           <DataTableFacetedFilter
             column={table.getColumn("roles")}
             title="Roles"
@@ -50,7 +50,7 @@ export function DataTableToolbar<TData>({
                   title="Enabled"
                   options={enabled}
               />
-          )}
+          )*/}
         {isFiltered && (
           <Button
             variant="ghost"

@@ -11,8 +11,8 @@ import {
 
 export const labels = [
   {
-    value: "bug",
-    label: "Bug",
+    value: "First iteration",
+    label: "First iteration",
   },
   {
     value: "feature",
@@ -27,27 +27,27 @@ export const labels = [
 export const statuses = [
   {
     value: "BACKLOG",
-    label: "Backlog",
+    label: "BACKLOG",
     icon: HelpCircle,
   },
   {
-    value: "todo",
-    label: "Todo",
+    value: "TODO",
+    label: "TODO",
     icon: Circle,
   },
   {
-    value: "in progress",
-    label: "In Progress",
+    value: "INPROGRESS",
+    label: "INPROGRESS",
     icon: ArrowUpCircle,
   },
   {
-    value: "done",
-    label: "Done",
+    value: "VERIFY",
+    label: "VERIFY",
     icon: CheckCircle2,
   },
   {
-    value: "canceled",
-    label: "Canceled",
+    value: "DONE",
+    label: "DONE",
     icon: XCircle,
   },
 ]
