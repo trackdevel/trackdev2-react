@@ -326,7 +326,7 @@ export default function TaskMainLayout(...props: any) {
                                                 selected={date}
                                                 onSelect={setDate}
                                                 initialFocus
-                                                disabled={true}
+                                                disabled={false}
                                             />
                                         </PopoverContent>
                                     </Popover>

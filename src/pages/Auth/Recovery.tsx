@@ -1,7 +1,8 @@
 
 import {PasswordForm} from "../../components/auth/pasword-form";
+import {RecoveryForm} from "../../components/auth/recovery-form";
 
-export default function Password() {
+export default function Recovery() {
 
     return (
         <>
@@ -10,13 +11,13 @@ export default function Password() {
                     <div className="mx-auto flex w-full flex-col justify-center space-y-6 sm:w-[350px]">
                         <div className="flex flex-col space-y-2 text-center">
                             <h1 className="text-2xl font-semibold tracking-tight">
-                                Generar nova contrasenya
+                                Recuperar contrasenya
                             </h1>
                             <p className="text-sm text-muted-foreground">
-                                Introdueix el codi rebut per correu i la nova contrasenya
+                                Introdueix el correu i rebràs un enllaç i un codi per restablir la contrasenya
                             </p>
                         </div>
-                        <PasswordForm />
+                        <RecoveryForm />
                     </div>
                 </div>
             </div>

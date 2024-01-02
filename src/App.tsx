@@ -22,6 +22,7 @@ import AuthGuard from "./guards/AuthGuard";
 import Password from "./pages/Auth/Password";
 import AdminGuard from "./guards/AdminGuard";
 import SettingsProfilePageAdmin from "./pages/Settings/profile/SettingsProfilePageAdmin";
+import Recovery from "./pages/Auth/Recovery";
 
 export function App() {
 
@@ -46,6 +47,7 @@ export function App() {
                     <Route path="/auth/login" element={<Login/>}/>
                     <Route path="/auth/register" element={<Register/>}/>
                     <Route path="/auth/password" element={<AuthGuard component={<Password/>}/>}/>
+                    <Route path="/auth/recovery" element={<AuthGuard component={<Recovery/>}/>}/>
                 </Route>
             </>
         )

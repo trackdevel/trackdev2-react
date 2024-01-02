@@ -1,6 +1,6 @@
 "use client"
 
-import React from "react";
+import React, {useEffect} from "react";
 import { z } from "zod"
 
 import { columns } from "../../components/tasks-table/columns"
@@ -27,32 +27,23 @@ function getTasks() {
 const Project = () => {
     //const tasks_demo = getTasks()
     const [state, setState] = React.useState<boolean>(false)
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [name, setName] = React.useState<string>('')
-    const [acronym, setAcronym] = React.useState<string>('')
 
     const navigate = useNavigate();
     const [tasks, setTasks] = React.useState<Array<any>>([])
-    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
     const { projectId } = useParams();
 
     function toogleState() { setState(!state) }
 
-    if(tasks.length === 0 && !istasksloaded) {
-        getTasks()
-    }
 
-    async function getTasks() {
-        setIsTasksLoaded(true)
+    useEffect(() => {
         Api.get(`/projects/${projectId}/tasks`).then((res) => {
             setTasks(z.array(taskSchema).parse(res))
         }).catch((err) => {
-            console.log(err)
-            navigate('/');
+            console.log(`/projects/${projectId}/tasks`,err)
+            // navigate('/');
         })
-        return;
-    }
+    }, [])
 
 
     async function onCreate(event: React.SyntheticEvent) {

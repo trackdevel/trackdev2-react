@@ -11,7 +11,7 @@ import Api from "../../utils/Api";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function PasswordForm({ className, ...props }: UserAuthFormProps) {
+export function RecoveryForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
     const [old_password,setOldPassword] = React.useState<string>('')
     const [password,setPassword] = React.useState<string>('')
@@ -56,7 +56,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                     <div className="grid gap-1">
                         <Input
                             id="old_password"
-                            placeholder="Codi de recuperació"
+                            placeholder="Correu electrònic"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="old_password"
@@ -64,32 +64,12 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                             disabled={isLoading}
                             onChange={(e) => setOldPassword(e.target.value)}
                         />
-                        <Input
-                            id="password"
-                            placeholder="Contrasenya"
-                            type="password"
-                            autoCapitalize="none"
-                            autoComplete="password"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                            onChange={(e) => setPassword(e.target.value)}
-                        />
-                        <Input
-                            id="repeat_password"
-                            placeholder="Repeteix la contrasenya"
-                            type="password"
-                            autoCapitalize="none"
-                            autoComplete="repeat_password"
-                            autoCorrect="off"
-                            disabled={isLoading}
-                            onChange={(e) => setRepeatPasword(e.target.value)}
-                        />
                     </div>
                     <Button disabled={isLoading}>
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Crear nova contrasenya
+                        Recuperar contrasenya
                     </Button>
                 </div>
             </form>
