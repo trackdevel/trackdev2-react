@@ -54,7 +54,7 @@ export default function TaskMainLayout(...props: any) {
     const [sprint, setSprint] = React.useState<Sprints>()
     const [sprintopen, setSprintopen] = React.useState(false)
 
-    const [statuses, setStatuses] = React.useState<Array<string>>([])
+    const [statuses, setStatuses] = React.useState<Object>([])
     const [status, setStatus] = React.useState<string>('')
     const [statusopen, setStatusopen] = React.useState(false)
 
@@ -247,18 +247,18 @@ export default function TaskMainLayout(...props: any) {
                                         <CommandInput placeholder="Buscar estats..." />
                                         <CommandEmpty>No presets found.</CommandEmpty>
                                         <CommandGroup heading="Status">
-                                            {statuses.map((request) => (
-                                                <CommandItem key={request}
+                                            {Object.entries(statuses).map(([key, value]) => (
+                                                <CommandItem key={key}
                                                              onSelect={() => {
-                                                                 setStatus(request)
+                                                                 setStatus(key)
                                                                  setStatusopen(false)
                                                              }}
                                                 >
-                                                    {request}
+                                                    {value}
                                                     <Check
                                                         className={cn(
                                                             "ml-auto h-4 w-4",
-                                                            status === request
+                                                            status === key
                                                                 ? "opacity-100"
                                                                 : "opacity-0"
                                                         )}

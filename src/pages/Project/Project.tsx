@@ -38,10 +38,9 @@ const Project = () => {
 
     useEffect(() => {
         Api.get(`/projects/${projectId}/tasks`).then((res) => {
-            setTasks(z.array(taskSchema).parse(res))
+            setTasks(z.array(taskSchema).parse(res.tasks))
         }).catch((err) => {
-            console.log(`/projects/${projectId}/tasks`,err)
-            // navigate('/');
+            navigate('/auth/login');
         })
     }, [])
 
