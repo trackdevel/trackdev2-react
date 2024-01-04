@@ -1,17 +1,7 @@
-import {
-    BookMarkedIcon,
-    CreditCard,
-    FolderKanban,
-    GraduationCapIcon,
-    LogOut,
-    PlusCircle,
-    Settings,
-    User,
-    Users2
-} from "lucide-react"
+import {BookMarkedIcon, FolderKanban, GraduationCapIcon, LogOut, User, Users2} from "lucide-react"
 
 
-import { Button } from "../registry/ui/button"
+import {Button} from "../registry/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -22,9 +12,9 @@ import {
     DropdownMenuShortcut,
     DropdownMenuTrigger,
 } from "../registry/ui/dropdown-menu"
-import {AvatarFallback, AvatarImage} from "../registry/ui/avatar";
+import {AvatarFallback} from "../registry/ui/avatar";
 import {Avatar} from "@radix-ui/react-avatar";
-import React, {useState} from "react";
+import React from "react";
 import Api from "../utils/Api";
 import {Link} from "react-router-dom";
 
@@ -73,19 +63,11 @@ export function UserNav() {
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                { ( githubData != '' ) ? (
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundImage: 'url(' + githubData.avatar_url + ') center center no-repeat', backgroundSize: 'cover'}}>
-                        <Avatar className="h-8 w-8">
-                            <AvatarImage src={githubData.avatar_url} alt="Avatar" />
-                        </Avatar>
-                    </Button>
-                ) : (
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundColor: currentUserColor}}>
-                        <Avatar className="h-8 w-8">
-                            <AvatarFallback  style={{backgroundColor: currentUserColor}}>{currentUserCappitalLetters}</AvatarFallback>
-                        </Avatar>
-                    </Button>
-                )}
+                <Button variant="ghost" className="relative h-8 w-8 rounded-full bg-accent text-accent-foreground" style={{backgroundColor: currentUserColor}}>
+                    <Avatar className="h-8 w-8">
+                        <AvatarFallback  style={{backgroundColor: currentUserColor}}>{currentUserCappitalLetters}</AvatarFallback>
+                    </Avatar>
+                </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-56" align="end" forceMount>
                 <DropdownMenuLabel className="font-normal">

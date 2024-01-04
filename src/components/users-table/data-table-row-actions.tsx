@@ -1,15 +1,15 @@
 "use client"
 
-import { Row } from "@tanstack/react-table"
-import { MoreHorizontal, Pen, Trash } from "lucide-react"
+import {Row} from "@tanstack/react-table"
+import {MoreHorizontal, Pen, Trash} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
 import {Link} from "react-router-dom";
 import React from "react";

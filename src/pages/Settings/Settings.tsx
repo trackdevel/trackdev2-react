@@ -1,5 +1,5 @@
-import { Separator } from "../../registry/ui/separator"
-import { ProfileForm } from "./profile/ProfileForm"
+import {Separator} from "../../registry/ui/separator"
+import {ProfileForm} from "./profile/ProfileForm"
 
 export default function Settings() {
     return (

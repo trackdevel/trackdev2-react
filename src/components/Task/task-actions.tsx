@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MoreHorizontal, Trash } from "lucide-react"
+import {MoreHorizontal, Trash} from "lucide-react"
 
 import {
     AlertDialog,
@@ -12,14 +12,14 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../../registry/ui/alert-dialog"
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
-import { toast } from "../../registry/ui/use-toast"
+import {toast} from "../../registry/ui/use-toast"
 
 export function TaskActions() {
     const [open, setIsOpen] = React.useState(false)

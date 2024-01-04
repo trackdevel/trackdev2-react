@@ -1,16 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { format } from "date-fns"
-import { Calendar as CalendarIcon } from "lucide-react"
+import {format} from "date-fns"
+import {Calendar as CalendarIcon} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
-import { Calendar } from "../../registry/ui/calendar"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "../../registry/ui/popover"
+import {Button} from "../../registry/ui/button"
+import {Calendar} from "../../registry/ui/calendar"
+import {Popover, PopoverContent, PopoverTrigger,} from "../../registry/ui/popover"
 import {cn} from "../../lib/utils";
 
 export function TaskDatePicker() {

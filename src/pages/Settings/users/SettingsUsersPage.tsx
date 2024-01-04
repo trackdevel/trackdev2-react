@@ -1,4 +1,4 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import {userSchema} from "../../../components/data/users/schema";
 import {columns} from "../../../components/users-table/columns";

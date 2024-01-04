@@ -1,15 +1,13 @@
 import * as React from "react"
-import { Send } from "lucide-react"
+import {useEffect} from "react"
+import {Send} from "lucide-react"
 import {Card, CardContent, CardFooter, CardHeader} from "../../registry/ui/card";
 import {Button} from "../ui/button";
 import {cn} from "../../lib/utils";
 import {Input} from "../../registry/ui/input";
 import Api from "../../utils/Api";
-import {taskSchema} from "../data/task/schema";
 import {z} from "zod";
-import {subjectSchema} from "../data/subjects/schema";
 import {taskCommentSchema} from "../data/task/comment";
-import {useEffect} from "react";
 
 export function CardsChat( ...props: any ) {
   const [currentUser, setCurrentUser] = React.useState<string>('1')
@@ -43,9 +41,10 @@ export function CardsChat( ...props: any ) {
   }
 
 
-  if(Object.keys(messages).length === 0 && !messagesloaded) {
+
+  useEffect(() => {
     getMessages(taskId)
-  }
+  }, [])
   async function getMessages(taskId: string|undefined) {
     Api.get('/tasks/' + taskId + '/comments').then((res) => {
       setMessages(z.array(taskCommentSchema).parse(res))

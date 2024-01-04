@@ -1,48 +1,15 @@
 "use client"
 
 import * as React from "react"
-import { Check, ChevronsUpDown, PlusCircle } from "lucide-react"
+import {useEffect} from "react"
+import {Check, ChevronsUpDown} from "lucide-react"
 
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarImage,
-} from "../../registry/ui/avatar"
-import { Button } from "../../registry/ui/button"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-    CommandList,
-    CommandSeparator,
-} from "../../registry/ui/command"
-import {
-    Dialog,
-    DialogContent,
-    DialogDescription,
-    DialogFooter,
-    DialogHeader,
-    DialogTitle,
-    DialogTrigger,
-} from "../../registry/ui/dialog"
-import { Input } from "../../registry/ui/input"
-import { Label } from "../../registry/ui/label"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "../../registry/ui/popover"
-import {
-    Select,
-    SelectContent,
-    SelectItem,
-    SelectTrigger,
-    SelectValue,
-} from "../../registry/ui/select"
+import {Avatar, AvatarFallback, AvatarImage,} from "../../registry/ui/avatar"
+import {Button} from "../../registry/ui/button"
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList,} from "../../registry/ui/command"
+import {Dialog,} from "../../registry/ui/dialog"
+import {Popover, PopoverContent, PopoverTrigger,} from "../../registry/ui/popover"
 import {cn} from "../../lib/utils";
-import {useEffect} from "react";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {courseSchema} from "../data/courses/schema";

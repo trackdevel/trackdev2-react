@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { DialogProps } from "@radix-ui/react-dialog"
-import { MagnifyingGlassIcon } from "@radix-ui/react-icons"
-import { Command as CommandPrimitive } from "cmdk"
+import {DialogProps} from "@radix-ui/react-dialog"
+import {MagnifyingGlassIcon} from "@radix-ui/react-icons"
+import {Command as CommandPrimitive} from "cmdk"
 
-import { Dialog, DialogContent } from "./dialog"
+import {Dialog, DialogContent} from "./dialog"
 import {cn} from "../../lib/utils";
 
 const Command = React.forwardRef<

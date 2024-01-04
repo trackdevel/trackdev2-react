@@ -1,23 +1,12 @@
 "use client"
 
 import * as React from "react"
-import { useRouter } from "next/navigation"
-import { PopoverProps } from "@radix-ui/react-popover"
-import { Check, ChevronsUpDown } from "lucide-react"
+import {PopoverProps} from "@radix-ui/react-popover"
+import {Check, ChevronsUpDown} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
-import {
-    Command,
-    CommandEmpty,
-    CommandGroup,
-    CommandInput,
-    CommandItem,
-} from "../../registry/ui/command"
-import {
-    Popover,
-    PopoverContent,
-    PopoverTrigger,
-} from "../../registry/ui/popover"
+import {Button} from "../../registry/ui/button"
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem,} from "../../registry/ui/command"
+import {Popover, PopoverContent, PopoverTrigger,} from "../../registry/ui/popover"
 
 import {cn} from "../../lib/utils";
 import {Sprints} from "../data/task/Sprints";

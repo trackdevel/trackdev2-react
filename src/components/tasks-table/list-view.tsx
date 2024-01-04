@@ -2,31 +2,14 @@
 
 import * as React from "react"
 import {
-  ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+  SortingState,
+  Table as TableLayout,
+  VisibilityState,
 } from "@tanstack/react-table"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../registry/ui/table"
-import {DataTablePagination} from "./data-table-pagination";
-
-import { Table as TableLayout} from "@tanstack/react-table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "../../registry/ui/table"
 
 
 interface DataTableProps<TData> {

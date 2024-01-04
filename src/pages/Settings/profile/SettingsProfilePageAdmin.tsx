@@ -1,4 +1,4 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {useParams} from "react-router-dom";
 import {ProfileForm} from "./ProfileForm";
 

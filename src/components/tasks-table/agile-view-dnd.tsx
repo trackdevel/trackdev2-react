@@ -4,8 +4,6 @@ import * as React from "react"
 
 import {Table as TableLayout} from "@tanstack/table-core/build/lib/types";
 
-import ReactDOM from "react-dom";
-
 
 interface DataTableProps<TData> {
   table: TableLayout<TData>

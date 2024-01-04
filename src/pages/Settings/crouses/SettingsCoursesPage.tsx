@@ -1,17 +1,16 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
-import data from "../../../components/data/courses/course.json";
 import {columns} from "../../../components/courses-table/columns";
 import React from "react";
 import {courseSchema} from "../../../components/data/courses/schema";
 import {CrousesTable} from "../../../components/courses-table/data-table";
-import { Button } from "../../../registry/ui/button"
+import {Button} from "../../../registry/ui/button"
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
 import Api from "../../../utils/Api";
 import {
     Dialog,
     DialogContent,
-    DialogDescription, DialogFooter,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger
@@ -19,13 +18,11 @@ import {
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Input} from "../../../registry/ui/input";
 import {Icons} from "../../../registry/ui/icons";
-import {pullRequests} from "../../../components/data/task/Sprints";
 import {subjectSchema} from "../../../components/data/subjects/schema";
 import {Popover, PopoverContent, PopoverTrigger} from "../../../registry/ui/popover";
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../../registry/ui/command";
 import {cn} from "../../../lib/utils";
-import { PopoverProps } from "@radix-ui/react-popover"
 
 
 export interface Subjects {

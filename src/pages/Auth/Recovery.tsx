@@ -1,5 +1,3 @@
-
-import {PasswordForm} from "../../components/auth/pasword-form";
 import {RecoveryForm} from "../../components/auth/recovery-form";
 
 export default function Recovery() {

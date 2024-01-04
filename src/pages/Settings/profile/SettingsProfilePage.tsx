@@ -1,5 +1,5 @@
-import { Separator } from "../../../registry/ui/separator"
-import { ProfileForm } from "./ProfileForm"
+import {Separator} from "../../../registry/ui/separator"
+import {ProfileForm} from "./ProfileForm"
 
 export default function SettingsProfilePage() {
     const userId = "self"

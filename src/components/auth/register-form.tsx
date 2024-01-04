@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { useNavigate } from 'react-router-dom';
-import { Icons } from "../../registry/ui/icons"
-import { Button } from "../../registry/ui/button"
-import { Input } from "../../registry/ui/input"
-import { Label } from "../../registry/ui/label"
+import {useNavigate} from 'react-router-dom';
+import {Icons} from "../../registry/ui/icons"
+import {Button} from "../../registry/ui/button"
+import {Input} from "../../registry/ui/input"
+import {Label} from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
 

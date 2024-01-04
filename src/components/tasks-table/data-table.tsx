@@ -1,38 +1,35 @@
 "use client"
 
 import * as React from "react"
+import {useEffect} from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table"
 
 import {DataTableToolbar} from "./data-table-toolbar";
 import {DataTablePagination} from "./data-table-pagination";
 import {TasksListView} from "./list-view";
 import {TasksAgileView} from "./agile-view";
-import {Tabs,TabsContent,TabsList, TabsTrigger} from "../../registry/ui/tabs";
+import {Tabs, TabsContent, TabsList, TabsTrigger} from "../../registry/ui/tabs";
 import {Icons} from "../ui/icons";
-import {Textarea} from "../../registry/ui/textarea";
-import {TasksAgileViewDND} from "./agile-view-dnd";
 import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover";
 import {Button} from "../../registry/ui/button";
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../registry/ui/command";
-import {pullRequests, Sprints} from "../data/task/Sprints";
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {projectSchema} from "../data/projects/schema";
-import {useEffect} from "react";
 import {Link, useNavigate, useParams} from "react-router-dom";
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "../../registry/ui/dialog";
@@ -244,7 +241,7 @@ export function DataTable<TData, TValue>({
               <TabsList className="grid grid-cols-2 w-max">
                 <TabsTrigger className="flex-1 space-x-4" value="information" onClick={() => setTab('Information')}>
                   <Icons.List className="h-5 w-5" />
-                  <span>List</span>
+                  <span>Llistat</span>
                 </TabsTrigger>
                 <TabsTrigger className="flex-1 space-x-4" value="history" onClick={() => setTab('History')}>
                   <Icons.Table className="h-5 w-5" />

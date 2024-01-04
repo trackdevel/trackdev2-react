@@ -1,5 +1,3 @@
-import {ArrowUpCircle, CheckCircle2, Circle, HelpCircle, XCircle} from "lucide-react";
-
 export interface Sprints {
     id: string
     name: string

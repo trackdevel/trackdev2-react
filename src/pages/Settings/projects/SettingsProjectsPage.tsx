@@ -1,4 +1,4 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import data from "../../../components/data/projects/groups.json";
 import {columns} from "../../../components/projects-table/columns";
@@ -23,8 +23,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "../../../registry/ui/popo
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../../registry/ui/command";
 import {cn} from "../../../lib/utils";
-import {Courses, Subjects} from "../crouses/SettingsCoursesPage";
-import {subjectSchema} from "../../../components/data/subjects/schema";
+import {Courses} from "../crouses/SettingsCoursesPage";
 import {courseSchema} from "../../../components/data/courses/schema";
 
 function getGroups() {

@@ -1,12 +1,12 @@
 import {
-  ArrowDownToLine,
-  ArrowRightToLine,
-  ArrowUpCircle,
-  ArrowUpToLine,
-  CheckCircle2,
-  Circle,
-  HelpCircle,
-  XCircle,
+    ArrowDownToLine,
+    ArrowRightToLine,
+    ArrowUpCircle,
+    ArrowUpToLine,
+    CheckCircle2,
+    Circle,
+    HelpCircle,
+    XCircle,
 } from "lucide-react"
 
 export const labels = [
@@ -31,22 +31,22 @@ export const statuses = [
     icon: HelpCircle,
   },
   {
-    value: "TODO",
+    value: "PRIORITZADA",
     label: "TODO",
     icon: Circle,
   },
   {
-    value: "INPROGRESS",
+    value: "EN PROGRES",
     label: "INPROGRESS",
     icon: ArrowUpCircle,
   },
   {
-    value: "VERIFY",
+    value: "EN VERIFICACIO",
     label: "VERIFY",
     icon: CheckCircle2,
   },
   {
-    value: "DONE",
+    value: "FINALITZADA",
     label: "DONE",
     icon: XCircle,
   },

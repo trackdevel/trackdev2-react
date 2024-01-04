@@ -10,6 +10,7 @@ import {
     File,
     FileText,
     HelpCircle,
+    type Icon as LucideIcon,
     Image,
     Laptop,
     Loader2,
@@ -24,7 +25,6 @@ import {
     Twitter,
     User,
     X,
-    type Icon as LucideIcon,
 } from "lucide-react"
 
 export type Icon = LucideIcon

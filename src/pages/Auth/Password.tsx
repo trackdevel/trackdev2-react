@@ -1,4 +1,3 @@
-
 import {PasswordForm} from "../../components/auth/pasword-form";
 
 export default function Password() {

@@ -1,8 +1,7 @@
 "use client"
 
 import {Link, useLocation} from "react-router-dom";
-import { usePathname } from "next/navigation"
-import { buttonVariants } from "../../../registry/ui/button"
+import {buttonVariants} from "../../../registry/ui/button"
 import {cn} from "../../../lib/utils";
 import React from "react";
 

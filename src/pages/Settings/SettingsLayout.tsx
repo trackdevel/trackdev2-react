@@ -1,8 +1,5 @@
-import { Metadata } from "next"
-import Image from "next/image"
-
-import { Separator } from "../../registry/ui/separator"
-import { SidebarNav } from "./components/sidebar-nav"
+import {Separator} from "../../registry/ui/separator"
+import {SidebarNav} from "./components/sidebar-nav"
 import {Outlet} from "react-router-dom";
 
 

@@ -1,13 +1,12 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import {ColumnDef} from "@tanstack/react-table"
 
-import { Badge } from "../../registry/ui/badge"
-import { Checkbox } from "../../registry/ui/checkbox"
+import {Badge} from "../../registry/ui/badge"
 
-import { UserListItem } from "../data/users/schema"
-import { DataTableColumnHeader } from "./data-table-column-header"
-import { DataTableRowActions } from "./data-table-row-actions"
+import {UserListItem} from "../data/users/schema"
+import {DataTableColumnHeader} from "./data-table-column-header"
+import {DataTableRowActions} from "./data-table-row-actions"
 
 const columns: ColumnDef<UserListItem>[] = [
     /*{

@@ -1,9 +1,9 @@
 "use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm} from "react-hook-form"
 import * as z from "zod"
 
-import { Button } from "../../../registry/ui/button"
+import {Button} from "../../../registry/ui/button"
 import {
     Form,
     FormControl,
@@ -13,14 +13,12 @@ import {
     FormLabel,
     FormMessage,
 } from "../../../registry/ui/form"
-import { Input } from "../../../registry/ui/input"
-import { Textarea } from "../../../registry/ui/textarea"
-import { toast } from "../../../registry/ui/use-toast"
+import {Input} from "../../../registry/ui/input"
+import {toast} from "../../../registry/ui/use-toast"
 import Api from "../../../utils/Api";
 import React from "react";
-import {subjectSchema} from "../../../components/data/subjects/schema";
 import {Link} from "react-router-dom";
-import {ExternalLink, User} from "lucide-react";
+import {ExternalLink} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "../../../registry/ui/avatar";
 
 const profileFormSchema = z.object({

@@ -1,22 +1,14 @@
+import {Calendar as CalendarIcon, Check, ChevronsUpDown} from "lucide-react"
 
-import {Calendar as CalendarIcon, Check, ChevronsUpDown, History} from "lucide-react"
+import {Button} from "../../registry/ui/button"
+import {Separator} from "../../registry/ui/separator"
+import {Tabs, TabsContent, TabsList, TabsTrigger,} from "../../registry/ui/tabs"
+import {Textarea} from "../../registry/ui/textarea"
 
-import { Button } from "../../registry/ui/button"
-import { Separator } from "../../registry/ui/separator"
-import {
-    Tabs,
-    TabsContent,
-    TabsList,
-    TabsTrigger,
-} from "../../registry/ui/tabs"
-import { Textarea } from "../../registry/ui/textarea"
-
-import { Icons } from "../ui/icons"
-import { TaskActions } from "./task-actions"
+import {Icons} from "../ui/icons"
+import {TaskActions} from "./task-actions"
 import "./styles.css"
-import {pullRequests, Sprints, Statuses, statuseslist, typeslist, Type} from "../data/task/Sprints";
-import TaskReporter from "./TaskReporter";
-import TaskAssignee from "./TaskAssignee";
+import {Sprints} from "../data/task/Sprints";
 import React, {useEffect} from "react";
 import Api from "../../utils/Api";
 import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover";
@@ -27,7 +19,6 @@ import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandL
 import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
 import {Input} from "../../registry/ui/input";
 import {CardsChat} from "./chat";
-import {Card, CardContent, CardHeader} from "../../registry/ui/card";
 import {taskSchema} from "../data/task/schema";
 import {TaskHistory} from "./history";
 import {z} from "zod";
@@ -113,7 +104,7 @@ export default function TaskMainLayout(...props: any) {
                 setDate(new Date(taskSchema.parse(res).task.createdAt))
                 setEstimationpoints(taskSchema.parse(res).task.estimationPoints)
                 setSprint(taskSchema.parse(res).task.activeSprints[0])
-                setStatus(taskSchema.parse(res).task.status)
+                setStatus(taskSchema.parse(res).task.statusText)
                 setInformation(taskSchema.parse(res).task.description)
                 setSubtasks(taskSchema.parse(res).task.childTasks)
                 if(taskSchema.parse(res).task.parentTask != null) {
@@ -164,9 +155,6 @@ export default function TaskMainLayout(...props: any) {
         }).catch((err) => {
             console.log(err)
         })
-
-        console.log('requestBody',requestBody)
-        console.log('is_new',taskId === 'new')
     }
 
     return (
@@ -248,9 +236,9 @@ export default function TaskMainLayout(...props: any) {
                                         <CommandEmpty>No presets found.</CommandEmpty>
                                         <CommandGroup heading="Status">
                                             {Object.entries(statuses).map(([key, value]) => (
-                                                <CommandItem key={key}
+                                                <CommandItem key={value}
                                                              onSelect={() => {
-                                                                 setStatus(key)
+                                                                 setStatus(value)
                                                                  setStatusopen(false)
                                                              }}
                                                 >
@@ -258,7 +246,7 @@ export default function TaskMainLayout(...props: any) {
                                                     <Check
                                                         className={cn(
                                                             "ml-auto h-4 w-4",
-                                                            status === key
+                                                            status === value
                                                                 ? "opacity-100"
                                                                 : "opacity-0"
                                                         )}
@@ -465,11 +453,11 @@ export default function TaskMainLayout(...props: any) {
                                         <>
                                             <span
                                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                Estimation Points
+                                                Punts d'estimació
                                             </span>
                                             <Input
                                                 id="estimationpoints"
-                                                placeholder="Estimation Points"
+                                                placeholder="Punts d'estimació"
                                                 value={estimationpoints}
                                                 type="number"
                                                 autoCapitalize="none"

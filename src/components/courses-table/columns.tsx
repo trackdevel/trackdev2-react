@@ -1,9 +1,9 @@
 "use client"
 
-import { ColumnDef } from "@tanstack/react-table"
+import {ColumnDef} from "@tanstack/react-table"
 
-import { DataTableColumnHeader } from "./data-table-column-header"
-import { DataTableRowActions } from "./data-table-row-actions"
+import {DataTableColumnHeader} from "./data-table-column-header"
+import {DataTableRowActions} from "./data-table-row-actions"
 import {CourseListItem} from "../data/courses/schema";
 import {ExternalLink} from "lucide-react";
 import {Link} from "react-router-dom";

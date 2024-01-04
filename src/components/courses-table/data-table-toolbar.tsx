@@ -1,11 +1,10 @@
 "use client"
 
-import { Table } from "@tanstack/react-table"
-import { X } from "lucide-react"
+import {Table} from "@tanstack/react-table"
+import {X} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
-import { Input } from "../../registry/ui/input"
-import { DataTableViewOptions } from "./data-table-view-options"
+import {Button} from "../../registry/ui/button"
+import {DataTableViewOptions} from "./data-table-view-options"
 
 
 interface DataTableToolbarProps<TData> {

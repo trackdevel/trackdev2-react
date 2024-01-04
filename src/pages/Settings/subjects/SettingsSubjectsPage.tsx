@@ -1,16 +1,14 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import {subjectSchema} from "../../../components/data/subjects/schema";
-import data from "../../../components/data/subjects/subject.json";
 import {columns} from "../../../components/subjects-table/columns";
-import React, {useEffect} from "react";
+import React from "react";
 import {SubjectsTable} from "../../../components/subjects-table/data-table";
 import {Button} from "../../../registry/ui/button";
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
     DialogFooter,
     DialogHeader,
     DialogTitle,

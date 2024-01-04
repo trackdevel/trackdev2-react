@@ -1,5 +1,4 @@
-
-import { Command } from "lucide-react"
+import {Command} from "lucide-react"
 import {RegisterForm} from "../../components/auth/register-form";
 import {Link} from "react-router-dom";
 import {Button} from "../../registry/ui/button";

@@ -1,7 +1,7 @@
-import { Column } from "@tanstack/react-table"
-import { ChevronsUpDown, EyeOff, SortAsc, SortDesc } from "lucide-react"
+import {Column} from "@tanstack/react-table"
+import {ChevronsUpDown, EyeOff, SortAsc, SortDesc} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
