@@ -9,7 +9,7 @@ import { DataTableViewOptions } from "./data-table-view-options"
 
 import { DataTableFacetedFilter } from "./data-table-faceted-filter"
 import {courses} from "../data/projects/data";
-import React from "react";
+import React, {useEffect} from "react";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {courseSchema} from "../data/courses/schema";
@@ -23,19 +23,14 @@ export function DataTableToolbar<TData>({
 }: DataTableToolbarProps<TData>) {
     const isFiltered = table.getState().columnFilters.length > 0
     const [courses, setCourses] = React.useState<Array<any>>([])
-    const [iscoursesloaded, setIscoursesloaded] = React.useState<boolean>(false)
 
-    if(courses.length === 0 && !iscoursesloaded) {
-        getCourses()
-    }
 
-    async function getCourses() {
-        setIscoursesloaded(true)
+    useEffect(() => {
         Api.get('/courses').then((res) => {
             setCourses(z.array(courseSchema).parse(res))
         }).catch((err) => {})
         return;
-    }
+    } , [])
 
 
     return (

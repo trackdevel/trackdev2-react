@@ -2,7 +2,7 @@ import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import {userSchema} from "../../../components/data/users/schema";
 import {columns} from "../../../components/users-table/columns";
-import React from "react";
+import React, {useEffect} from "react";
 import {UsersTable} from "../../../components/users-table/data-table";
 import {Button} from "../../../registry/ui/button";
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
@@ -28,19 +28,14 @@ export default function SettingsUsersPage() {
     const [email,setEmail] = React.useState<string>('')
 
     const [tasks, setTasks] = React.useState<Array<any>>([])
-    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
 
-    if(tasks.length === 0 && !istasksloaded) {
-        getUsers()
-    }
-    async function getUsers() {
-        setIsTasksLoaded(true)
+    useEffect(() => {
         Api.get('/users').then((res) => {
             setTasks(z.array(userSchema).parse(res))
         }).catch((err) => {})
         return;
-    }
+    }, []);
 
     function toogleState() {
         setState(!state)

@@ -1,9 +1,18 @@
 import {Separator} from "../../registry/ui/separator"
 import {SidebarNav} from "./components/sidebar-nav"
 import {Outlet} from "react-router-dom";
+import React, {useEffect} from "react";
+import Api from "../../utils/Api";
 
 
 const sidebarNavItems = [
+    {
+        title: "Perfil",
+        href: "/settings/profile",
+    }
+]
+
+const sidebarNavItemsAdmin = [
     {
         title: "Perfil",
         href: "/settings/profile",
@@ -31,6 +40,18 @@ interface SettingsLayoutProps {
 }
 
 export default function SettingsLayout() {
+
+    const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
+
+
+    useEffect(() => {
+        Api.get('/users/checker/admin').then((res) => {
+            setIsAdmin(true)
+        }).catch((err) => {
+            setIsAdmin(false)
+        })
+    }, []);
+
     return (
         <>
             <div className="hidden space-y-6 p-10 pb-16 md:block">
@@ -43,7 +64,7 @@ export default function SettingsLayout() {
                 <Separator className="my-6" />
                 <div className="flex flex-col space-y-8 lg:flex-row lg:space-x-12 lg:space-y-0">
                     <aside className="-mx-4 lg:w-1/5">
-                        <SidebarNav items={sidebarNavItems} />
+                        <SidebarNav items={isAdmin ? sidebarNavItemsAdmin : sidebarNavItems} />
                     </aside>
                     <div className="flex-1 w-full">
                         <Outlet/>

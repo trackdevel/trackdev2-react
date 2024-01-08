@@ -51,29 +51,6 @@ export function CardsChat( ...props: any ) {
     }).catch((err) => {})
   }
 
-  //const [messages, setMessages] = React.useState([
-  //  {
-  //    user: "2",
-  //    username: "Gerard Rovellat",
-  //    content: "Hi, how can I help you today?",
-  //  },
-  //  {
-  //    user: "1",
-  //    username: "Marc Got",
-  //    content: "Hey, I'm having trouble with my account.",
-  //  },
-  //  {
-  //    user: "2",
-  //    username: "Gerard Rovellat",
-  //    content: "What seems to be the problem?",
-  //  },
-  //  {
-  //    user: "1",
-  //    username: "Marc Got",
-  //    content: "I can't log in.",
-  //  },
-  //])
-
   return (
     <>
       <Card>
@@ -81,6 +58,12 @@ export function CardsChat( ...props: any ) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {messages.length === 0 && (
+                <div className="flex justify-center items-center h-32">
+                    <p className="text-muted">No hi ha comentaris</p>
+                </div>
+                )
+            }
             {messages.map((message : any, index : any) => (
               <div
                 key={index}
@@ -91,7 +74,7 @@ export function CardsChat( ...props: any ) {
                     : "bg-muted"
                 )}
               >
-                  <h1>{message.username}</h1>
+                  <h1>{message.author.username}</h1>
                   <p className="m-0">{message.content}</p>
               </div>
             ))}
@@ -101,7 +84,7 @@ export function CardsChat( ...props: any ) {
           <div className="flex w-full items-center space-x-2">
             <Input
               id="message"
-              placeholder="Type your message..."
+              placeholder="Escriu el seu comentari"
               className="flex-1"
               autoComplete="off"
               value={input}

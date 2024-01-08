@@ -1,7 +1,7 @@
 import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import {columns} from "../../../components/courses-table/columns";
-import React from "react";
+import React, {useEffect} from "react";
 import {courseSchema} from "../../../components/data/courses/schema";
 import {CrousesTable} from "../../../components/courses-table/data-table";
 import {Button} from "../../../registry/ui/button"
@@ -45,7 +45,6 @@ export default function SettingsCoursesPage() {
     const [subjectId,setSubjectId] = React.useState<string>('')
     const [year,setYear] = React.useState<number>()
     const [subjects, setSubjects] = React.useState<Array<any>>([])
-    const [issubjectsloaded, setIsSubjectsLoaded] = React.useState<boolean>(false)
 
     const [tasks, setCourses] = React.useState<Array<any>>([])
     const [iscourseloaded, setIsCourseLoaded] = React.useState<boolean>(false)
@@ -56,20 +55,16 @@ export default function SettingsCoursesPage() {
 
     const current_year = new Date().getFullYear()
 
-    if(subjects.length === 0 && !issubjectsloaded) {
-        getSubjects()
-    }
-    async function getSubjects() {
-        setIsSubjectsLoaded(true)
+    useEffect(() => {
         Api.get('/subjects').then((res) => {
             setSubjects(z.array(subjectSchema).parse(res))
         }).catch((err) => {})
         return;
-    }
+    } ,[])
 
-    if(tasks.length === 0 && !iscourseloaded) {
+    useEffect(() => {
         getCourses()
-    }
+    } ,[])
 
     async function getCourses() {
         setIsCourseLoaded(true)

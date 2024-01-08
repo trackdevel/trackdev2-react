@@ -211,7 +211,7 @@ export function DataTable<TData, TValue>({
                 </PopoverTrigger>
                 <PopoverContent className="w-[300px] p-0">
                   <Command>
-                    <CommandInput placeholder="Search presets..." />
+                    <CommandInput placeholder="Buscar projecte..." />
                     <CommandEmpty>No presets found.</CommandEmpty>
                     <CommandGroup heading="Sprints">
                       {projects.map((request) => (

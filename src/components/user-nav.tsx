@@ -14,7 +14,7 @@ import {
 } from "../registry/ui/dropdown-menu"
 import {AvatarFallback} from "../registry/ui/avatar";
 import {Avatar} from "@radix-ui/react-avatar";
-import React from "react";
+import React, {useEffect} from "react";
 import Api from "../utils/Api";
 import {Link} from "react-router-dom";
 
@@ -23,34 +23,29 @@ export function UserNav() {
     const [currentUserCappitalLetters, setCurrentUserCappitalLetter] = React.useState<string>('1')
     const [currentUserEmail, setCurrentUserEmail] = React.useState<string>('1')
     const [currentUserColor, setCurrentUserColor] = React.useState<string>('1')
-    const [currentUserloaded, setCurrentUserloaded] = React.useState<boolean>(false)
     const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
 
     const [githubData, setGithubData] = React.useState<any>([])
 
 
-    if(!currentUserloaded) {
-        getUserData()
-    }
-    async function getUserData() {
-        setCurrentUserloaded(true)
+    useEffect(() => {
         Api.get('/auth/self').then((res) => {
             setCurrentUser(res.username)
             setCurrentUserCappitalLetter(res.capitalLetters)
             setCurrentUserEmail(res.email)
             setCurrentUserColor(res.color)
-            if( res.githubInfo.github_token != '' ) {
+            if (res.githubInfo.github_token != '') {
                 setGithubData(res.githubInfo)
             }
-        }).catch((err) => {})
+        }).catch((err) => {
+        })
 
         Api.get('/users/checker/admin').then((res) => {
             setIsAdmin(true)
         }).catch((err) => {
             setIsAdmin(false)
         })
-        return;
-    }
+    }, []);
 
     async function logout() {
         Api.post('/auth/logout', {}).then((res) => {

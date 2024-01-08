@@ -30,6 +30,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../registry/ui/command";
 import {cn} from "../../lib/utils";
 import {Subjects} from "../../pages/Settings/crouses/SettingsCoursesPage";
+import {useEffect} from "react";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -43,7 +44,6 @@ export function DataTableRowActions<TData>({
   const [showEditDialog, setShowEditDialog] = React.useState(false)
 
   const [subjects, setSubjects] = React.useState<Array<any>>([])
-  const [issubjectsloaded, setIsSubjectsLoaded] = React.useState<boolean>(false)
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
@@ -67,16 +67,11 @@ export function DataTableRowActions<TData>({
     })
   }
 
-  if(subjects.length === 0 && !issubjectsloaded) {
-    getSubjects()
-  }
-  async function getSubjects() {
-    setIsSubjectsLoaded(true)
+  useEffect(() => {
     Api.get('/subjects').then((res) => {
       setSubjects(z.array(subjectSchema).parse(res))
     }).catch((err) => {})
-    return;
-  }
+  }, [])
 
 
   async function getCourse() {
@@ -164,7 +159,7 @@ export function DataTableRowActions<TData>({
         <AlertDialogContent>
           <form onSubmit={onCreate}>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">

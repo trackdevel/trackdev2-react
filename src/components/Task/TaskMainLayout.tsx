@@ -32,10 +32,11 @@ export interface User {
     username: string
     email: string
     capitalLetters: string
+    color: string
 }
 
 export default function TaskMainLayout(...props: any) {
-    const [tab, setTab] = React.useState<string>('Information')
+    const [tab, setTab] = React.useState<string>('Informació')
 
     const [title, setTitle] = React.useState<string>('Full task name')
     const [information, setInformation] = React.useState<string>('')
@@ -48,7 +49,6 @@ export default function TaskMainLayout(...props: any) {
     const [statuses, setStatuses] = React.useState<Object>([])
     const [status, setStatus] = React.useState<string>('')
     const [statusopen, setStatusopen] = React.useState(false)
-
 
     const [type, setType] = React.useState<string>('')
     const [typeopen, setTypeopen] = React.useState(false)
@@ -76,7 +76,9 @@ export default function TaskMainLayout(...props: any) {
     const [pointsReviews, setPointsReviews] = React.useState<Array<any>>([])
     const [currentReview, setCurrentReview] = React.useState<any>([])
 
-    const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
+    const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
+    const [currenUserMail , setCurrentUserMail] = React.useState<string>('')
+    const [isAssignee, setIsAssignee] = React.useState<boolean>(false)
 
 
     useEffect(() => {
@@ -86,31 +88,26 @@ export default function TaskMainLayout(...props: any) {
         }).catch((err) => {})
     }, [])
 
-    useEffect(() => {
-        if(taskId != 'new') {
-            Api.get('/tasks/' + taskId).then((res) => {
-                setSelectedTeamAssignee(res.reporter)
-                setSelectedTeam(res.assignee)
-            }).catch((err) => {})
-        }
-    }, []);
-
 
     useEffect(() => {
         if(taskId != 'new') {
             Api.get('/tasks/' + taskId).then((res) => {
-                setTask(taskSchema.parse(res).task)
-                setTitle(taskSchema.parse(res).task.name)
-                setDate(new Date(taskSchema.parse(res).task.createdAt))
-                setEstimationpoints(taskSchema.parse(res).task.estimationPoints)
-                setSprint(taskSchema.parse(res).task.activeSprints[0])
-                setStatus(taskSchema.parse(res).task.statusText)
-                setInformation(taskSchema.parse(res).task.description)
-                setSubtasks(taskSchema.parse(res).task.childTasks)
-                if(taskSchema.parse(res).task.parentTask != null) {
+                console.log(res.task)
+                console.log(res.task.createdAt)
+                setTask(taskSchema.parse(res.task))
+                setTitle(taskSchema.parse(res.task.name))
+                setDate(new Date(taskSchema.parse(res.task.createdAt)))
+                setEstimationpoints(taskSchema.parse(res.task.estimationPoints))
+                setSelectedTeamAssignee(res.task.reporter)
+                setSelectedTeam(res.task.assignee)
+                setSprint(taskSchema.parse(res.task.activeSprints[0]))
+                setStatus(taskSchema.parse(res.task.statusText))
+                setInformation(taskSchema.parse(res.task.description))
+                setSubtasks(taskSchema.parse(res.task.childTasks))
+                if(taskSchema.parse(res.task.parentTask) != null) {
                     setIsUserStory(false)
                 }
-                setPointsReviews(taskSchema.parse(res).pointsReview)
+                setPointsReviews(taskSchema.parse(res.pointsReview))
                 let current_review = taskSchema.parse(res).pointsReview.filter((item : any) => item.user.username === 'Admin user')
                 if(current_review.length > 0) {
                     setCurrentReview(current_review[0])
@@ -121,10 +118,12 @@ export default function TaskMainLayout(...props: any) {
     }, []);
 
     useEffect(() => {
-        Api.get('/tasks/status').then((res) => {
+        if(isuserstory) var url = '/tasks/usstatus'
+        else var url = '/tasks/taskstatus'
+        Api.get(url).then((res) => {
             setStatuses(res)
         }).catch((err) => {})
-    }, []);
+    }, [isuserstory]);
 
 
     useEffect(() => {
@@ -135,6 +134,16 @@ export default function TaskMainLayout(...props: any) {
         })
     }, []);
 
+    useEffect(() => {
+        Api.get('/auth/self').then((res) => {
+            setCurrentUserMail(res.email)
+            if(res.email == selectedTeam?.email) {
+                setIsAssignee(true)
+            }
+        }).catch((err) => {
+        })
+    })
+
 
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
@@ -142,13 +151,15 @@ export default function TaskMainLayout(...props: any) {
         let requestBody = {
             name: title,
             estimationPoints: estimationpoints,
-            activeSprints: [sprint?.id],
-            status: status,
+            activeSprints: [sprint?.id], // no ho guarda
+            // status: status, // Error 400
             // createdAt: date,
-            assignee: selectedTeam?.email,
-            reporter: selectedTeamAssignee?.email,
-            description: information,
+            assignee: selectedTeam?.email, // guarda el SeletedTeam sempre
+            reporter: selectedTeamAssignee?.email, // guarda el SeletedTeam sempre
+            description: information
         }
+
+        console.log('/tasks/' + taskId,requestBody)
 
         Api.patch('/tasks/' + taskId, requestBody).then((res) => {
             console.log(res)
@@ -192,7 +203,7 @@ export default function TaskMainLayout(...props: any) {
                                 </PopoverTrigger>
                                 <PopoverContent className="w-[300px] p-0">
                                     <Command>
-                                        <CommandInput placeholder="Search presets..." />
+                                        <CommandInput placeholder="Buscar sprint..." />
                                         <CommandEmpty>No presets found.</CommandEmpty>
                                         <CommandGroup heading="Sprints">
                                             {sprints.map((request : any) => (
@@ -262,7 +273,7 @@ export default function TaskMainLayout(...props: any) {
                             ) : (
                                 <Button>Guardar</Button>
                             )}
-                            <TaskActions />
+                            {/* <TaskActions taskId={taskId} projectId={projectId}/> */}
                         </div>
                     </div>
                     <Separator />
@@ -271,22 +282,22 @@ export default function TaskMainLayout(...props: any) {
                             <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_350px]">
                                 <div className="hidden flex-col space-y-4 sm:flex md:order-2">
                                     <div className="grid gap-2">
-                                        <TabsList className={"grid grid-cols-" + (isuserstory ? 4 : 3)}>
-                                            <TabsTrigger value="information" onClick={() => setTab('Information')}>
-                                                <span className="sr-only">Information</span>
+                                        <TabsList className={"grid  " + (isuserstory ? 'grid-cols-4' : 'grid-cols-3')}>
+                                            <TabsTrigger value="information" onClick={() => setTab('Informació')}>
+                                                <span className="sr-only">Informació</span>
                                                 <Icons.Info className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="history" onClick={() => setTab('History')}>
-                                                <span className="sr-only">History</span>
+                                            <TabsTrigger value="history" onClick={() => setTab('Historial')}>
+                                                <span className="sr-only">Historial</span>
                                                 <Icons.History className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="comments" onClick={() => setTab('Comments')}>
-                                                <span className="sr-only">Comments</span>
+                                            <TabsTrigger value="comments" onClick={() => setTab('Comentaris')}>
+                                                <span className="sr-only">Comentaris</span>
                                                 <Icons.messagesSquare className="h-5 w-5"/>
                                             </TabsTrigger>
                                             {isuserstory ? (
-                                                <TabsTrigger value="subtasks" onClick={() => setTab('Subtasks')}>
-                                                    <span className="sr-only">Subtasks</span>
+                                                <TabsTrigger value="subtasks" onClick={() => setTab('Tasques')}>
+                                                    <span className="sr-only">Sub Tasques</span>
                                                     <Icons.Megaphone className="h-5 w-5"/>
                                                 </TabsTrigger>
                                             ) : null}
@@ -296,8 +307,7 @@ export default function TaskMainLayout(...props: any) {
                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Data de creació
                                     </span>
-                                    <Popover open={false} onOpenChange={() => {
-                                    }}>
+                                    <Popover open={false} onOpenChange={() => {}}>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant={"outline"}
@@ -320,7 +330,7 @@ export default function TaskMainLayout(...props: any) {
                                     </Popover>
                                     <span
                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Reporter
+                                        Creador
                                     </span>
                                     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
                                         <Popover open={open} onOpenChange={setOpen}>
@@ -333,11 +343,12 @@ export default function TaskMainLayout(...props: any) {
                                                     className="w-full justify-between"
                                                 >
                                                     <Avatar className="mr-2 h-5 w-5">
-                                                        <AvatarImage
-                                                            alt={selectedTeam?.capitalLetters}
-                                                            className="grayscale"
-                                                        />
-                                                        <AvatarFallback>SC</AvatarFallback>
+                                                        <AvatarFallback style={
+                                                            {
+
+                                                                fontSize: '10px', backgroundColor: selectedTeam?.color
+                                                            }
+                                                        }>{selectedTeam?.capitalLetters}</AvatarFallback>
                                                     </Avatar>
                                                     {selectedTeam?.username}
                                                     <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
@@ -359,12 +370,8 @@ export default function TaskMainLayout(...props: any) {
                                                                     className="text-sm"
                                                                 >
                                                                     <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage
-                                                                            src={`https://avatar.vercel.sh/${team.username}.png`}
-                                                                            alt={team.username}
-                                                                            className="grayscale"
-                                                                        />
-                                                                        <AvatarFallback>SC</AvatarFallback>
+                                                                        <AvatarImage className="grayscale" />
+                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
                                                                     </Avatar>
                                                                     {team.username}
                                                                     <Check
@@ -385,7 +392,7 @@ export default function TaskMainLayout(...props: any) {
                                     </Dialog>
                                     <span
                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Assignee
+                                        Asignat
                                     </span>
                                     <Dialog open={showNewTeamDialogAssignee}
                                             onOpenChange={setShowNewTeamDialogAssignee}>
@@ -399,11 +406,7 @@ export default function TaskMainLayout(...props: any) {
                                                     className="w-full justify-between"
                                                 >
                                                     <Avatar className="mr-2 h-5 w-5">
-                                                        <AvatarImage
-                                                            alt={selectedTeamAssignee?.username}
-                                                            className="grayscale"
-                                                        />
-                                                        <AvatarFallback>SC</AvatarFallback>
+                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: selectedTeamAssignee?.color}}>{selectedTeamAssignee?.capitalLetters}</AvatarFallback>
                                                     </Avatar>
                                                     {selectedTeamAssignee?.username}
                                                     <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
@@ -421,16 +424,13 @@ export default function TaskMainLayout(...props: any) {
                                                                     onSelect={() => {
                                                                         setSelectedTeamAssignee(team)
                                                                         setOpenAssignee(false)
+                                                                        setIsAssignee(team.email == currenUserMail)
                                                                     }}
                                                                     className="text-sm"
                                                                 >
                                                                     <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage
-                                                                            src={`https://avatar.vercel.sh/${team.username}.png`}
-                                                                            alt={team.username}
-                                                                            className="grayscale"
-                                                                        />
-                                                                        <AvatarFallback>SC</AvatarFallback>
+                                                                        <AvatarImage className="grayscale" />
+                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
                                                                     </Avatar>
                                                                     {team.username}
                                                                     <Check
@@ -463,16 +463,18 @@ export default function TaskMainLayout(...props: any) {
                                                 autoCapitalize="none"
                                                 autoComplete="name"
                                                 autoCorrect="off"
-                                                disabled={true}
+                                                disabled={!isAssignee}
                                                 onChange={(e) => setEstimationpoints(parseInt(e.target.value))}
                                             />
-                                            <span
-                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                Points Review
-                                            </span>
+                                            {(!isAssignee) ? (
+                                                <>
+                                                    <span
+                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                        Revisió de punts
+                                                    </span>
                                                     <Input
                                                         id="pointsreview"
-                                                        placeholder="Points Review"
+                                                        placeholder="Punts"
                                                         value={currentReview.points}
                                                         type="number"
                                                         autoCapitalize="none"
@@ -486,8 +488,8 @@ export default function TaskMainLayout(...props: any) {
                                                         }}
                                                     />
                                                     <Input
-                                                        id="pointsreview"
-                                                        placeholder="Commentaris"
+                                                        id="pointsreviewcomment"
+                                                        placeholder="Commentari"
                                                         value={currentReview.comment}
                                                         type="text"
                                                         autoCapitalize="none"
@@ -500,13 +502,15 @@ export default function TaskMainLayout(...props: any) {
                                                             })
                                                         }}
                                                     />
+                                                </>
+                                            ) : null}
+                                            {isAdmin && pointsReviews.length > 0 ? (
+                                                <>
                                                     <span
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                Points Review List
-                                            </span>
-                                            {isAdmin ? (
-                                                <>
-                                                    {pointsReviews.map((item : any, index : any) => (
+                                                        Llistat de revisions de punts
+                                                    </span>
+                                                    {pointsReviews.map((item: any, index: any) => (
                                                         <>
                                                             <div className="flex items-center">
                                                                 <Avatar className="h-9 w-9">
@@ -530,11 +534,11 @@ export default function TaskMainLayout(...props: any) {
                                     ) : null}
                                 </div>
                                 <div className="md:order-1">
-                                    <TabsContent value="information" className="mt-0 border-0 p-0">
+                                <TabsContent value="information" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
                                             <Textarea
-                                                placeholder="Information"
-                                                value={information}
+                                                placeholder="Informació"
+                                                value={(information) ? information : ''}
                                                 onChange={(e) => setInformation(e.target.value)}
                                                 className="min-h-[200px] flex-1 p-4 md:min-h-[400px] lg:min-h-[400px]"
                                             />

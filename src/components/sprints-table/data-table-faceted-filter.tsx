@@ -1,10 +1,10 @@
 import * as React from "react"
-import {Column} from "@tanstack/react-table"
-import {Check, LucideIcon, PlusCircle} from "lucide-react"
+import { Column } from "@tanstack/react-table"
+import { Check, LucideIcon, PlusCircle } from "lucide-react"
 
 import {cn} from "../../lib/utils";
-import {Badge} from "../../registry/ui/badge"
-import {Button} from "../../registry/ui/button"
+import { Badge } from "../../registry/ui/badge"
+import { Button } from "../../registry/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -14,8 +14,12 @@ import {
   CommandList,
   CommandSeparator,
 } from "../../registry/ui/command"
-import {Popover, PopoverContent, PopoverTrigger,} from "../../registry/ui/popover"
-import {Separator} from "../../registry/ui/separator"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "../../registry/ui/popover"
+import { Separator } from "../../registry/ui/separator"
 
 interface DataTableFacetedFilter<TData, TValue> {
   column?: Column<TData, TValue>
@@ -27,13 +31,11 @@ interface DataTableFacetedFilter<TData, TValue> {
   }[]
 }
 
-export function DataTableFacetedFilter<TData, TValue>({
-  column,
-  title,
-  options,
-}: DataTableFacetedFilter<TData, TValue>) {
+export function DataTableFacetedFilter<TData, TValue>({ column,  title,  options, }: DataTableFacetedFilter<TData, TValue>) {
+
   const facets = column?.getFacetedUniqueValues()
   const selectedValues = new Set(column?.getFilterValue() as string[])
+
 
   return (
     <Popover>
@@ -56,7 +58,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     variant="secondary"
                     className="rounded-sm px-1 font-normal"
                   >
-                    {selectedValues.size} selected
+                    {selectedValues.size} seleccionats
                   </Badge>
                 ) : (
                   options
@@ -80,7 +82,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
-            <CommandEmpty>Cap resultat.</CommandEmpty>
+            <CommandEmpty>Cap resultat trobat.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value)
@@ -109,9 +111,6 @@ export function DataTableFacetedFilter<TData, TValue>({
                     >
                       <Check className={cn("h-4 w-4")} />
                     </div>
-                    {option.icon && (
-                      <option.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-                    )}
                     <span>{option.label}</span>
                     {facets?.get(option.value) && (
                       <span className="ml-auto flex h-4 w-4 items-center justify-center font-mono text-xs">
@@ -130,7 +129,7 @@ export function DataTableFacetedFilter<TData, TValue>({
                     onSelect={() => column?.setFilterValue(undefined)}
                     className="justify-center text-center"
                   >
-                    Clear filters
+                    Borrar filtres
                   </CommandItem>
                 </CommandGroup>
               </>

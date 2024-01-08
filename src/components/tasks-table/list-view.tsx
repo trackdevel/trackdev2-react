@@ -71,7 +71,7 @@ export function TasksListView<TData, TValue>({ table }: DataTableProps<TData>) {
                   colSpan={table.getHeaderGroups().length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Cap resultat
                 </TableCell>
               </TableRow>
             )}

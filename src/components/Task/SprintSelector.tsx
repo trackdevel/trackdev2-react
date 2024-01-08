@@ -35,7 +35,7 @@ export function SprintSelector({ pullRequests, ...props }: PresetSelectorProps) 
             </PopoverTrigger>
             <PopoverContent className="w-[300px] p-0">
                 <Command>
-                    <CommandInput placeholder="Search presets..." />
+                    <CommandInput placeholder="Buscar sprint..." />
                     <CommandEmpty>No presets found.</CommandEmpty>
                     <CommandGroup heading="Sprints">
                         {pullRequests.map((request) => (

@@ -98,7 +98,7 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "reporter",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Reporter" />
+        <DataTableColumnHeader column={column} title="Creador" />
     ),
     cell: ({ row }) => {
       const reporter = row?.original?.reporter ? row?.original?.reporter : ''
@@ -114,7 +114,7 @@ const columns: ColumnDef<Task>[] = [
                     key={reporter.username}
                     className="inline-block border-2 border-background"
                 >
-                    <AvatarFallback>{reporter.username[0].toUpperCase() + reporter.username[1].toUpperCase()}</AvatarFallback>
+                    <AvatarFallback style={{backgroundColor: reporter.color}}>{reporter.username[0].toUpperCase() + reporter.username[1].toUpperCase()}</AvatarFallback>
                   </Avatar>
             </div>
           </div>
@@ -127,7 +127,7 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "assignee",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Assignee" />
+        <DataTableColumnHeader column={column} title="Asignat" />
     ),
     cell: ({ row }) => {
       const assignee = row?.original?.assignee ? row?.original?.assignee : ''
@@ -143,7 +143,7 @@ const columns: ColumnDef<Task>[] = [
                   key={assignee.username}
                   className="inline-block border-2 border-background"
               >
-                <AvatarFallback>{assignee.username[0].toUpperCase() + assignee.username[1].toUpperCase()}</AvatarFallback>
+                <AvatarFallback style={{backgroundColor: assignee.color}}>{assignee.username[0].toUpperCase() + assignee.username[1].toUpperCase()}</AvatarFallback>
               </Avatar>
             </div>
           </div>
@@ -175,6 +175,24 @@ const columns: ColumnDef<Task>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
+    },
+  },
+  {
+    accessorKey: "type",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Tipus" />
+    ),
+    cell: ({ row }) => {
+      var text = 'Subtasca'
+      if(!row.original.parentTask) text = 'Història d\'usuari'
+
+      return (
+          <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {text}
+          </span>
+          </div>
+      )
     },
   },
   {

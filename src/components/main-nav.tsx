@@ -22,11 +22,16 @@ export function MainNav() {
     return (
         <nav className={"flex items-center space-x-4 lg:space-x-6"} >
             <Link to="/" className="text-sm font-medium transition-colors hover:text-primary" >
-                Home
+                Inici
             </Link>
             {currentProject != -1 && currentProject != undefined && true && (
                 <Link to={"/project/" + currentProject} className="text-sm font-medium transition-colors hover:text-primary" >
-                    Project
+                    Projecte
+                </Link>
+            )}
+            {currentProject != -1 && currentProject != undefined && true && (
+                <Link to={"/sprints/" + currentProject} className="text-sm font-medium transition-colors hover:text-primary" >
+                    Sprints
                 </Link>
             )}
         </nav>

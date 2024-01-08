@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import { MoreHorizontal, Pen, Trash } from "lucide-react"
+import {Calendar as CalendarIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
 import {
@@ -29,6 +29,9 @@ import {Input} from "../../registry/ui/input";
 import {Icons} from "../../registry/ui/icons";
 import {z} from "zod";
 import {subjectSchema} from "../data/subjects/schema";
+import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover";
+import {format} from "date-fns";
+import {Calendar} from "../../registry/ui/calendar";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -41,56 +44,47 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [name, setName] = React.useState<string>('')
-  const [acronym, setAcronym] = React.useState<string>('')
-
-  const [tasks, setTasks] = React.useState<Array<any>>([])
-  const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
+  const [startDate, setStartDate] = React.useState<Date>()
+  const [startDateOpen , setStartDateOpen] = React.useState<boolean>(false)
+  const [endDate, setEndDate] = React.useState<Date>()
+  const [endDateOpen , setEndDateOpen] = React.useState<boolean>(false)
 
   function deleteRow() {
-
     // @ts-ignore
-    Api.delete('/subjects/' + row.original.id ).then((res) => {
-      setShowDeleteDialog(false)
-      toast({
-        description: "This preset has been deleted.",
-      })
+    Api.delete('/sprints/' + row.original.id).then((res) => {
       window.location.reload()
     }).catch((err) => {
+      window.location.reload()
     })
   }
 
   async function getSubject() {
     // @ts-ignore
-    Api.get('/subjects/' + row.original.id).then((res) => {
+    Api.get('/sprints/'+ row.original.id).then((res) => {
       setName(res.name)
-      setAcronym(res.acronym)
+      setStartDate(new Date(res.startDate))
+      setEndDate(new Date(res.endDate))
     }).catch((err) => {
     })
   }
 
   async function onCreate(event: React.SyntheticEvent) {
     event.preventDefault()
-    setIsLoading(true)
 
-    if (name === '' || acronym === '') {
-      setIsLoading(false)
-      return;
-    }
-
-    var requestBody = {
-      name: name,
-      acronym: acronym
+    let requestData = {
+        name: name,
+        startDate: startDate,
+        endDate: endDate
     }
 
     // @ts-ignore
-    Api.patch('/subjects/' + row.original.id, requestBody).then((res) => {
-      setIsLoading(false)
-      setShowEditDialog(false)
-      window.location.reload()
+    Api.patch('/sprints/' + row.original.id, requestData).then((res) => {
+        window.location.reload()
     }).catch((err) => {
-      setIsLoading(false)
+      console.log(err)
     })
 
+    setIsLoading(false)
   }
 
   return (
@@ -149,13 +143,12 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         <AlertDialogContent>
           <form onSubmit={onCreate}>
             <AlertDialogHeader>
-              <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
+              <AlertDialogTitle>Editar Sprint</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">
                 <Input
                     id="name"
-                    placeholder="Projecte de Desenvolupament de Software"
                     value={name}
                     type="text"
                     autoCapitalize="none"
@@ -164,26 +157,53 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                     disabled={isLoading}
                     onChange={(e) => setName(e.target.value)}
                 />
-                <Input
-                    id="acronym"
-                    placeholder="PDS"
-                    value={acronym}
-                    type="text"
-                    autoCapitalize="none"
-                    autoComplete="acronym"
-                    autoCorrect="off"
-                    disabled={isLoading}
-                    onChange={(e) => setAcronym(e.target.value)}
-                />
+                <Popover open={startDateOpen} onOpenChange={() => { setStartDateOpen(!startDateOpen) }}>
+                  <PopoverTrigger asChild>
+                    <Button
+                        variant={"outline"}
+                        className={"w-full justify-start text-left font-normal"}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4"/>
+                      {startDate ? format(startDate, "PPP") : <span>Data d'inici</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                        mode="single"
+                        selected={startDate}
+                        onSelect={setStartDate}
+                        initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <Popover open={endDateOpen} onOpenChange={() => { setEndDateOpen(!endDateOpen) }}>
+                  <PopoverTrigger asChild>
+                    <Button
+                        variant={"outline"}
+                        className={"w-full justify-start text-left font-normal"}
+                    >
+                      <CalendarIcon className="mr-2 h-4 w-4"/>
+                      {endDate ? format(endDate, "PPP") : <span>Data de finalització</span>}
+                    </Button>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0">
+                    <Calendar
+                        mode="single"
+                        selected={endDate}
+                        onSelect={setEndDate}
+                        initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
               </div>
             </div>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>Cancelar</AlertDialogCancel>
               <Button disabled={isLoading}>
                 {isLoading && (
                     <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                 )}
-                Crear Assignatura
+                Guardar
               </Button>
             </AlertDialogFooter>
           </form>

@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import {Check, ChevronsUpDown, EyeIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
+import {Check, ChevronsUpDown, EyeIcon, GraduationCapIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
 import {
@@ -31,6 +31,7 @@ import {Courses} from "../../pages/Settings/crouses/SettingsCoursesPage";
 import {z} from "zod";
 import {courseSchema} from "../data/courses/schema";
 import {Link} from "react-router-dom";
+import {useEffect} from "react";
 
 
 interface DataTableRowActionsProps<TData> {
@@ -46,6 +47,7 @@ export function DataTableRowActions<TData>({
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [name, setName] = React.useState<string>('')
+  const [nota, setNota] = React.useState<string>('8.5')
   const [acronym, setAcronym] = React.useState<string>('')
 
   const [open, setOpen] = React.useState(false)
@@ -53,21 +55,15 @@ export function DataTableRowActions<TData>({
   const [subjectId,setSubjectId] = React.useState<string>('')
 
   const [courses, setCourses] = React.useState<Array<any>>([])
-  const [iscoursesloaded, setIscoursesloaded] = React.useState<boolean>(false)
 
   const [selectedCourse, setSelectedCourse] = React.useState<Courses>()
 
-  if(courses.length === 0 && !iscoursesloaded) {
-    getCourses()
-  }
 
-  async function getCourses() {
-    setIscoursesloaded(true)
+  useEffect(() => {
     Api.get('/courses').then((res) => {
       setCourses(z.array(courseSchema).parse(res))
     }).catch((err) => {})
-    return;
-  }
+  }, [])
 
   function deleteRow() {
 
@@ -98,7 +94,8 @@ export function DataTableRowActions<TData>({
 
     var requestBody = {
       name: name,
-      courseId: selectedCourse?.id
+      courseId: selectedCourse?.id,
+      qualification: nota
     }
 
     // @ts-ignore
@@ -144,6 +141,16 @@ export function DataTableRowActions<TData>({
               Veure
             </Link>
           </DropdownMenuItem>
+          <DropdownMenuItem
+              onSelect={() => setShowDeleteDialog(true)}>
+            <GraduationCapIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Link to={
+              // @ts-ignore
+              "/settings/projects/" + row.original.id + "/notes"
+            } >
+              Notes
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={() => setShowDeleteDialog(true)}>
@@ -155,10 +162,9 @@ export function DataTableRowActions<TData>({
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This preset will no longer be
-              accessible by you or others you&apos;ve shared it with.
+              Aquesta acció no es pot desfer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -169,7 +175,7 @@ export function DataTableRowActions<TData>({
                   deleteRow()
                 }}
             >
-              Delete
+              Esborrar
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -232,6 +238,16 @@ export function DataTableRowActions<TData>({
                     autoCorrect="off"
                     disabled={isLoading}
                     onChange={(e) => setName(e.target.value)}
+                />
+                <Input
+                    id="nota"
+                    value={nota ? nota : "Nota"}
+                    type="text"
+                    autoCapitalize="none"
+                    autoComplete="Nota"
+                    autoCorrect="off"
+                    disabled={isLoading}
+                    onChange={(e) => setNota(e.target.value)}
                 />
               </div>
             </div>

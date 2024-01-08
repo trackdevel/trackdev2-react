@@ -16,7 +16,7 @@ import {
 import {Input} from "../../../registry/ui/input"
 import {toast} from "../../../registry/ui/use-toast"
 import Api from "../../../utils/Api";
-import React from "react";
+import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
 import {ExternalLink} from "lucide-react";
 import {Avatar, AvatarFallback, AvatarImage} from "../../../registry/ui/avatar";
@@ -66,15 +66,9 @@ export function ProfileForm(...props: any) {
         mode: "onChange",
     })
 
-    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
     const [githubData, setGithubData] = React.useState<any>([])
 
-    if(!istasksloaded) {
-        getUserData()
-    }
-
-    async function getUserData() {
-        setIsTasksLoaded(true)
+    useEffect(() => {
         if(userId == 'self') {
             Api.get('/auth/self').then((res) => {
                 form.setValue("username", res.username)
@@ -101,8 +95,7 @@ export function ProfileForm(...props: any) {
             }).catch((err) => {
             })
         }
-        return;
-    }
+    }, []);
 
     function onSubmit(data: ProfileFormValues) {
 
@@ -140,7 +133,7 @@ export function ProfileForm(...props: any) {
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Username</FormLabel>
+                        <FormLabel>Nom d'usuari</FormLabel>
                         <FormControl><Input placeholder="username" {...field} disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
@@ -156,7 +149,7 @@ export function ProfileForm(...props: any) {
                 )} />
                 <FormField control={form.control} name="capitalLetters" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Acronym</FormLabel>
+                        <FormLabel>Acronim</FormLabel>
                         <FormControl><Input placeholder="NC" {...field}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
@@ -164,7 +157,7 @@ export function ProfileForm(...props: any) {
                 )} />
                 <FormField control={form.control} name="githubToken" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Github Token</FormLabel>
+                        <FormLabel>Token de Github</FormLabel>
                         <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
                         <FormDescription className="flex items-center">
                             { ( githubData != '' ) ? (

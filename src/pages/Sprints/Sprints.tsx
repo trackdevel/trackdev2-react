@@ -1,35 +1,29 @@
 "use client"
 
 import React, {useEffect} from "react";
-import {z} from "zod"
-
-import {columns} from "../../components/tasks-table/columns"
-import {DataTable} from "../../components/tasks-table/data-table"
-import {taskSchema} from "../../components/data/taskTable/schema";
-import data from "../../components/data/taskTable/tasks.json";
-import Api from "../../utils/Api";
+import {columns} from "../../components/sprints-table/columns";
 import {useNavigate, useParams} from "react-router-dom";
+import Api from "../../utils/Api";
+import {z} from "zod";
+import {taskSchema} from "../../components/data/taskTable/schema";
+import {SprintsTable} from "../../components/sprints-table/data-table";
 
 
-const Project = () => {
-    //const tasks_demo = getTasks()
+const Sprints = () => {
+
     const [state, setState] = React.useState<boolean>(false)
 
     const navigate = useNavigate();
-    const [tasks, setTasks] = React.useState<Array<any>>([])
+    const [sprints, setSprints] = React.useState<Array<any>>([])
 
     const { projectId } = useParams();
     const [ name, setName ] = React.useState<string>('')
 
-    function toogleState() { setState(!state) }
 
 
     useEffect(() => {
-        Api.get(`/projects/${projectId}/tasks`).then((res) => {
-            for (let i = 0; i < res.tasks.length; i++) {
-                res.tasks[i].projectId = res.projectId
-            }
-            setTasks(z.array(taskSchema).parse(res.tasks))
+        Api.get(`/projects/${projectId}/sprints`).then((res) => {
+            setSprints(z.array(taskSchema).parse(res))
         }).catch((err) => {
             navigate('/auth/login');
         })
@@ -41,6 +35,7 @@ const Project = () => {
         }).catch((err) => {})
     }, [])
 
+    console.log('sprints',sprints)
 
     return (
         <>
@@ -55,11 +50,11 @@ const Project = () => {
                         </p>*/}
                     </div>
                 </div>
-                <DataTable data={tasks} columns={columns} />
+                <SprintsTable data={sprints} columns={columns} />
             </div>
         </>
     )
 
 }
 
-export default Project;
+export default Sprints;
