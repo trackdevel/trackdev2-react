@@ -148,6 +148,8 @@ export default function TaskMainLayout(...props: any) {
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
 
+        console.log(selectedTeam,selectedTeamAssignee)
+
         let requestBody = {
             name: title,
             estimationPoints: estimationpoints,
@@ -157,7 +159,11 @@ export default function TaskMainLayout(...props: any) {
             // createdAt: date,
             assignee: selectedTeam?.email, // guarda el SeletedTeam sempre
             reporter: selectedTeamAssignee?.email, // guarda el SeletedTeam sempre
-            description: information
+            description: information,
+            pointsReview: {
+                points: currentReview.points,
+                comment: currentReview.comment
+            }
         }
 
         console.log('/tasks/' + taskId,requestBody)
