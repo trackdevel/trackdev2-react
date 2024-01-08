@@ -152,7 +152,8 @@ export default function TaskMainLayout(...props: any) {
             name: title,
             estimationPoints: estimationpoints,
             activeSprints: [sprint?.id], // no ho guarda
-            // status: status, // Error 400
+            // @ts-ignore
+            status: statuses[status],
             // createdAt: date,
             assignee: selectedTeam?.email, // guarda el SeletedTeam sempre
             reporter: selectedTeamAssignee?.email, // guarda el SeletedTeam sempre
