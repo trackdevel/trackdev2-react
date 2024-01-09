@@ -469,11 +469,11 @@ export default function TaskMainLayout(...props: any) {
                                         <>
                                             <span
                                                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                Punts d'estimació
+                                                Estimació de punts
                                             </span>
                                             <Input
                                                 id="estimationpoints"
-                                                placeholder="Punts d'estimació"
+                                                placeholder="Estimació de punts"
                                                 value={estimationpoints}
                                                 type="number"
                                                 autoCapitalize="none"

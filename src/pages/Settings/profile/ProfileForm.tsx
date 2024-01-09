@@ -128,13 +128,14 @@ export function ProfileForm(...props: any) {
         })
     }
 
+    // @ts-ignore
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
                 <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Nom d'usuari</FormLabel>
-                        <FormControl><Input placeholder="username" {...field} disabled={!userId}/></FormControl>
+                        <FormControl><Input placeholder="username" {...field} disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -158,7 +159,9 @@ export function ProfileForm(...props: any) {
                 <FormField control={form.control} name="githubToken" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Token de Github</FormLabel>
-                        <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
+                        <FormControl>
+                            <Input placeholder="githubToken" {...field} />
+                        </FormControl>
                         <FormDescription className="flex items-center">
                             { ( githubData != '' ) ? (
                                 <div className="flex items-center mr-10 mt-2">

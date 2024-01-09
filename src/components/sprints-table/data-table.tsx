@@ -247,7 +247,7 @@ export function SprintsTable<TData, TValue>({columns,data,}: DataTableProps<TDat
                   {isLoading && (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                   )}
-                  Crear Subtasca
+                  Crear Sprint
                 </Button>
               </DialogFooter>
             </form>

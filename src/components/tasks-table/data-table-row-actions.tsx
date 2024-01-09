@@ -35,8 +35,12 @@ export function DataTableRowActions<TData>({
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
   const task = taskSchema.parse(row.original)
 
+  console.log('asdfasdf',row.original)
+
   // @ts-ignore
-  const to = `/project/${row?.original?.projectId}/${row?.original?.id}`
+  let projectID = (row?.original?.projectId) ? row?.original?.projectId : row?.original?.project?.id
+  // @ts-ignore
+  const to = `/project/${projectID}/${row?.original?.id}`
 
   function deleteRow() {
     // @ts-ignore
@@ -63,7 +67,7 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            <Link to={to} >
+            <Link to={to} onClick={window.location.reload}>
               Editar
             </Link>
           </DropdownMenuItem>

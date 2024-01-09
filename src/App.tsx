@@ -46,8 +46,8 @@ export function App() {
                 <Route path="/auth" element={<AuthLayout/>}>
                     <Route path="/auth/login" element={<Login/>}/>
                     <Route path="/auth/register" element={<Register/>}/>
-                    <Route path="/auth/password" element={<AuthGuard component={<Password/>}/>}/>
-                    <Route path="/auth/recovery" element={<AuthGuard component={<Recovery/>}/>}/>
+                    <Route path="/auth/password" element={<Password/>}/>
+                    <Route path="/auth/recovery" element={<Recovery/>}/>
                 </Route>
             </>
         )

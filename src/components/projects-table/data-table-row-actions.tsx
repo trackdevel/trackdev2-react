@@ -47,7 +47,7 @@ export function DataTableRowActions<TData>({
 
   const [isLoading, setIsLoading] = React.useState<boolean>(false)
   const [name, setName] = React.useState<string>('')
-  const [nota, setNota] = React.useState<string>('8.5')
+  const [nota, setNota] = React.useState<string>('')
   const [acronym, setAcronym] = React.useState<string>('')
 
   const [open, setOpen] = React.useState(false)
@@ -241,7 +241,8 @@ export function DataTableRowActions<TData>({
                 />
                 <Input
                     id="nota"
-                    value={nota ? nota : "Nota"}
+                    placeholder="Nota"
+                    value={nota ? nota : ""}
                     type="text"
                     autoCapitalize="none"
                     autoComplete="Nota"

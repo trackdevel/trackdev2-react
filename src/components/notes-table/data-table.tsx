@@ -247,7 +247,7 @@ export function NotesTable<TData, TValue>({columns,data,}: DataTableProps<TData,
                   {isLoading && (
                       <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                   )}
-                  Crear Subtasca
+                  Crear Nota
                 </Button>
               </DialogFooter>
             </form>

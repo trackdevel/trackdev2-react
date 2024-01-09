@@ -147,7 +147,7 @@ export function DataTable<TData, TValue>({
               <Button>
                 <PlusCircledIcon className="mr-2 h-4 w-4"/>
                 <Link to={"/project/" + projectId + "/new"}>
-                  Nova Tasca
+                  Nova Historia d'Usuari
                 </Link>
               </Button>
             )}
@@ -156,7 +156,7 @@ export function DataTable<TData, TValue>({
                 <DialogTrigger onClick={toogleState}>
                   <Button>
                     <PlusCircledIcon className="mr-2 h-4 w-4"/>
-                    Nova Subtasca
+                    Nova Tasca
                   </Button>
                 </DialogTrigger>
                 <DialogContent>
@@ -167,7 +167,7 @@ export function DataTable<TData, TValue>({
                   </DialogPrimitive.Close>
                   <form onSubmit={onCreate}>
                     <DialogHeader>
-                      <DialogTitle>Nova Subtasca</DialogTitle>
+                      <DialogTitle>Nova Tasca</DialogTitle>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                       <div className="grid gap-2">

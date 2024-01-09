@@ -55,6 +55,21 @@ const columns: ColumnDef<SprintListItem>[] = [
     },
   },
   {
+    accessorKey: "status",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Estat" />
+    ),
+    cell: ({ row }) => {
+      return (
+          <div className="flex space-x-2">
+          <span className="max-w-[500px] truncate font-medium">
+            {row.getValue("status")}
+          </span>
+          </div>
+      )
+    },
+  },
+  {
     id: "actions",
     cell: ({ row }) => <DataTableRowActions row={row} />,
   },

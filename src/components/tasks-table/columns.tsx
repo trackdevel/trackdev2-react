@@ -156,7 +156,7 @@ const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "estimationpoints",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Punts d'estimació" />
+        <DataTableColumnHeader column={column} title="Estimació de punts" />
     ),
     cell: ({ row }) => {
       const assignee = row?.original?.assignee ? row?.original?.assignee : ''
