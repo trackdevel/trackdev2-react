@@ -108,9 +108,9 @@ export default function SettingsProjectsPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Groups</h3>
+                    <h3 className="text-lg font-medium">Projectes</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update groups list settings
+                        Llista de projectes
                     </p>
                 </div>
                 <Dialog open={state}>

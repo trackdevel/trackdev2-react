@@ -124,7 +124,7 @@ export function DataTableRowActions<TData>({
                 }
               }>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Edit
+            Editar
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
@@ -159,7 +159,7 @@ export function DataTableRowActions<TData>({
         <AlertDialogContent>
           <form onSubmit={onCreate}>
             <AlertDialogHeader>
-              <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
+              <AlertDialogTitle>Editar Curs</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">

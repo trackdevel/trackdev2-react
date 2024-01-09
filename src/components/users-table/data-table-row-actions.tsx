@@ -42,14 +42,16 @@ export function DataTableRowActions<TData>({
               // @ts-ignore
               "/settings/profile/" + row.original.id
           } >
-            Edit
+            Editar
           </Link>
         </DropdownMenuItem>
+      {/*
         <DropdownMenuSeparator />
-        <DropdownMenuItem>
+          <DropdownMenuItem>
           <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
           Esborrar
         </DropdownMenuItem>
+        */}
       </DropdownMenuContent>
     </DropdownMenu>
   )

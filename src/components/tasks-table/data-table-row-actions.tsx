@@ -44,7 +44,7 @@ export function DataTableRowActions<TData>({
       setShowDeleteDialog(false)
       window.location.reload()
     }).catch((err) => {
-      console.log(err)
+      window.location.reload()
     })
   }
 

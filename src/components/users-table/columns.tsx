@@ -42,7 +42,7 @@ const columns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "username",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Username" />
+      <DataTableColumnHeader column={column} title="Nom d'usuari" />
     ),
     cell: ({ row }) => {
       return (
@@ -57,7 +57,7 @@ const columns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "email",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Email" />
+        <DataTableColumnHeader column={column} title="Correu electrònic" />
     ),
     cell: ({ row }) => {
       return (
@@ -72,7 +72,7 @@ const columns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "roles",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Roles" />
+        <DataTableColumnHeader column={column} title="Rols" />
     ),
     cell: ({ row }) => {
       let roles:any = row.getValue("roles")
@@ -110,7 +110,7 @@ const columns: ColumnDef<UserListItem>[] = [
   {
     accessorKey: "changePassword",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Change Password" />
+        <DataTableColumnHeader column={column} title="Canviar contrasenya" />
     ),
     cell: ({ row }) => {
       return (

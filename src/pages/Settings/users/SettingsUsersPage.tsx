@@ -68,16 +68,16 @@ export default function SettingsUsersPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Users</h3>
+                    <h3 className="text-lg font-medium">Usuaris</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update users list settings
+                        Actualitzar la llista d'usuaris
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add User
+                            Afegir Usuari
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -87,9 +87,9 @@ export default function SettingsUsersPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add User</DialogTitle>
+                                <DialogTitle>Afegir Usuari</DialogTitle>
                                 <DialogDescription>
-                                    Add the new user data
+                                    Afegir un usuari a la aplicació. Aquest usuari rebrà un correu electrònic amb les credencials d'accés.
                                 </DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
@@ -121,7 +121,7 @@ export default function SettingsUsersPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Import User
+                                    Afegir
                                 </Button>
                             </DialogFooter>
                         </form>

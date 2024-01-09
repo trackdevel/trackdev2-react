@@ -44,7 +44,7 @@ const profileFormSchema = z.object({
             message: "Must be 2 characters.",
         }),
     githubToken: z
-        .string(),
+        .union([z.string().nullish(), z.literal("")]),
     color: z
         .string()
         .min(7, {
@@ -83,7 +83,7 @@ export function ProfileForm(...props: any) {
             })
         }
         else {
-            Api.get('/users/'+userId).then((res) => {
+            Api.get('/users/uuid/'+userId).then((res) => {
                 form.setValue("username", res.username)
                 form.setValue("email", res.email)
                 form.setValue("capitalLetters", res.capitalLetters)
@@ -134,7 +134,7 @@ export function ProfileForm(...props: any) {
                 <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Nom d'usuari</FormLabel>
-                        <FormControl><Input placeholder="username" {...field} disabled={userId == 'self'}/></FormControl>
+                        <FormControl><Input placeholder="username" {...field} disabled={!userId}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>

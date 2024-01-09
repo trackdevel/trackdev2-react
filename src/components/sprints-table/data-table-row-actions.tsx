@@ -108,7 +108,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                 }
               }>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Edit
+            Editar
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem

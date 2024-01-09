@@ -45,7 +45,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Nom" />
     ),
     cell: ({ row }) => {
       return (
@@ -60,7 +60,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
   {
     accessorKey: "course",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Coruse" />
+        <DataTableColumnHeader column={column} title="Curs" />
     ),
     cell: ({ row }) => {
       return (
@@ -80,7 +80,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
   {
     accessorKey: "users",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Users" />
+        <DataTableColumnHeader column={column} title="Usuaris" />
     ),
     cell: ({ row }) => {
       const users = row?.original?.members

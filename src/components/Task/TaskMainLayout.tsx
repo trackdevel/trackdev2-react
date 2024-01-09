@@ -168,11 +168,20 @@ export default function TaskMainLayout(...props: any) {
 
         console.log('/tasks/' + taskId,requestBody)
 
-        Api.patch('/tasks/' + taskId, requestBody).then((res) => {
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-        })
+        if(taskId != 'new') {
+            Api.patch('/tasks/' + taskId, requestBody).then((res) => {
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
+        else {
+            Api.post('/projects/' + projectId + '/tasks', requestBody).then((res) => {
+                console.log(res)
+            }).catch((err) => {
+                console.log(err)
+            })
+        }
     }
 
     return (
