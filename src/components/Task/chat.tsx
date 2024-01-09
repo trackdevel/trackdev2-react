@@ -1,18 +1,16 @@
 import * as React from "react"
-import { Send } from "lucide-react"
+import {useEffect} from "react"
+import {Send} from "lucide-react"
 import {Card, CardContent, CardFooter, CardHeader} from "../../registry/ui/card";
 import {Button} from "../ui/button";
 import {cn} from "../../lib/utils";
 import {Input} from "../../registry/ui/input";
 import Api from "../../utils/Api";
-import {taskSchema} from "../data/task/schema";
 import {z} from "zod";
-import {subjectSchema} from "../data/subjects/schema";
 import {taskCommentSchema} from "../data/task/comment";
 
 export function CardsChat( ...props: any ) {
   const [currentUser, setCurrentUser] = React.useState<string>('1')
-  const [currentUserloaded, setCurrentUserloaded] = React.useState<boolean>(false)
 
   const [input, setInput] = React.useState("")
   const inputLength = input.trim().length
@@ -23,17 +21,12 @@ export function CardsChat( ...props: any ) {
   const [taskId, setTaskId] = React.useState<any>(props[0].taskId)
 
 
-  if(!currentUserloaded) {
-    getUserData()
-  }
-  async function getUserData() {
-    setCurrentUserloaded(true)
+  useEffect(() => {
     Api.get('/auth/self').then((res) => {
-      console.log(res)
       setCurrentUser(res.username)
     }).catch((err) => {})
     return;
-  }
+  }, [])
 
   function newMessage(event: React.SyntheticEvent) {
     event.preventDefault()
@@ -48,37 +41,15 @@ export function CardsChat( ...props: any ) {
   }
 
 
-  if(Object.keys(messages).length === 0 && !messagesloaded) {
+
+  useEffect(() => {
     getMessages(taskId)
-  }
+  }, [])
   async function getMessages(taskId: string|undefined) {
     Api.get('/tasks/' + taskId + '/comments').then((res) => {
       setMessages(z.array(taskCommentSchema).parse(res))
     }).catch((err) => {})
   }
-
-  //const [messages, setMessages] = React.useState([
-  //  {
-  //    user: "2",
-  //    username: "Gerard Rovellat",
-  //    content: "Hi, how can I help you today?",
-  //  },
-  //  {
-  //    user: "1",
-  //    username: "Marc Got",
-  //    content: "Hey, I'm having trouble with my account.",
-  //  },
-  //  {
-  //    user: "2",
-  //    username: "Gerard Rovellat",
-  //    content: "What seems to be the problem?",
-  //  },
-  //  {
-  //    user: "1",
-  //    username: "Marc Got",
-  //    content: "I can't log in.",
-  //  },
-  //])
 
   return (
     <>
@@ -87,6 +58,12 @@ export function CardsChat( ...props: any ) {
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
+            {messages.length === 0 && (
+                <div className="flex justify-center items-center h-32">
+                    <p className="text-muted">No hi ha comentaris</p>
+                </div>
+                )
+            }
             {messages.map((message : any, index : any) => (
               <div
                 key={index}
@@ -97,7 +74,7 @@ export function CardsChat( ...props: any ) {
                     : "bg-muted"
                 )}
               >
-                  <h1>{message.username}</h1>
+                  <h1>{message.author.username}</h1>
                   <p className="m-0">{message.content}</p>
               </div>
             ))}
@@ -107,7 +84,7 @@ export function CardsChat( ...props: any ) {
           <div className="flex w-full items-center space-x-2">
             <Input
               id="message"
-              placeholder="Type your message..."
+              placeholder="Escriu el seu comentari"
               className="flex-1"
               autoComplete="off"
               value={input}

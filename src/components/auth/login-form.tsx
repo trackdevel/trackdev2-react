@@ -1,11 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { useNavigate } from 'react-router-dom';
-import { Icons } from "../../registry/ui/icons"
-import { Button } from "../../registry/ui/button"
-import { Input } from "../../registry/ui/input"
-import { Label } from "../../registry/ui/label"
+import {useNavigate} from 'react-router-dom';
+import {Icons} from "../../registry/ui/icons"
+import {Button} from "../../registry/ui/button"
+import {Input} from "../../registry/ui/input"
+import {Label} from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
 
@@ -26,7 +26,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         }
 
         var requestBody = {
-            username: username,
+            email: username,
             password: password
         }
 
@@ -70,38 +70,15 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                     </div>
                     <Button disabled={isLoading}>
                         {isLoading && (
-                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
                         Log In with Email
                     </Button>
                 </div>
             </form>
-            <div className="relative">
-                <div className="absolute inset-0 flex items-center">
-                    <span className="w-full border-t" />
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                    <span className="bg-background px-2 text-muted-foreground">
-                        Or continue with
-                    </span>
-                </div>
-            </div>
-            <Button variant="outline" type="button" disabled={isLoading}>
-                {isLoading ? (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                    <Icons.gitHub className="mr-2 h-4 w-4" />
-                )}{" "}
-                Github
-            </Button>
-            <Button variant="outline" type="button" disabled={isLoading}>
-                {isLoading ? (
-                    <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                ) : (
-                    <Icons.google className="mr-2 h-4 w-4" />
-                )}{" "}
-                Google
-            </Button>
+            <p className="px-8 text-center text-sm text-muted-foreground">
+                <a className="underline underline-offset-4 hover:text-primary" href="/auth/password">Recuperar contrasenya</a>
+            </p>
         </div>
     )
 }

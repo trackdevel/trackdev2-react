@@ -1,18 +1,18 @@
 import {
-  ArrowDownToLine,
-  ArrowRightToLine,
-  ArrowUpCircle,
-  ArrowUpToLine,
-  CheckCircle2,
-  Circle,
-  HelpCircle,
-  XCircle,
+    ArrowDownToLine,
+    ArrowRightToLine,
+    ArrowUpCircle,
+    ArrowUpToLine,
+    CheckCircle2,
+    Circle,
+    HelpCircle,
+    XCircle,
 } from "lucide-react"
 
 export const labels = [
   {
-    value: "bug",
-    label: "Bug",
+    value: "First iteration",
+    label: "First iteration",
   },
   {
     value: "feature",
@@ -27,27 +27,27 @@ export const labels = [
 export const statuses = [
   {
     value: "BACKLOG",
-    label: "Backlog",
+    label: "BACKLOG",
     icon: HelpCircle,
   },
   {
-    value: "todo",
-    label: "Todo",
+    value: "PRIORITZADA",
+    label: "TODO",
     icon: Circle,
   },
   {
-    value: "in progress",
-    label: "In Progress",
+    value: "EN PROGRES",
+    label: "INPROGRESS",
     icon: ArrowUpCircle,
   },
   {
-    value: "done",
-    label: "Done",
+    value: "EN VERIFICACIO",
+    label: "VERIFY",
     icon: CheckCircle2,
   },
   {
-    value: "canceled",
-    label: "Canceled",
+    value: "FINALITZADA",
+    label: "DONE",
     icon: XCircle,
   },
 ]

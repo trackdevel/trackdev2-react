@@ -9,9 +9,6 @@ import {
     DialogHeader,
     DialogTitle
 } from "../../registry/ui/dialog";
-
-
-import {Card, CardHeader} from "../../registry/ui/card";
 import {Tooltip, TooltipContent, TooltipProvider, TooltipTrigger} from "../../registry/ui/tooltip";
 import {
     Command,
@@ -22,28 +19,46 @@ import {
     CommandList
 } from "../../registry/ui/command";
 import {Avatar, AvatarFallback, AvatarImage} from "../../registry/ui/avatar";
+import Api from "../../utils/Api";
+import {z} from "zod";
+import {userSchema} from "../data/users/schema";
+import {useEffect} from "react";
 
 
 
 export function UsersSelect(props: any) {
 
     var users = props.users
-    const users_new = props.users
-    // array merge users and users_new as a new array
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
-    users = [...users, ...users_new]
 
-
-    const groupId = props.row.original.id
+    const projectId = props.row.original.id
 
     type User = (typeof users)[number]
 
     const [open, setOpen] = React.useState(false)
-    const [selectedUsers, setSelectedUsers] = React.useState<User[]>([])
+    const [selectedUsers, setSelectedUsers] = React.useState<User[]>(users)
+    const [activeUsers, setActiveUsers] = React.useState<User[]>([])
+
+
+    useEffect(() => {
+        Api.get('/users').then((res) => {
+            setActiveUsers(z.array(userSchema).parse(res))
+        }).catch((err) => {})
+    }, []);
+
+    async function setUsers() {
+        let RequestBody = {
+            name: null,
+            members: selectedUsers.map((user) => user.email),
+            courseId: null
+        }
+
+        Api.patch('/projects/' + projectId, RequestBody).then((res) => {
+            setOpen(false)
+            window.location.reload()
+        }).catch((err) => {})
+    }
+
+
 
     return (
         <>
@@ -57,49 +72,44 @@ export function UsersSelect(props: any) {
                             onClick={() => setOpen(true)}
                         >
                             <PlusIcon className="h-4 w-4" />
-                            <span className="sr-only">New message</span>
+                            <span className="sr-only">Afegir Usuaris</span>
                         </Button>
                     </TooltipTrigger>
-                    <TooltipContent sideOffset={10}>New message</TooltipContent>
+                    <TooltipContent sideOffset={10}>Afegir Usuaris</TooltipContent>
                 </Tooltip>
             </TooltipProvider>
             <Dialog open={open} onOpenChange={setOpen}>
                 <DialogContent className="gap-0 p-0 outline-none">
                     <DialogHeader className="px-4 pb-4 pt-5">
-                        <DialogTitle>New message</DialogTitle>
+                        <DialogTitle>Afegir Usuaris</DialogTitle>
                         <DialogDescription>
-                            Invite a user to this thread. This will create a new group
-                            message.
+                            Sel·lecciona els usuaris que vols afegir al projecte
                         </DialogDescription>
                     </DialogHeader>
                     <Command className="overflow-hidden rounded-t-none border-t bg-transparent">
-                        <CommandInput placeholder="Search user..." />
+                        <CommandInput placeholder="Buscar usuaris..." />
                         <CommandList>
-                            <CommandEmpty>No users found.</CommandEmpty>
+                            <CommandEmpty>Cap usuari trobat.</CommandEmpty>
                             <CommandGroup className="p-2">
-                                {users.map((user: { email: any; avatar: any; username: any; }) => (
+                                {activeUsers.map((user: { id: any; email: any; avatar: any; username: any; color: any; }) => (
                                     <CommandItem
-                                        key={user.email}
+                                        key={user.id}
                                         className="flex items-center px-2"
                                         onSelect={() => {
-                                            if (selectedUsers.includes(user)) {
+                                            //if (selectedUsers.includes(user)) {
+                                            if( selectedUsers.find( ({ id }) => id === user.id ) !== undefined) {
                                                 return setSelectedUsers(
                                                     selectedUsers.filter(
-                                                        (selectedUser) => selectedUser !== user
+                                                        (selectedUser) => selectedUser.id !== user.id
                                                     )
                                                 )
                                             }
-
-                                            return setSelectedUsers(
-                                                [...users].filter((u) =>
-                                                    [...selectedUsers, user].includes(u)
-                                                )
-                                            )
+                                            else setSelectedUsers([...selectedUsers, user])
                                         }}
                                     >
                                         <Avatar>
                                             <AvatarImage src={user.avatar} alt="Image" />
-                                            <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                                            <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
                                         </Avatar>
                                         <div className="ml-2">
                                             <p className="text-sm font-medium leading-none">
@@ -109,7 +119,7 @@ export function UsersSelect(props: any) {
                                                 {user.email}
                                             </p>
                                         </div>
-                                        {selectedUsers.includes(user) ? (
+                                        {( selectedUsers.find( ({ id }) => id === user.id ) !== undefined) ? (
                                             <CheckIcon className="ml-auto flex h-5 w-5 text-primary" />
                                         ) : null}
                                     </CommandItem>
@@ -126,7 +136,7 @@ export function UsersSelect(props: any) {
                                         className="inline-block border-2 border-background"
                                     >
                                         <AvatarImage src={user.avatar} />
-                                        <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                                        <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
                                     </Avatar>
                                 ))}
                             </div>
@@ -136,12 +146,12 @@ export function UsersSelect(props: any) {
                             </p>
                         )}
                         <Button
-                            disabled={selectedUsers.length < 2}
+                            disabled={selectedUsers.length < 1}
                             onClick={() => {
-                                setOpen(false)
+                                setUsers()
                             }}
                         >
-                            Continue
+                            Guardar
                         </Button>
                     </DialogFooter>
                 </DialogContent>

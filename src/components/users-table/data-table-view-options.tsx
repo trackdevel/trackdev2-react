@@ -1,16 +1,16 @@
 "use client"
 
-import { DropdownMenuTrigger } from "@radix-ui/react-dropdown-menu"
-import { Table } from "@tanstack/react-table"
-import { SlidersHorizontal } from "lucide-react"
+import {DropdownMenuTrigger} from "@radix-ui/react-dropdown-menu"
+import {Table} from "@tanstack/react-table"
+import {SlidersHorizontal} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
+    DropdownMenu,
+    DropdownMenuCheckboxItem,
+    DropdownMenuContent,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
 } from "../../registry/ui/dropdown-menu"
 
 interface DataTableViewOptionsProps<TData> {

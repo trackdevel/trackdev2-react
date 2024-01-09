@@ -47,18 +47,15 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
   const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
   function deleteRow() {
-    console.log('row',row)
 
     // @ts-ignore
     Api.delete('/subjects/' + row.original.id ).then((res) => {
-      console.log('res',res)
       setShowDeleteDialog(false)
       toast({
         description: "This preset has been deleted.",
       })
       window.location.reload()
     }).catch((err) => {
-      console.log('err',err)
     })
   }
 
@@ -68,7 +65,6 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       setName(res.name)
       setAcronym(res.acronym)
     }).catch((err) => {
-        console.log('err',err)
     })
   }
 
@@ -118,23 +114,22 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                 }
               }>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Edit
+            Editar
           </DropdownMenuItem>
           <DropdownMenuSeparator />
           <DropdownMenuItem
               onSelect={() => setShowDeleteDialog(true)}>
             <Trash className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Delete
+            Esborrar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
       <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+            <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This preset will no longer be
-              accessible by you or others you&apos;ve shared it with.
+              Aquesta acció no es pot desfer.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
@@ -145,7 +140,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
                   deleteRow()
                 }}
             >
-              Delete
+              Esborrar
             </Button>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -154,7 +149,7 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         <AlertDialogContent>
           <form onSubmit={onCreate}>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle>Editar Assignatura</AlertDialogTitle>
             </AlertDialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid gap-2">

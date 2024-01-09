@@ -2,28 +2,21 @@
 
 import * as React from "react"
 import {
-  ColumnDef,
-  ColumnFiltersState,
-  SortingState,
-  VisibilityState,
-  flexRender,
-  getCoreRowModel,
-  getFacetedRowModel,
-  getFacetedUniqueValues,
-  getFilteredRowModel,
-  getPaginationRowModel,
-  getSortedRowModel,
-  useReactTable,
+    ColumnDef,
+    ColumnFiltersState,
+    flexRender,
+    getCoreRowModel,
+    getFacetedRowModel,
+    getFacetedUniqueValues,
+    getFilteredRowModel,
+    getPaginationRowModel,
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+    VisibilityState,
 } from "@tanstack/react-table"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../registry/ui/table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "../../registry/ui/table"
 import {DataTableToolbar} from "./data-table-toolbar";
 import {DataTablePagination} from "./data-table-pagination";
 
@@ -107,7 +100,7 @@ export function CrousesTable<TData, TValue>({columns,data,}: DataTableProps<TDat
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  No s'ha trobat cap curs
                 </TableCell>
               </TableRow>
             )}

@@ -45,7 +45,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Name" />
+      <DataTableColumnHeader column={column} title="Nom" />
     ),
     cell: ({ row }) => {
       return (
@@ -60,7 +60,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
   {
     accessorKey: "course",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Coruse" />
+        <DataTableColumnHeader column={column} title="Curs" />
     ),
     cell: ({ row }) => {
       return (
@@ -73,21 +73,18 @@ const columns: ColumnDef<ProjectListItem>[] = [
       )
     },
     filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
+      // @ts-ignore
+      return value.includes(row.getValue(id).subject.name)
     },
   },
   {
     accessorKey: "users",
     header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Users" />
+        <DataTableColumnHeader column={column} title="Usuaris" />
     ),
     cell: ({ row }) => {
       const users = row?.original?.members
-      console.log('users',users)
 
-      if (!users || !users.length) {
-          return null
-      }
 
       return (
         <div className="flex space-x-2">
@@ -97,13 +94,33 @@ const columns: ColumnDef<ProjectListItem>[] = [
                     key={user.username}
                     className="inline-block border-2 border-background"
                 >
-                  <AvatarFallback>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                  <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
                 </Avatar>
             ))}
             <UsersSelect row={row} users={users}/>
           </div>
         </div>
       )
+    },
+  },
+  {
+    accessorKey: "qualification",
+    header: ({ column }) => (
+        <DataTableColumnHeader column={column} title="Nota" />
+    ),
+    cell: ({ row }) => {
+      return (
+          <div className="flex w-[100px] items-center">
+            <span>{
+                // @ts-ignore
+                row.getValue("qualification")
+            }</span>
+          </div>
+      )
+    },
+    filterFn: (row, id, value) => {
+      // @ts-ignore
+      return true
     },
   },
   {

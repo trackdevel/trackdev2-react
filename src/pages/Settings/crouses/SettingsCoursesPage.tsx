@@ -1,17 +1,16 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
-import data from "../../../components/data/courses/course.json";
 import {columns} from "../../../components/courses-table/columns";
-import React from "react";
+import React, {useEffect} from "react";
 import {courseSchema} from "../../../components/data/courses/schema";
 import {CrousesTable} from "../../../components/courses-table/data-table";
-import { Button } from "../../../registry/ui/button"
+import {Button} from "../../../registry/ui/button"
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
 import Api from "../../../utils/Api";
 import {
     Dialog,
     DialogContent,
-    DialogDescription, DialogFooter,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger
@@ -19,13 +18,11 @@ import {
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Input} from "../../../registry/ui/input";
 import {Icons} from "../../../registry/ui/icons";
-import {pullRequests} from "../../../components/data/task/Sprints";
 import {subjectSchema} from "../../../components/data/subjects/schema";
 import {Popover, PopoverContent, PopoverTrigger} from "../../../registry/ui/popover";
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../../registry/ui/command";
 import {cn} from "../../../lib/utils";
-import { PopoverProps } from "@radix-ui/react-popover"
 
 
 export interface Subjects {
@@ -48,7 +45,6 @@ export default function SettingsCoursesPage() {
     const [subjectId,setSubjectId] = React.useState<string>('')
     const [year,setYear] = React.useState<number>()
     const [subjects, setSubjects] = React.useState<Array<any>>([])
-    const [issubjectsloaded, setIsSubjectsLoaded] = React.useState<boolean>(false)
 
     const [tasks, setCourses] = React.useState<Array<any>>([])
     const [iscourseloaded, setIsCourseLoaded] = React.useState<boolean>(false)
@@ -59,26 +55,21 @@ export default function SettingsCoursesPage() {
 
     const current_year = new Date().getFullYear()
 
-    if(subjects.length === 0 && !issubjectsloaded) {
-        getSubjects()
-    }
-    async function getSubjects() {
-        setIsSubjectsLoaded(true)
+    useEffect(() => {
         Api.get('/subjects').then((res) => {
             setSubjects(z.array(subjectSchema).parse(res))
         }).catch((err) => {})
         return;
-    }
+    } ,[])
 
-    if(tasks.length === 0 && !iscourseloaded) {
+    useEffect(() => {
         getCourses()
-    }
+    } ,[])
 
     async function getCourses() {
         setIsCourseLoaded(true)
         Api.get('/courses').then((res) => {
             setCourses(z.array(courseSchema).parse(res))
-            console.log(tasks)
         }).catch((err) => {})
         return;
     }
@@ -89,7 +80,6 @@ export default function SettingsCoursesPage() {
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
-        console.log(subjectId,year)
 
         if(!subjectId|| !year) {
             setIsLoading(false)
@@ -100,15 +90,12 @@ export default function SettingsCoursesPage() {
             startYear: year
         }
 
-        console.log(requestBody)
-
         Api.post('/subjects/' + subjectId + '/courses',requestBody).then((res) => {
             setIsLoading(false)
             toogleState()
             getCourses()
         }).catch((err) => {
             setIsLoading(false)
-            console.log(err);
         })
     }
 
@@ -119,14 +106,14 @@ export default function SettingsCoursesPage() {
                 <div>
                     <h3 className="text-lg font-medium">Courses</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update courses list settings
+                        Actualitza els cursos de les assignatures
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add Course
+                            Nou curs
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -136,7 +123,7 @@ export default function SettingsCoursesPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add Course</DialogTitle>
+                                <DialogTitle>Afegir nou curs</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
@@ -155,9 +142,9 @@ export default function SettingsCoursesPage() {
                                         </PopoverTrigger>
                                         <PopoverContent className="w-[300px] p-0">
                                             <Command>
-                                                <CommandInput placeholder="Search subject..." />
-                                                <CommandEmpty>No presets found.</CommandEmpty>
-                                                <CommandGroup heading="Subjects">
+                                                <CommandInput placeholder="Buscar assignatura..." />
+                                                <CommandEmpty>No s'ha trobat cap assignatura</CommandEmpty>
+                                                <CommandGroup heading="Assignatures">
                                                     {subjects.map((request) => (
                                                         <CommandItem key={request.id}
                                                                      onSelect={() => {
@@ -198,7 +185,7 @@ export default function SettingsCoursesPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Import User
+                                    Crear nou curs
                                 </Button>
                             </DialogFooter>
                         </form>

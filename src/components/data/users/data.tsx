@@ -1,12 +1,3 @@
-import {
-  ArrowUpCircle,
-  CheckCircle2,
-  Circle,
-  HelpCircle,
-  XCircle,
-} from "lucide-react"
-
-
 export const groups = [
   {
     value: "group_1",

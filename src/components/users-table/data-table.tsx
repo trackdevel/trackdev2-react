@@ -4,8 +4,6 @@ import * as React from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
-  SortingState,
-  VisibilityState,
   flexRender,
   getCoreRowModel,
   getFacetedRowModel,
@@ -13,17 +11,12 @@ import {
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
+  SortingState,
   useReactTable,
+  VisibilityState,
 } from "@tanstack/react-table"
 
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "../../registry/ui/table"
+import {Table, TableBody, TableCell, TableHead, TableHeader, TableRow,} from "../../registry/ui/table"
 import {DataTableToolbar} from "./data-table-toolbar";
 import {DataTablePagination} from "./data-table-pagination";
 
@@ -34,7 +27,6 @@ interface DataTableProps<TData, TValue> {
 }
 
 export function UsersTable<TData, TValue>({columns,data,}: DataTableProps<TData, TValue>) {
-  console.log(columns)
   const [rowSelection, setRowSelection] = React.useState({})
   const [columnVisibility, setColumnVisibility] = React.useState<VisibilityState>({})
   const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>([])
@@ -107,7 +99,7 @@ export function UsersTable<TData, TValue>({columns,data,}: DataTableProps<TData,
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Cap resultat.
                 </TableCell>
               </TableRow>
             )}

@@ -1,9 +1,9 @@
 "use client"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { useFieldArray, useForm } from "react-hook-form"
+import {zodResolver} from "@hookform/resolvers/zod"
+import {useForm} from "react-hook-form"
 import * as z from "zod"
 
-import { Button } from "../../../registry/ui/button"
+import {Button} from "../../../registry/ui/button"
 import {
     Form,
     FormControl,
@@ -13,15 +13,16 @@ import {
     FormLabel,
     FormMessage,
 } from "../../../registry/ui/form"
-import { Input } from "../../../registry/ui/input"
-import { Textarea } from "../../../registry/ui/textarea"
-import { toast } from "../../../registry/ui/use-toast"
+import {Input} from "../../../registry/ui/input"
+import {toast} from "../../../registry/ui/use-toast"
 import Api from "../../../utils/Api";
-import React from "react";
-import {subjectSchema} from "../../../components/data/subjects/schema";
+import React, {useEffect} from "react";
+import {Link} from "react-router-dom";
+import {ExternalLink} from "lucide-react";
+import {Avatar, AvatarFallback, AvatarImage} from "../../../registry/ui/avatar";
 
 const profileFormSchema = z.object({
-    nicename: z
+    username: z
         .string()
         .min(2, {
             message: "Username must be at least 2 characters.",
@@ -43,7 +44,7 @@ const profileFormSchema = z.object({
             message: "Must be 2 characters.",
         }),
     githubToken: z
-        .string(),
+        .union([z.string().nullish(), z.literal("")]),
     color: z
         .string()
         .min(7, {
@@ -57,44 +58,65 @@ const profileFormSchema = z.object({
 type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 
-export function ProfileForm() {
+export function ProfileForm(...props: any) {
+    const [userId, setUserId] = React.useState<any>(props[0].userId)
+
     const form = useForm<ProfileFormValues>({
         resolver: zodResolver(profileFormSchema),
         mode: "onChange",
     })
 
-    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
+    const [githubData, setGithubData] = React.useState<any>([])
 
-    if(!istasksloaded) {
-        getUserData()
-    }
-    async function getUserData() {
-        setIsTasksLoaded(true)
-        Api.get('/auth/self').then((res) => {
-            console.log(res)
-            form.setValue("nicename", res.nicename)
-            form.setValue("email", res.email)
-            form.setValue("capitalLetters", res.capitalLetters)
-            form.setValue("githubToken", res.githubToken)
-            form.setValue("color", res.color)
-        }).catch((err) => {})
-        return;
-    }
+    useEffect(() => {
+        if(userId == 'self') {
+            Api.get('/auth/self').then((res) => {
+                form.setValue("username", res.username)
+                form.setValue("email", res.email)
+                form.setValue("capitalLetters", res.capitalLetters)
+                form.setValue("githubToken", res.githubInfo.github_token)
+                if (res.githubInfo.github_token != '') {
+                    setGithubData(res.githubInfo)
+                }
+                form.setValue("color", res.color)
+            }).catch((err) => {
+            })
+        }
+        else {
+            Api.get('/users/uuid/'+userId).then((res) => {
+                form.setValue("username", res.username)
+                form.setValue("email", res.email)
+                form.setValue("capitalLetters", res.capitalLetters)
+                form.setValue("githubToken", res.githubInfo.github_token)
+                if (res.githubInfo.github_token != '') {
+                    setGithubData(res.githubInfo)
+                }
+                form.setValue("color", res.color)
+            }).catch((err) => {
+            })
+        }
+    }, []);
 
     function onSubmit(data: ProfileFormValues) {
-        console.log(data)
 
         var requestBody = {
-            nicename: data.nicename,
-            email: data.email
+            username: data.username,
+            capitalLetters: data.capitalLetters,
+            githubToken: (data.githubToken == '') ? null : data.githubToken,
+            color: data.color
         }
 
-        Api.patch('/users', requestBody).then((res) => {
-            console.log(res)
-        }).catch((err) => {
-            console.log(err)
-        })
-
+        if(userId == 'self') {
+            Api.patch('/users', requestBody).then((res) => {
+                window.location.reload();
+            }).catch((err) => {})
+        }
+        else {
+            Api.patch('/users/'+userId, requestBody).then((res) => {
+                window.location.reload();
+            }).catch((err) => {
+            })
+        }
 
         toast({
             title: "You submitted the following values:",
@@ -106,13 +128,14 @@ export function ProfileForm() {
         })
     }
 
+    // @ts-ignore
     return (
         <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-                <FormField control={form.control} name="nicename" render={({ field }) => (
+                <FormField control={form.control} name="username" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Nicename</FormLabel>
-                        <FormControl><Input placeholder="nicename" {...field} /></FormControl>
+                        <FormLabel>Nom d'usuari</FormLabel>
+                        <FormControl><Input placeholder="username" {...field} disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
@@ -120,24 +143,46 @@ export function ProfileForm() {
                 <FormField control={form.control} name="email" render={({ field }) => (
                     <FormItem>
                         <FormLabel>Correu Electronic</FormLabel>
-                        <FormControl><Input placeholder="email@domain.com" {...field} /></FormControl>
+                        <FormControl><Input placeholder="email@domain.com" {...field}  disabled={userId == 'self'}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="capitalLetters" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Acronym</FormLabel>
-                        <FormControl><Input placeholder="NC" {...field} /></FormControl>
+                        <FormLabel>Acronim</FormLabel>
+                        <FormControl><Input placeholder="NC" {...field}/></FormControl>
                         <FormDescription></FormDescription>
                         <FormMessage />
                     </FormItem>
                 )} />
                 <FormField control={form.control} name="githubToken" render={({ field }) => (
                     <FormItem>
-                        <FormLabel>Github Token</FormLabel>
-                        <FormControl><Input placeholder="githubToken" {...field} /></FormControl>
-                        <FormDescription></FormDescription>
+                        <FormLabel>Token de Github</FormLabel>
+                        <FormControl>
+                            <Input placeholder="githubToken" {...field} />
+                        </FormControl>
+                        <FormDescription className="flex items-center">
+                            { ( githubData != '' ) ? (
+                                <div className="flex items-center mr-10 mt-2">
+                                    <Link to={githubData.html_url} target="_blank" >
+                                        <Avatar className="h-9 w-9">
+                                            <AvatarImage src={githubData.avatar_url} alt="Avatar" />
+                                            <AvatarFallback>MG</AvatarFallback>
+                                        </Avatar>
+                                    </Link>
+                                    <Link to={githubData.html_url} target="_blank" >
+                                        <div className="ml-4 space-y-1">
+                                            <p className="text-sm font-medium leading-none">{githubData.login}</p>
+                                        </div>
+                                    </Link>
+                                </div>
+                            ) : null }
+                            <ExternalLink className="mr-2 h-4 w-4 mt-2" />
+                            <Link to="https://github.com/settings/tokens/new?description=TrackDev%20GitHub%20integration&scopes=repo%2Cgist%2Cread%3Aorg%2Cworkflow" target="_blank" className="mt-2" >
+                                Generar Token
+                            </Link>
+                        </FormDescription>
                         <FormMessage />
                     </FormItem>
                 )} />
@@ -149,7 +194,7 @@ export function ProfileForm() {
                         <FormMessage />
                     </FormItem>
                 )} />
-                <Button type="submit">Update profile</Button>
+                <Button type="submit">Actualitzar</Button>
             </form>
         </Form>
     )

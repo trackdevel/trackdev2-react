@@ -1,15 +1,11 @@
 "use client"
 
 import * as React from "react"
-import { SliderProps } from "@radix-ui/react-slider"
+import {SliderProps} from "@radix-ui/react-slider"
 
-import {
-    HoverCard,
-    HoverCardContent,
-    HoverCardTrigger,
-} from "../../registry/ui/hover-card"
-import { Label } from "../../registry/ui/label"
-import { Slider } from "../../registry/ui/slider"
+import {HoverCard, HoverCardContent, HoverCardTrigger,} from "../../registry/ui/hover-card"
+import {Label} from "../../registry/ui/label"
+import {Slider} from "../../registry/ui/slider"
 
 interface MaxLengthSelectorProps {
     defaultValue: SliderProps["defaultValue"]

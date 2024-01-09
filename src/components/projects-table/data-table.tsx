@@ -64,7 +64,6 @@ export function GroupsTable<TData, TValue>({columns,data,}: DataTableProps<TData
 
   return (
     <div className="space-y-4">
-      <DataTableToolbar table={table} />
       <div className="rounded-md border">
         <Table>
           <TableHeader>
@@ -108,7 +107,7 @@ export function GroupsTable<TData, TValue>({columns,data,}: DataTableProps<TData
                   colSpan={columns.length}
                   className="h-24 text-center"
                 >
-                  No results.
+                  Cap resultat.
                 </TableCell>
               </TableRow>
             )}

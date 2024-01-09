@@ -1,4 +1,4 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import data from "../../../components/data/projects/groups.json";
 import {columns} from "../../../components/projects-table/columns";
@@ -23,8 +23,7 @@ import {Popover, PopoverContent, PopoverTrigger} from "../../../registry/ui/popo
 import {Check, ChevronsUpDown} from "lucide-react";
 import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem} from "../../../registry/ui/command";
 import {cn} from "../../../lib/utils";
-import {Courses, Subjects} from "../crouses/SettingsCoursesPage";
-import {subjectSchema} from "../../../components/data/subjects/schema";
+import {Courses} from "../crouses/SettingsCoursesPage";
 import {courseSchema} from "../../../components/data/courses/schema";
 
 function getGroups() {
@@ -68,13 +67,9 @@ export default function SettingsProjectsPage() {
     if(projects.length === 0 && !projectsloaded) {
         getProjects()
     }
-    else {
-        console.log('projects',projects)
-    }
     async function getProjects() {
         setProjectsloaded(true)
         Api.get('/projects').then((res) => {
-            console.log('res',res)
             setProjects(z.array(projectSchema).parse(res))
         }).catch((err) => {})
         return;
@@ -113,26 +108,26 @@ export default function SettingsProjectsPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Groups</h3>
+                    <h3 className="text-lg font-medium">Projectes</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update groups list settings
+                        Llista de projectes
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add Project
+                            Afegir Projecte
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
                         <DialogPrimitive.Close  onClick={toogleState} className="absolute right-4 top-4 rounded-sm opacity-70 ring-offset-background transition-opacity hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:pointer-events-none data-[state=open]:bg-accent data-[state=open]:text-muted-foreground">
                             <Cross2Icon className="h-4 w-4" />
-                            <span className="sr-only">Close</span>
+                            <span className="sr-only">Tancar</span>
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add Project</DialogTitle>
+                                <DialogTitle>Afegir Projecte</DialogTitle>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">

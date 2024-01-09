@@ -1,11 +1,10 @@
 "use client"
 
 import * as React from "react"
-import { useNavigate } from 'react-router-dom';
-import { Icons } from "../../registry/ui/icons"
-import { Button } from "../../registry/ui/button"
-import { Input } from "../../registry/ui/input"
-import { Label } from "../../registry/ui/label"
+import {useNavigate} from 'react-router-dom';
+import {Icons} from "../../registry/ui/icons"
+import {Button} from "../../registry/ui/button"
+import {Input} from "../../registry/ui/input"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
 
@@ -39,9 +38,6 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
             username: userdataJSON.username
         }
 
-
-        console.log(requestBody)
-
         Api.post('/auth/changepassword',requestBody).then((res) => {
             setIsLoading(false)
             userdataJSON.changePassword = false
@@ -59,7 +55,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                     <div className="grid gap-1">
                         <Input
                             id="old_password"
-                            placeholder="Old Password"
+                            placeholder="Codi de recuperació"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="old_password"
@@ -69,7 +65,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                         />
                         <Input
                             id="password"
-                            placeholder="Password"
+                            placeholder="Contrasenya"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="password"
@@ -79,7 +75,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                         />
                         <Input
                             id="repeat_password"
-                            placeholder="Repeat Password"
+                            placeholder="Repeteix la contrasenya"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="repeat_password"
@@ -92,7 +88,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                         )}
-                        Set new password
+                        Crear nova contrasenya
                     </Button>
                 </div>
             </form>

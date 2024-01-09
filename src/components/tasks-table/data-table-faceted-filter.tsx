@@ -1,10 +1,10 @@
 import * as React from "react"
-import { Column } from "@tanstack/react-table"
-import { Check, LucideIcon, PlusCircle } from "lucide-react"
+import {Column} from "@tanstack/react-table"
+import {Check, LucideIcon, PlusCircle} from "lucide-react"
 
 import {cn} from "../../lib/utils";
-import { Badge } from "../../registry/ui/badge"
-import { Button } from "../../registry/ui/button"
+import {Badge} from "../../registry/ui/badge"
+import {Button} from "../../registry/ui/button"
 import {
   Command,
   CommandEmpty,
@@ -14,12 +14,8 @@ import {
   CommandList,
   CommandSeparator,
 } from "../../registry/ui/command"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "../../registry/ui/popover"
-import { Separator } from "../../registry/ui/separator"
+import {Popover, PopoverContent, PopoverTrigger,} from "../../registry/ui/popover"
+import {Separator} from "../../registry/ui/separator"
 
 interface DataTableFacetedFilter<TData, TValue> {
   column?: Column<TData, TValue>
@@ -84,7 +80,7 @@ export function DataTableFacetedFilter<TData, TValue>({
         <Command>
           <CommandInput placeholder={title} />
           <CommandList>
-            <CommandEmpty>No results found.</CommandEmpty>
+            <CommandEmpty>Cap resultat.</CommandEmpty>
             <CommandGroup>
               {options.map((option) => {
                 const isSelected = selectedValues.has(option.value)

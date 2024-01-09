@@ -1,8 +1,8 @@
-import { Separator } from "../../../registry/ui/separator"
+import {Separator} from "../../../registry/ui/separator"
 import {z} from "zod";
 import {userSchema} from "../../../components/data/users/schema";
 import {columns} from "../../../components/users-table/columns";
-import React from "react";
+import React, {useEffect} from "react";
 import {UsersTable} from "../../../components/users-table/data-table";
 import {Button} from "../../../registry/ui/button";
 import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
@@ -28,19 +28,14 @@ export default function SettingsUsersPage() {
     const [email,setEmail] = React.useState<string>('')
 
     const [tasks, setTasks] = React.useState<Array<any>>([])
-    const [istasksloaded, setIsTasksLoaded] = React.useState<boolean>(false)
 
 
-    if(tasks.length === 0 && !istasksloaded) {
-        getUsers()
-    }
-    async function getUsers() {
-        setIsTasksLoaded(true)
+    useEffect(() => {
         Api.get('/users').then((res) => {
             setTasks(z.array(userSchema).parse(res))
         }).catch((err) => {})
         return;
-    }
+    }, []);
 
     function toogleState() {
         setState(!state)
@@ -61,7 +56,7 @@ export default function SettingsUsersPage() {
         }
 
 
-        Api.post('/users/v2/register',requestBody).then((res) => {
+        Api.post('/users/register',requestBody).then((res) => {
             setIsLoading(false)
             toogleState()
         }).catch((err) => {
@@ -73,16 +68,16 @@ export default function SettingsUsersPage() {
         <div className="space-y-6">
             <div className="flex flex-row justify-between">
                 <div>
-                    <h3 className="text-lg font-medium">Users</h3>
+                    <h3 className="text-lg font-medium">Usuaris</h3>
                     <p className="text-sm text-muted-foreground">
-                        Update users list settings
+                        Actualitzar la llista d'usuaris
                     </p>
                 </div>
                 <Dialog open={state}>
                     <DialogTrigger onClick={toogleState}>
                         <Button>
                             <PlusCircledIcon className="mr-2 h-4 w-4" />
-                            Add User
+                            Afegir Usuari
                         </Button>
                     </DialogTrigger>
                     <DialogContent>
@@ -92,16 +87,16 @@ export default function SettingsUsersPage() {
                         </DialogPrimitive.Close>
                         <form onSubmit={onSubmit}>
                             <DialogHeader>
-                                <DialogTitle>Add User</DialogTitle>
+                                <DialogTitle>Afegir Usuari</DialogTitle>
                                 <DialogDescription>
-                                    Add the new user data
+                                    Afegir un usuari a la aplicació. Aquest usuari rebrà un correu electrònic amb les credencials d'accés.
                                 </DialogDescription>
                             </DialogHeader>
                             <div className="grid gap-4 py-4">
                                 <div className="grid gap-2">
                                     <Input
                                         id="username"
-                                        placeholder="u1234567"
+                                        placeholder="Nom i Cognoms"
                                         type="text"
                                         autoCapitalize="none"
                                         autoComplete="username"
@@ -126,7 +121,7 @@ export default function SettingsUsersPage() {
                                     {isLoading && (
                                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                                     )}
-                                    Import User
+                                    Afegir
                                 </Button>
                             </DialogFooter>
                         </form>

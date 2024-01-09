@@ -1,13 +1,13 @@
-import { Column } from "@tanstack/react-table"
-import { ChevronsUpDown, EyeOff, SortAsc, SortDesc } from "lucide-react"
+import {Column} from "@tanstack/react-table"
+import {ChevronsUpDown, EyeOff, SortAsc, SortDesc} from "lucide-react"
 
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
 import {cn} from "../../lib/utils";
 
@@ -57,7 +57,7 @@ export function DataTableColumnHeader<TData, TValue>({
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => column.toggleVisibility(false)}>
             <EyeOff className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            Hide
+            Amagar
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>

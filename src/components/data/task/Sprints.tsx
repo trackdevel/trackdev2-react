@@ -21,3 +21,49 @@ export const pullRequests: Sprints[] = [
         name: "Sprint4",
     },
 ]
+
+export interface Statuses {
+    id: string
+    name: string
+}
+
+export const statuseslist: Statuses[] = [
+    {
+        name: "BACKLOG",
+        id: "Backlog",
+    },
+    {
+        name: "todo",
+        id: "Todo",
+    },
+    {
+        name: "in progress",
+        id: "In Progress",
+    },
+    {
+        name: "done",
+        id: "Done",
+    },
+    {
+        name: "canceled",
+        id: "Canceled",
+    },
+]
+
+
+
+export interface Type {
+    id: string
+    name: string
+}
+
+export const typeslist: Type[] = [
+    {
+        name: "User Story",
+        id: "userstory",
+    },
+    {
+        name: "Tasca",
+        id: "task",
+    },
+]

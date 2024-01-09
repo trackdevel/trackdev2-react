@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { MoreHorizontal, Trash } from "lucide-react"
+import {MoreHorizontal, Trash} from "lucide-react"
 
 import {
     AlertDialog,
@@ -12,18 +12,30 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "../../registry/ui/alert-dialog"
-import { Button } from "../../registry/ui/button"
+import {Button} from "../../registry/ui/button"
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
-import { toast } from "../../registry/ui/use-toast"
+import {toast} from "../../registry/ui/use-toast"
+import Api from "../../utils/Api";
+import {useNavigate} from "react-router-dom";
 
-export function TaskActions() {
+export function TaskActions({taskId, projectId}: any) {
     const [open, setIsOpen] = React.useState(false)
     const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
+    const navigate = useNavigate();
+
+    function deleteTask() {
+        Api.delete('/tasks/' + taskId ).then((res) => {
+            setShowDeleteDialog(false)
+            navigate('/project/' + projectId)
+        }).catch((err) => {
+            setShowDeleteDialog(false)
+        })
+    }
 
     return (
         <>
@@ -40,17 +52,16 @@ export function TaskActions() {
                         className="text-red-600"
                     >
                         <Trash className="mr-2 h-4 w-4" />
-                        Delete task
+                        Esborrar tasca
                     </DropdownMenuItem>
                 </DropdownMenuContent>
             </DropdownMenu>
             <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
                 <AlertDialogContent>
                     <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure absolutely sure?</AlertDialogTitle>
+                        <AlertDialogTitle>Estàs segur?</AlertDialogTitle>
                         <AlertDialogDescription>
-                            This action cannot be undone. This preset will no longer be
-                            accessible by you or others you&apos;ve shared it with.
+                            Aquesta acció no es pot desfer.
                         </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
@@ -58,13 +69,10 @@ export function TaskActions() {
                         <Button
                             variant="destructive"
                             onClick={() => {
-                                setShowDeleteDialog(false)
-                                toast({
-                                    description: "This preset has been deleted.",
-                                })
+                                deleteTask()
                             }}
                         >
-                            Delete
+                            Esborrar
                         </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
