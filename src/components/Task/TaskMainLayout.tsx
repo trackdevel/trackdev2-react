@@ -26,6 +26,7 @@ import {courseSchema} from "../data/courses/schema";
 import {Dialog} from "../../registry/ui/dialog";
 import {DataTable} from "../tasks-table/data-table";
 import {columns} from "../tasks-table/columns"
+import {toast} from "react-toastify";
 
 export interface User {
     id: string
@@ -170,9 +171,27 @@ export default function TaskMainLayout(...props: any) {
 
         if(taskId != 'new') {
             Api.patch('/tasks/' + taskId, requestBody).then((res) => {
-                console.log(res)
+                toast.success('Tasca actualitzada correctament', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }).catch((err) => {
-                console.log(err)
+                toast.error('No s\'ha pogut actualitzar la tasca', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             })
         }
         else {

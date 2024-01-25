@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
 import Api from "../../utils/Api";
-import {toast} from "../../registry/ui/use-toast";
+import {toast} from "react-toastify";
 import * as React from "react";
 import {
   AlertDialog,
@@ -70,11 +70,28 @@ export function DataTableRowActions<TData>({
     // @ts-ignore
     Api.delete('/projects/' + row.original.id ).then((res) => {
       setShowDeleteDialog(false)
-      toast({
-        description: "This preset has been deleted.",
-      })
       window.location.reload()
+      toast.success('Tasca eliminada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }).catch((err) => {
+      toast.error('No s\'ha pogut eliminar la tasca', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     })
   }
 
@@ -100,11 +117,31 @@ export function DataTableRowActions<TData>({
 
     // @ts-ignore
     Api.patch(`/projects/${row.original.id}`,requestBody).then((res) => {
+      toast.success('Tasca actualitzada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       setIsLoading(false)
       setShowEditDialog(false)
       window.location.reload()
     }).catch((err) => {
       setIsLoading(false)
+        toast.error('No s\'ha pogut actualitzar la tasca', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
     })
   }
 

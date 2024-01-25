@@ -7,44 +7,129 @@ import {Button} from "../../registry/ui/button"
 import {Input} from "../../registry/ui/input"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
+import {toast} from "react-toastify";
+import {useEffect} from "react";
+import {z} from "zod";
+import {courseSchema} from "../data/courses/schema";
+import { useSearchParams  } from 'react-router-dom'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function PasswordForm({ className, ...props }: UserAuthFormProps) {
-    const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [old_password,setOldPassword] = React.useState<string>('')
+    let [searchParams, setSearchParams] = useSearchParams();
+    const [isLoading, setIsLoading] = React.useState<boolean>(true)
+
+    const [email,setEmail] = React.useState<string>('')
+    const [code,setCode] = React.useState<string>('')
     const [password,setPassword] = React.useState<string>('')
     const [repeat_password,setRepeatPasword] = React.useState<string>('')
     const navigate = useNavigate();
+
+    useEffect(() => {
+        if(searchParams.has('email')) setEmail(searchParams.get('email') as string)
+    } ,[])
+
+    async function onChangeCode(event: React.SyntheticEvent, value: string) {
+        event.preventDefault()
+        setCode(value)
+
+        if(email === '') return;
+
+        var requestBody = {
+            code: value
+        }
+
+        Api.post('/auth/recovery/'+email+'/check',requestBody).then((res) => {
+            setIsLoading(false)
+            toast.success('Codi i correu electrònic correctes', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }).catch((err) => {
+            setIsLoading(true)
+            toast.error('Codi o correu electrònic incorrectes', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        })
+    }
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
 
-        if(password === '' || repeat_password === '' || old_password === '') {
+        if(email === '' || repeat_password === '' || password === '') {
+            setIsLoading(false)
+            toast.error('Camps buits', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             return;
         }
 
         if(password !== repeat_password) {
+            setIsLoading(false)
+            toast.error('Les contrasenyes no coincideixen', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             return;
         }
 
-        var userdata = localStorage.getItem('userdata')
-        var userdataJSON = JSON.parse(userdata ? userdata : '')
-
         var requestBody = {
-            oldpassword: old_password,
-            newpassword: password,
-            username: userdataJSON.username
+            code: code,
+            newPassword: password
         }
 
-        Api.post('/auth/changepassword',requestBody).then((res) => {
+        Api.post('/auth/recovery/'+email,requestBody).then((res) => {
             setIsLoading(false)
-            userdataJSON.changePassword = false
-            localStorage.setItem('userdata',JSON.stringify(userdataJSON))
-            navigate('/')
+            toast.success('Contrasenya canviada correctament', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            navigate('/auth/login')
         }).catch((err) => {
             setIsLoading(false)
+            toast.error('No s\'ha pogut canviar la contrasenya', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         })
     }
 
@@ -54,14 +139,16 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                 <div className="grid gap-2">
                     <div className="grid gap-1">
                         <Input
-                            id="old_password"
+                            id="codi"
                             placeholder="Codi de recuperació"
-                            type="password"
+                            type="text"
                             autoCapitalize="none"
-                            autoComplete="old_password"
+                            autoComplete="codi"
                             autoCorrect="off"
-                            disabled={isLoading}
-                            onChange={(e) => setOldPassword(e.target.value)}
+                            disabled={!isLoading}
+                            onChange={(e) => {
+                                onChangeCode(e,e.target.value)
+                            }}
                         />
                         <Input
                             id="password"
@@ -85,9 +172,6 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                         />
                     </div>
                     <Button disabled={isLoading}>
-                        {isLoading && (
-                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                        )}
                         Crear nova contrasenya
                     </Button>
                 </div>
@@ -96,3 +180,6 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
         </div>
     )
 }
+
+
+

@@ -14,7 +14,7 @@ import {
     FormMessage,
 } from "../../../registry/ui/form"
 import {Input} from "../../../registry/ui/input"
-import {toast} from "../../../registry/ui/use-toast"
+import {toast} from "react-toastify";
 import Api from "../../../utils/Api";
 import React, {useEffect} from "react";
 import {Link} from "react-router-dom";
@@ -109,6 +109,16 @@ export function ProfileForm(...props: any) {
         if(userId == 'self') {
             Api.patch('/users', requestBody).then((res) => {
                 window.location.reload();
+                toast.success('Tasca actualitzada correctament', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }).catch((err) => {})
         }
         else {
@@ -118,14 +128,6 @@ export function ProfileForm(...props: any) {
             })
         }
 
-        toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-        </pre>
-            ),
-        })
     }
 
     // @ts-ignore
@@ -160,7 +162,11 @@ export function ProfileForm(...props: any) {
                     <FormItem>
                         <FormLabel>Token de Github</FormLabel>
                         <FormControl>
-                            <Input placeholder="githubToken" {...field} />
+                            <Input
+                                type={(userId != 'self') ? 'password' : 'text'}
+                                placeholder="githubToken"
+                                disabled={userId != 'self'}
+                            />
                         </FormControl>
                         <FormDescription className="flex items-center">
                             { ( githubData != '' ) ? (

@@ -21,8 +21,11 @@ import SettingsProfilePageAdmin from "./pages/Settings/profile/SettingsProfilePa
 import Recovery from "./pages/Auth/Recovery";
 import Sprints from "./pages/Sprints/Sprints";
 import SettingsNotesPage from "./pages/Settings/projects/SettingsNotesPage";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 export function App() {
+
 
     const router = createBrowserRouter(
         createRoutesFromElements(
@@ -59,6 +62,9 @@ export function App() {
                 <head />
                 <body className={"min-h-screen bg-background font-sans antialiased"} >
                     <RouterProvider router={router}/>
+                    <>
+                        <ToastContainer />
+                    </>
                 </body>
             </html>
         </>

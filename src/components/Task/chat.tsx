@@ -8,6 +8,7 @@ import {Input} from "../../registry/ui/input";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {taskCommentSchema} from "../data/task/comment";
+import {toast} from "react-toastify";
 
 export function CardsChat( ...props: any ) {
   const [currentUser, setCurrentUser] = React.useState<string>('1')
@@ -37,7 +38,28 @@ export function CardsChat( ...props: any ) {
     Api.patch('/tasks/' + taskId, requestBody).then((res) => {
       getMessages(taskId)
       setInput("")
-    }).catch((err) => {})
+      toast.success('Comentari enviat', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }).catch((err) => {
+        toast.error('No s\'ha pogut enviar el comentari', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
+    })
   }
 
 

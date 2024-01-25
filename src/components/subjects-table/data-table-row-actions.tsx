@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "../../registry/ui/alert-dialog";
-import {toast} from "../../registry/ui/use-toast";
+import {toast} from "react-toastify";
 import * as React from "react";
 import Api from "../../utils/Api";
 import * as DialogPrimitive from "@radix-ui/react-dialog/dist";
@@ -51,9 +51,6 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     // @ts-ignore
     Api.delete('/subjects/' + row.original.id ).then((res) => {
       setShowDeleteDialog(false)
-      toast({
-        description: "This preset has been deleted.",
-      })
       window.location.reload()
     }).catch((err) => {
     })
@@ -86,9 +83,29 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
     Api.patch('/subjects/' + row.original.id, requestBody).then((res) => {
       setIsLoading(false)
       setShowEditDialog(false)
+      toast.success('Tasca actualitzada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       window.location.reload()
     }).catch((err) => {
       setIsLoading(false)
+        toast.error('No s\'ha pogut actualitzar la tasca', {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+        });
     })
 
   }

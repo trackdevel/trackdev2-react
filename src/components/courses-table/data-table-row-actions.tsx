@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
 import Api from "../../utils/Api";
-import {toast} from "../../registry/ui/use-toast";
+import {toast} from  "react-toastify";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -59,9 +59,6 @@ export function DataTableRowActions<TData>({
     // @ts-ignore
     Api.delete('/courses/' + row.original.id ).then((res) => {
       setShowDeleteDialog(false)
-      toast({
-        description: "This preset has been deleted.",
-      })
       window.location.reload()
     }).catch((err) => {
     })
@@ -98,8 +95,28 @@ export function DataTableRowActions<TData>({
       setIsLoading(false)
       setShowEditDialog(false)
       window.location.reload()
+      toast.success('Curs editat correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }).catch((err) => {
       setIsLoading(false)
+      toast.error('No s\'ha pogut editar el curs', {
+          position: "bottom-right",
+          autoClose: 5000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          theme: "colored",
+      });
     })
   }
 

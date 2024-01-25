@@ -7,45 +7,53 @@ import {Button} from "../../registry/ui/button"
 import {Input} from "../../registry/ui/input"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
+import {toast} from "react-toastify";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
 export function RecoveryForm({ className, ...props }: UserAuthFormProps) {
     const [isLoading, setIsLoading] = React.useState<boolean>(false)
-    const [old_password,setOldPassword] = React.useState<string>('')
-    const [password,setPassword] = React.useState<string>('')
-    const [repeat_password,setRepeatPasword] = React.useState<string>('')
+    const [email,setEmail] = React.useState<string>('')
     const navigate = useNavigate();
 
+
     async function onSubmit(event: React.SyntheticEvent) {
-        event.preventDefault()
         setIsLoading(true)
+        event.preventDefault()
 
-        if(password === '' || repeat_password === '' || old_password === '') {
-            return;
-        }
-
-        if(password !== repeat_password) {
-            return;
-        }
-
-        var userdata = localStorage.getItem('userdata')
-        var userdataJSON = JSON.parse(userdata ? userdata : '')
+        if(email === '') return;
 
         var requestBody = {
-            oldpassword: old_password,
-            newpassword: password,
-            username: userdataJSON.username
+            email: email
         }
 
-        Api.post('/auth/changepassword',requestBody).then((res) => {
+        Api.post('/auth/recovery',requestBody).then((res) => {
             setIsLoading(false)
-            userdataJSON.changePassword = false
-            localStorage.setItem('userdata',JSON.stringify(userdataJSON))
-            navigate('/')
+            toast.success('Revisa el teu correu electrònic per restablir la contrasenya', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+            navigate('/auth/password?email='+email)
         }).catch((err) => {
             setIsLoading(false)
+            toast.error('No s\'ha pogut enviar el correu electrònic', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         })
+
     }
 
     return (
@@ -54,14 +62,14 @@ export function RecoveryForm({ className, ...props }: UserAuthFormProps) {
                 <div className="grid gap-2">
                     <div className="grid gap-1">
                         <Input
-                            id="old_password"
+                            id="email"
                             placeholder="Correu electrònic"
-                            type="password"
+                            type="email"
                             autoCapitalize="none"
-                            autoComplete="old_password"
+                            autoComplete="email"
                             autoCorrect="off"
                             disabled={isLoading}
-                            onChange={(e) => setOldPassword(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                     </div>
                     <Button disabled={isLoading}>

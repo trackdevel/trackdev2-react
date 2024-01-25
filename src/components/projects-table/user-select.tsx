@@ -23,6 +23,7 @@ import Api from "../../utils/Api";
 import {z} from "zod";
 import {userSchema} from "../data/users/schema";
 import {useEffect} from "react";
+import {toast} from "react-toastify";
 
 
 
@@ -55,6 +56,16 @@ export function UsersSelect(props: any) {
         Api.patch('/projects/' + projectId, RequestBody).then((res) => {
             setOpen(false)
             window.location.reload()
+            toast.success('Usuaris afegits correctament', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         }).catch((err) => {})
     }
 

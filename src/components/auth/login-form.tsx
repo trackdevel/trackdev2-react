@@ -8,6 +8,7 @@ import {Input} from "../../registry/ui/input"
 import {Label} from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
+import {toast} from "react-toastify";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,9 +34,29 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         Api.post('/auth/login',requestBody).then((res) => {
             localStorage.setItem('userdata',JSON.stringify(res.userdata))
             setIsLoading(false)
+            toast.success('Sessió iniciada correctament', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             navigate('/');
         }).catch((err) => {
             setIsLoading(false)
+            toast.error('No s\'ha pogut iniciar sessió', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
         })
     }
 
@@ -77,7 +98,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                 </div>
             </form>
             <p className="px-8 text-center text-sm text-muted-foreground">
-                <a className="underline underline-offset-4 hover:text-primary" href="/auth/password">Recuperar contrasenya</a>
+                <a className="underline underline-offset-4 hover:text-primary" href="/auth/recovery">Recuperar contrasenya</a>
             </p>
         </div>
     )
