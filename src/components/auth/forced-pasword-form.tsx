@@ -15,55 +15,21 @@ import { useSearchParams  } from 'react-router-dom'
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
-export function PasswordForm({ className, ...props }: UserAuthFormProps) {
+export function ForcedPasswordForm({ className, ...props }: UserAuthFormProps) {
     let [searchParams, setSearchParams] = useSearchParams();
-    const [isLoading, setIsLoading] = React.useState<boolean>(true)
+    const [isLoading, setIsLoading] = React.useState<boolean>(false)
 
-    const [email,setEmail] = React.useState<string>('')
     const [code,setCode] = React.useState<string>('')
+    const [old_password,setOldPassword] = React.useState<string>('')
     const [password,setPassword] = React.useState<string>('')
     const [repeat_password,setRepeatPasword] = React.useState<string>('')
     const navigate = useNavigate();
-
-    useEffect(() => {
-        if(searchParams.has('email')) setEmail(searchParams.get('email') as string)
-    } ,[])
-
-    async function onChangeCode(event: React.SyntheticEvent, value: string) {
-        event.preventDefault()
-        setCode(value)
-
-        if(email === '') return;
-
-        // code length < 8
-        if(value.length < 8) return;
-
-        var requestBody = {
-            code: value
-        }
-
-        Api.post('/auth/recovery/'+email+'/check',requestBody).then((res) => {
-            setIsLoading(false)
-            toast.success('Codi i correu electrònic correctes', {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
-        }).catch((err) => {
-            setIsLoading(true)
-        })
-    }
 
     async function onSubmit(event: React.SyntheticEvent) {
         event.preventDefault()
         setIsLoading(true)
 
-        if(email === '' || repeat_password === '' || password === '') {
+        if(old_password === '' || repeat_password === '' || password === '') {
             setIsLoading(false)
             toast.error('Camps buits', {
                 position: "bottom-right",
@@ -94,11 +60,11 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
         }
 
         var requestBody = {
-            code: code,
+            oldPassword: old_password,
             newPassword: password
         }
 
-        Api.post('/auth/recovery/'+email,requestBody).then((res) => {
+        Api.post('/auth/password/',requestBody).then((res) => {
             setIsLoading(false)
             toast.success('Contrasenya canviada correctament', {
                 position: "bottom-right",
@@ -110,7 +76,7 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                 progress: undefined,
                 theme: "colored",
             });
-            navigate('/auth/login')
+            navigate('/')
         }).catch((err) => {
             setIsLoading(false)
         })
@@ -122,17 +88,14 @@ export function PasswordForm({ className, ...props }: UserAuthFormProps) {
                 <div className="grid gap-2">
                     <div className="grid gap-1">
                         <Input
-                            id="codi"
-                            placeholder="Codi de recuperació"
+                            id="old_password"
+                            placeholder="Contrasenya antiga"
                             type="text"
                             autoCapitalize="none"
-                            autoComplete="codi"
+                            autoComplete="password"
                             autoCorrect="off"
-                            disabled={!isLoading}
-                            maxLength={8}
-                            onChange={(e) => {
-                                onChangeCode(e,e.target.value)
-                            }}
+                            disabled={isLoading}
+                            onChange={(e) => setOldPassword(e.target.value)}
                         />
                         <Input
                             id="password"

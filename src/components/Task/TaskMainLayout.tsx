@@ -182,16 +182,6 @@ export default function TaskMainLayout(...props: any) {
                     theme: "colored",
                 });
             }).catch((err) => {
-                toast.error('No s\'ha pogut actualitzar la tasca', {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                    theme: "colored",
-                });
             })
         }
         else {

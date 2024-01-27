@@ -42,18 +42,7 @@ export function RecoveryForm({ className, ...props }: UserAuthFormProps) {
             navigate('/auth/password?email='+email)
         }).catch((err) => {
             setIsLoading(false)
-            toast.error('No s\'ha pogut enviar el correu electrònic', {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
         })
-
     }
 
     return (

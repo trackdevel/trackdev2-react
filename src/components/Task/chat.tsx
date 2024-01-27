@@ -24,7 +24,7 @@ export function CardsChat( ...props: any ) {
 
   useEffect(() => {
     Api.get('/auth/self').then((res) => {
-      setCurrentUser(res.username)
+      setCurrentUser(res.id)
     }).catch((err) => {})
     return;
   }, [])
@@ -49,16 +49,6 @@ export function CardsChat( ...props: any ) {
         theme: "colored",
       });
     }).catch((err) => {
-        toast.error('No s\'ha pogut enviar el comentari', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     })
   }
 
@@ -91,7 +81,7 @@ export function CardsChat( ...props: any ) {
                 key={index}
                 className={cn(
                   "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.author === currentUser
+                    message.author.id == currentUser
                     ? "ml-auto bg-primary text-primary-foreground"
                     : "bg-muted"
                 )}

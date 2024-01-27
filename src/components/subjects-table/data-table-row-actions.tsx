@@ -96,16 +96,6 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
       window.location.reload()
     }).catch((err) => {
       setIsLoading(false)
-        toast.error('No s\'ha pogut actualitzar la tasca', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     })
 
   }

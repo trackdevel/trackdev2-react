@@ -47,16 +47,6 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
             navigate('/');
         }).catch((err) => {
             setIsLoading(false)
-            toast.error('No s\'ha pogut iniciar sessió', {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
         })
     }
 
@@ -70,7 +60,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="username"
-                            placeholder="u1234567"
+                            placeholder="Correu electrònic"
                             type="text"
                             autoCapitalize="none"
                             autoComplete="username"
@@ -80,7 +70,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         />
                         <Input
                             id="password"
-                            placeholder="Password"
+                            placeholder="Contrasenya"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="current-password"
@@ -93,7 +83,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
-                        Log In with Email
+                        Entrar a Trackdev
                     </Button>
                 </div>
             </form>

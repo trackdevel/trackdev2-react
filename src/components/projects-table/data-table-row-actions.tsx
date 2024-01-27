@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import {Check, ChevronsUpDown, EyeIcon, GraduationCapIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
+import {Check, ChevronsUpDown, EyeIcon, GraduationCapIcon, MoreHorizontal, Pen, TableIcon, Trash} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
 import {
@@ -82,16 +82,6 @@ export function DataTableRowActions<TData>({
         theme: "colored",
       });
     }).catch((err) => {
-      toast.error('No s\'ha pogut eliminar la tasca', {
-        position: "bottom-right",
-        autoClose: 5000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-        theme: "colored",
-      });
     })
   }
 
@@ -132,16 +122,6 @@ export function DataTableRowActions<TData>({
       window.location.reload()
     }).catch((err) => {
       setIsLoading(false)
-        toast.error('No s\'ha pogut actualitzar la tasca', {
-            position: "bottom-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-        });
     })
   }
 
@@ -176,6 +156,16 @@ export function DataTableRowActions<TData>({
                 "/project/" + row.original.id
             } >
               Veure
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+              onSelect={() => setShowDeleteDialog(true)}>
+            <TableIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Link to={
+              // @ts-ignore
+                "/sprints/" + row.original.id
+            } >
+              Sprints
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem

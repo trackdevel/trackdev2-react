@@ -1,3 +1,4 @@
+import {toast} from "react-toastify";
 
 const apiBaseUrl = 'https://localhost:8080'
 const requiresCors = true
@@ -20,12 +21,24 @@ const  Api = {
     }
 }
 
-async function getData(response: { status: number; json: () => any; ok: any }) {
+async function getData(response: Response) {
     let data = null
     if (response.status !== 204) {
         data = await response.json()
     }
     if (!response.ok) {
+        if (data.message) {
+            toast.error(data.message, {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
+        }
         throw {status: response.status, details: data}
     }
     return data
@@ -44,7 +57,7 @@ async function send(method: any, relativePath: string, requestBody: any) {
         options.body = JSON.stringify(requestBody)
         //options.mode = 'no-cors'
     }
-    const response = await fetch(apiBaseUrl + relativePath, options)
+    const response : Response = await fetch(apiBaseUrl + relativePath, options)
     return getData(response)
 }
 

@@ -23,6 +23,9 @@ import Sprints from "./pages/Sprints/Sprints";
 import SettingsNotesPage from "./pages/Settings/projects/SettingsNotesPage";
 import {toast, ToastContainer} from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Error404 from "./pages/Generic/Error404";
+import {ForcedPasswordForm} from "./components/auth/forced-pasword-form";
+import ForcedPassword from "./pages/Auth/ForcedPassword";
 
 export function App() {
 
@@ -50,8 +53,10 @@ export function App() {
                     <Route path="/auth/login" element={<Login/>}/>
                     <Route path="/auth/register" element={<Register/>}/>
                     <Route path="/auth/password" element={<Password/>}/>
+                    <Route path="/auth/forced-password" element={<ForcedPassword />}/>
                     <Route path="/auth/recovery" element={<Recovery/>}/>
                 </Route>
+                <Route path="*" element={<Error404 />} />
             </>
         )
     )
