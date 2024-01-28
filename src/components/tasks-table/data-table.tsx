@@ -1,7 +1,7 @@
 "use client"
 
 import * as React from "react"
-import {useEffect} from "react"
+import {useContext,useEffect} from "react"
 import {
   ColumnDef,
   ColumnFiltersState,
@@ -35,6 +35,7 @@ import {Cross2Icon, PlusCircledIcon} from "@radix-ui/react-icons";
 import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger} from "../../registry/ui/dialog";
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Input} from "../../registry/ui/input";
+import {ProjectContext} from "../../pages/Project/Project";
 
 
 interface DataTableProps<TData, TValue> {
@@ -76,7 +77,12 @@ export function DataTable<TData, TValue>({
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
   })
+
+  const projectChange = useContext(ProjectContext);
+
+
   const { projectId } = useParams();
+  const [ projectid, setProjectId ] = React.useState<string | undefined>(projectId)
   const {taskId} = useParams();
 
   const [project, setProject] = React.useState<any>(null);
@@ -93,13 +99,13 @@ export function DataTable<TData, TValue>({
     Api.get('/projects').then((res) => {
       setProjects(z.array(projectSchema).parse(res))
     }).catch((err) => {})
-  }, []);
+  }, [projectid]);
 
   useEffect(() => {
-    Api.get('/projects/' + projectId).then((res) => {
+    Api.get('/projects/' + projectid).then((res) => {
         setProject(res)
     }).catch((err) => {})
-  }, []);
+  }, [projectid]);
 
   function openNewProject(id: string) {
     navigate('/project/' + id);
@@ -146,7 +152,7 @@ export function DataTable<TData, TValue>({
             { !taskId && (
               <Button>
                 <PlusCircledIcon className="mr-2 h-4 w-4"/>
-                <Link to={"/project/" + projectId + "/new"}>
+                <Link to={"/project/" + projectid + "/new"}>
                   Nova Historia d'Usuari
                 </Link>
               </Button>
@@ -216,10 +222,12 @@ export function DataTable<TData, TValue>({
                     <CommandGroup heading="Sprints">
                       {projects.map((request) => (
                           <CommandItem key={request.id}
-                                       onSelect={() => {
-                                         navigate('/project/' + request.id)
-                                         window.location.reload()
-                                       }}
+                             onSelect={() => {
+                               navigate('/project/' + request.id)
+                               // @ts-ignore
+                               projectChange(request.id)
+                               setProjectId(request.id)
+                             }}
                           >
                             {request.name}
                             <Check
@@ -239,11 +247,11 @@ export function DataTable<TData, TValue>({
             )}
             { !taskId && (
               <TabsList className="grid grid-cols-2 w-max">
-                <TabsTrigger className="flex-1 space-x-4" value="information" onClick={() => setTab('Information')}>
+                <TabsTrigger className="flex-1 space-x-4" value="information" onClick={() => setTab('Llistat')}>
                   <Icons.List className="h-5 w-5" />
                   <span>Llistat</span>
                 </TabsTrigger>
-                <TabsTrigger className="flex-1 space-x-4" value="history" onClick={() => setTab('History')}>
+                <TabsTrigger className="flex-1 space-x-4" value="history" onClick={() => setTab('Agile')}>
                   <Icons.Table className="h-5 w-5" />
                   <span>Agile</span>
                 </TabsTrigger>
@@ -259,9 +267,6 @@ export function DataTable<TData, TValue>({
             <TasksAgileView table={table} />
           </TabsContent>
         )}
-        {/*<TabsContent value="history" className="mt-0 border-0 p-0">
-          <TasksAgileViewDND table={table} />
-        </TabsContent>*/}
       </Tabs>
       <DataTablePagination table={table} />
     </div>

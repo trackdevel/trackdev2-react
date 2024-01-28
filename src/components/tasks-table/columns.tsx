@@ -7,8 +7,9 @@ import {Task} from "../data/taskTable/schema"
 import {DataTableColumnHeader} from "./data-table-column-header"
 import {DataTableRowActions} from "./data-table-row-actions"
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useContext} from "react";
 import {Avatar, AvatarFallback} from "../../registry/ui/avatar";
+import {TaskContext} from "../Task/TaskMainLayout";
 
 const columns: ColumnDef<Task>[] = [
   {
@@ -17,15 +18,16 @@ const columns: ColumnDef<Task>[] = [
       <DataTableColumnHeader column={column} title="Títol" />
     ),
     cell: ({ row }) => {
-      const to = `/project/${row?.original?.projectId}/${row?.original?.id}`
+      let projectID = (row?.original?.projectId) ? row?.original?.projectId : row?.original?.project?.id
+
+      const to = `/project/${projectID}/${row?.original?.id}`
       const name = row?.original?.name ? row?.original?.name : ''
+
 
       return (
         <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium">
-            <Link to={to} >
-              {name}
-            </Link>
+            {name}
           </span>
         </div>
       )

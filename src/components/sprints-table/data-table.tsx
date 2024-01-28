@@ -123,7 +123,6 @@ export function SprintsTable<TData, TValue>({columns,data,}: DataTableProps<TDat
       setState(false)
       window.location.reload()
     }).catch((err) => {
-      console.log(err)
     })
 
   }

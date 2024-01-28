@@ -13,7 +13,7 @@ import {
 } from "../../registry/ui/dropdown-menu"
 import {taskSchema} from "../data/taskTable/schema"
 import {Link} from "react-router-dom";
-import React from "react";
+import React, {useContext} from "react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -24,6 +24,8 @@ import {
   AlertDialogTitle
 } from "../../registry/ui/alert-dialog";
 import Api from "../../utils/Api";
+import {ProjectContext} from "../../pages/Project/Project";
+import {TaskContext} from "../Task/TaskMainLayout";
 
 interface DataTableRowActionsProps<TData> {
   row: Row<TData>
@@ -35,12 +37,12 @@ export function DataTableRowActions<TData>({
   const [showDeleteDialog, setShowDeleteDialog] = React.useState(false)
   const task = taskSchema.parse(row.original)
 
-  console.log('asdfasdf',row.original)
+  const taskChange = useContext(TaskContext);
 
   // @ts-ignore
   let projectID = (row?.original?.projectId) ? row?.original?.projectId : row?.original?.project?.id
   // @ts-ignore
-  const to = `/project/${projectID}/${row?.original?.id}`
+  const to = `/project/${projectID}/${row?.original?.id}/information`
 
   function deleteRow() {
     // @ts-ignore
@@ -67,7 +69,11 @@ export function DataTableRowActions<TData>({
         <DropdownMenuContent align="end" className="w-[160px]">
           <DropdownMenuItem>
             <Pen className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
-            <Link to={to} onClick={window.location.reload}>
+            <Link to={to} onClick={() => {
+                if (typeof taskChange !== 'function') return
+                // @ts-ignore
+                taskChange(task.id)
+            } }>
               Editar
             </Link>
           </DropdownMenuItem>

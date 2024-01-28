@@ -91,7 +91,6 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
         theme: "colored",
       });
     }).catch((err) => {
-      console.log(err)
     })
 
     setIsLoading(false)

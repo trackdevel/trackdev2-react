@@ -37,6 +37,7 @@ export function App() {
                     <Route path="/" element={<AuthGuard component={<Dashboard/>}/>}/>
                     <Route path="/project/:projectId" element={<AuthGuard component={<Project/>}/>}/>
                     <Route path="/project/:projectId/:taskId" element={<AuthGuard component={<Task/>}/>}/>
+                    <Route path="/project/:projectId/:taskId/:tabName" element={<AuthGuard component={<Task/>}/>}/>
                     <Route path="/sprints/:projectId" element={<AuthGuard component={<Sprints/>}/>}/>
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>

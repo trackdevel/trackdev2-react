@@ -9,7 +9,7 @@ import {Icons} from "../ui/icons"
 import {TaskActions} from "./task-actions"
 import "./styles.css"
 import {Sprints} from "../data/task/Sprints";
-import React, {useEffect} from "react";
+import React, {createContext, useEffect} from "react";
 import Api from "../../utils/Api";
 import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover";
 import {cn} from "../../lib/utils";
@@ -27,6 +27,7 @@ import {Dialog} from "../../registry/ui/dialog";
 import {DataTable} from "../tasks-table/data-table";
 import {columns} from "../tasks-table/columns"
 import {toast} from "react-toastify";
+import {useNavigate} from "react-router-dom";
 
 export interface User {
     id: string
@@ -36,8 +37,13 @@ export interface User {
     color: string
 }
 
+
+export const TaskContext = createContext({});
+
 export default function TaskMainLayout(...props: any) {
+    const [tabName, setTabName] = React.useState<any>(props[0].tabName)
     const [tab, setTab] = React.useState<string>('Informació')
+
 
     const [title, setTitle] = React.useState<string>('Full task name')
     const [information, setInformation] = React.useState<string>('')
@@ -55,6 +61,8 @@ export default function TaskMainLayout(...props: any) {
     const [typeopen, setTypeopen] = React.useState(false)
     const [isuserstory, setIsUserStory] = React.useState<boolean>(true)
     const [subtasks, setSubtasks] = React.useState<Array<any>>([])
+
+    const navigate = useNavigate();
 
     // task use state object
     const [task, setTask] = React.useState<any>({})
@@ -81,20 +89,41 @@ export default function TaskMainLayout(...props: any) {
     const [currenUserMail , setCurrentUserMail] = React.useState<string>('')
     const [isAssignee, setIsAssignee] = React.useState<boolean>(false)
 
+    const [reloadTask, setReloadTask] = React.useState<boolean>(false)
+
+    function taskChange(taskId: any) {
+        setTaskId(taskId)
+        setTabName('information')
+        reloadTask ? setReloadTask(false) : setReloadTask(true)
+    }
+
+    useEffect(() => {
+        if(tabName == 'information') setTab('Informació')
+        else if(tabName == 'history') setTab('Historial')
+        else if(tabName == 'comments') setTab('Comentaris')
+        else if(tabName == 'subtasks') setTab('Tasques')
+    }, [tabName]);
+
+    useEffect(() => {
+        if(tab == 'Informació') setTabName('information')
+        else if(tab == 'Historial') setTabName('history')
+        else if(tab == 'Comentaris') setTabName('comments')
+        else if(tab == 'Tasques') setTabName('subtasks')
+        console.log('tab',tab)
+    }, [tab]);
+
 
     useEffect(() => {
         Api.get('/projects/' + projectId).then((res) => {
             setMembers(z.array(courseSchema).parse(res.members))
             setSprints(z.array(courseSchema).parse(res.sprints))
         }).catch((err) => {})
-    }, [])
+    }, [reloadTask])
 
 
     useEffect(() => {
         if(taskId != 'new') {
             Api.get('/tasks/' + taskId).then((res) => {
-                console.log(res.task)
-                console.log(res.task.createdAt)
                 setTask(taskSchema.parse(res.task))
                 setTitle(taskSchema.parse(res.task.name))
                 setDate(new Date(taskSchema.parse(res.task.createdAt)))
@@ -109,14 +138,14 @@ export default function TaskMainLayout(...props: any) {
                     setIsUserStory(false)
                 }
                 setPointsReviews(taskSchema.parse(res.pointsReview))
-                let current_review = taskSchema.parse(res).pointsReview.filter((item : any) => item.user.username === 'Admin user')
+                let current_review = taskSchema.parse(res).pointsReview.filter((item : any) => item.user.email === currenUserMail)
                 if(current_review.length > 0) {
                     setCurrentReview(current_review[0])
                 }
             }).catch((err) => {
             })
         }
-    }, []);
+    }, [reloadTask,currenUserMail]);
 
     useEffect(() => {
         if(isuserstory) var url = '/tasks/usstatus'
@@ -124,7 +153,7 @@ export default function TaskMainLayout(...props: any) {
         Api.get(url).then((res) => {
             setStatuses(res)
         }).catch((err) => {})
-    }, [isuserstory]);
+    }, [isuserstory,reloadTask]);
 
 
     useEffect(() => {
@@ -133,23 +162,20 @@ export default function TaskMainLayout(...props: any) {
         }).catch((err) => {
             setIsAdmin(false)
         })
-    }, []);
+    }, [reloadTask]);
 
     useEffect(() => {
         Api.get('/auth/self').then((res) => {
             setCurrentUserMail(res.email)
-            if(res.email == selectedTeam?.email) {
+            if(res.email == selectedTeamAssignee?.email) {
                 setIsAssignee(true)
             }
-        }).catch((err) => {
-        })
-    })
+        }).catch((err) => {})
+    }, [selectedTeamAssignee,reloadTask]);
 
 
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
-
-        console.log(selectedTeam,selectedTeamAssignee)
 
         let requestBody = {
             name: title,
@@ -167,10 +193,9 @@ export default function TaskMainLayout(...props: any) {
             }
         }
 
-        console.log('/tasks/' + taskId,requestBody)
-
         if(taskId != 'new') {
             Api.patch('/tasks/' + taskId, requestBody).then((res) => {
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
                 toast.success('Tasca actualitzada correctament', {
                     position: "bottom-right",
                     autoClose: 5000,
@@ -182,15 +207,17 @@ export default function TaskMainLayout(...props: any) {
                     theme: "colored",
                 });
             }).catch((err) => {
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             })
         }
         else {
             Api.post('/projects/' + projectId + '/tasks', requestBody).then((res) => {
-                console.log(res)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             }).catch((err) => {
-                console.log(err)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             })
         }
+
     }
 
     return (
@@ -302,26 +329,26 @@ export default function TaskMainLayout(...props: any) {
                         </div>
                     </div>
                     <Separator />
-                    <Tabs defaultValue="information" className="flex-1">
+                    <Tabs value={tabName} className="flex-1">
                         <div className="h-full py-6">
                             <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_350px]">
                                 <div className="hidden flex-col space-y-4 sm:flex md:order-2">
                                     <div className="grid gap-2">
                                         <TabsList className={"grid  " + (isuserstory ? 'grid-cols-4' : 'grid-cols-3')}>
-                                            <TabsTrigger value="information" onClick={() => setTab('Informació')}>
+                                            <TabsTrigger value="information" onClick={ () => { setTab('Informació'); navigate('/project/' + projectId + '/' + taskId + '/information')}}>
                                                 <span className="sr-only">Informació</span>
                                                 <Icons.Info className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="history" onClick={() => setTab('Historial')}>
+                                            <TabsTrigger value="history" onClick={() => { setTab('Historial'); navigate('/project/' + projectId + '/' + taskId + '/history' )}}>
                                                 <span className="sr-only">Historial</span>
                                                 <Icons.History className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="comments" onClick={() => setTab('Comentaris')}>
+                                            <TabsTrigger value="comments" onClick={() => { setTab('Comentaris'); navigate('/project/' + projectId + '/' + taskId + '/comments')}}>
                                                 <span className="sr-only">Comentaris</span>
                                                 <Icons.messagesSquare className="h-5 w-5"/>
                                             </TabsTrigger>
                                             {isuserstory ? (
-                                                <TabsTrigger value="subtasks" onClick={() => setTab('Tasques')}>
+                                                <TabsTrigger value="subtasks" onClick={() => { setTab('Tasques'); navigate('/project/' + projectId + '/' + taskId + '/subtasks')}}>
                                                     <span className="sr-only">Sub Tasques</span>
                                                     <Icons.Megaphone className="h-5 w-5"/>
                                                 </TabsTrigger>
@@ -535,24 +562,24 @@ export default function TaskMainLayout(...props: any) {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                                         Llistat de revisions de punts
                                                     </span>
-                                                    {console.log(pointsReviews)}
                                                     {pointsReviews.map((item: any, index: any) => (
-
-                                                        <>
-                                                            <div className="flex items-center">
-                                                                <Avatar className="h-9 w-9">
-                                                                    <AvatarFallback  style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
-                                                                </Avatar>
-                                                                <div className="ml-4 space-y-1">
-                                                                    <p className="text-sm font-medium leading-none">{item.user.username}</p>
-                                                                    <p className="text-sm text-muted-foreground">{item.comment}</p>
+                                                        item.user.email !== currenUserMail ? (
+                                                            <>
+                                                                <div className="flex items-center">
+                                                                    <Avatar className="h-9 w-9">
+                                                                        <AvatarFallback  style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
+                                                                    </Avatar>
+                                                                    <div className="ml-4 space-y-1">
+                                                                        <p className="text-sm font-medium leading-none">{item.user.username}</p>
+                                                                        <p className="text-sm text-muted-foreground">{item.comment}</p>
+                                                                    </div>
+                                                                    <div className="ml-auto font-medium">{item.points}</div>
                                                                 </div>
-                                                                <div className="ml-auto font-medium">{item.points}</div>
-                                                            </div>
-                                                            {index !== pointsReviews.length - 1 && (
-                                                                <Separator/>
-                                                            )}
-                                                        </>
+                                                                {index !== pointsReviews.length - 1 && (
+                                                                    <Separator/>
+                                                                )}
+                                                            </>
+                                                        ) : null
                                                     ))}
                                                 </>
                                             ) : null}
@@ -560,7 +587,7 @@ export default function TaskMainLayout(...props: any) {
                                     ) : null}
                                 </div>
                                 <div className="md:order-1">
-                                <TabsContent value="information" className="mt-0 border-0 p-0">
+                                    <TabsContent value="information" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
                                             <Textarea
                                                 placeholder="Informació"
@@ -580,7 +607,9 @@ export default function TaskMainLayout(...props: any) {
                                     </TabsContent>
                                     <TabsContent value="subtasks" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
-                                            <DataTable data={subtasks} columns={columns}/>
+                                            <TaskContext.Provider value={taskChange}>
+                                                <DataTable data={subtasks} columns={columns}/>
+                                            </TaskContext.Provider>
                                         </div>
                                     </TabsContent>
                                 </div>
