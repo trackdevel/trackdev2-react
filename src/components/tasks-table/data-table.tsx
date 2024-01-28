@@ -209,7 +209,7 @@ export function DataTable<TData, TValue>({
                       role="combobox"
                       aria-label="Load a preset..."
                       aria-expanded={openproject}
-                      className="flex-1 justify-between w-auto md:max-w-[250px] lg:max-w-[250px]"
+                      className="flex-1 justify-between w-auto"
                   >
                     {project ? project.name : "Sel·lecciona un projecte"}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
@@ -219,7 +219,7 @@ export function DataTable<TData, TValue>({
                   <Command>
                     <CommandInput placeholder="Buscar projecte..." />
                     <CommandEmpty>No presets found.</CommandEmpty>
-                    <CommandGroup heading="Sprints">
+                    <CommandGroup heading="Projectes">
                       {projects.map((request) => (
                           <CommandItem key={request.id}
                              onSelect={() => {

@@ -57,12 +57,14 @@ export default function SettingsProfilePageAdmin() {
                         Actualitza la informació personal del usuari
                     </p>
                 </div>
-                <Button disabled={isLoading} onClick={resetPassword}>
-                    {isLoading && (
-                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
-                    )}
-                    Recuperar contrasenya
-                </Button>
+                {userId == 'self' ? (
+                    <Button disabled={isLoading} onClick={resetPassword}>
+                        {isLoading && (
+                            <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                        )}
+                        Recuperar contrasenya
+                    </Button>
+                ) : null }
             </div>
             <Separator/>
             <ProfileForm userId={userId}/>

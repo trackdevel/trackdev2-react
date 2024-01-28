@@ -156,6 +156,8 @@ export default function TaskMainLayout(...props: any) {
     }, [isuserstory,reloadTask]);
 
 
+
+
     useEffect(() => {
         Api.get('/users/checker/admin').then((res) => {
             setIsAdmin(true)
@@ -170,6 +172,9 @@ export default function TaskMainLayout(...props: any) {
             if(res.email == selectedTeamAssignee?.email) {
                 setIsAssignee(true)
             }
+            if(taskId == 'new') {
+                setSelectedTeam(res)
+            }
         }).catch((err) => {})
     }, [selectedTeamAssignee,reloadTask]);
 
@@ -177,12 +182,18 @@ export default function TaskMainLayout(...props: any) {
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
 
+        var sendstatus = ''
+        Object.entries(statuses).forEach(([key, value]) => {
+            if(value == status) sendstatus = key
+        })
+
+
         let requestBody = {
             name: title,
             estimationPoints: estimationpoints,
             activeSprints: [sprint?.id], // no ho guarda
             // @ts-ignore
-            status: statuses[status],
+            status: sendstatus,
             // createdAt: date,
             assignee: selectedTeam?.email, // guarda el SeletedTeam sempre
             reporter: selectedTeamAssignee?.email, // guarda el SeletedTeam sempre

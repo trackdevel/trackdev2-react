@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import {useParams} from "react-router-dom";
 import TaskMainLayout from "../../components/Task/TaskMainLayout";
 
@@ -6,8 +6,10 @@ import TaskMainLayout from "../../components/Task/TaskMainLayout";
 const Task = () => {
 
     const { taskId } = useParams();
+    const [taskid, setTaskId] = React.useState<string | undefined>(taskId)
     const { projectId } = useParams();
     const {  tabName  }  = useParams();
+
 
     return (
         <div>

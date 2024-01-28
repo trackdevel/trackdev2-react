@@ -1,7 +1,10 @@
 import {toast} from "react-toastify";
+import {useParams} from "react-router-dom";
 
 const apiBaseUrl = 'https://localhost:8080'
 const requiresCors = true
+
+
 
 const  Api = {
     get: async function(relativePath: any) {
@@ -21,23 +24,26 @@ const  Api = {
     }
 }
 
-async function getData(response: Response) {
+async function getData(response: Response, relativePath: string) {
     let data = null
     if (response.status !== 204) {
         data = await response.json()
     }
     if (!response.ok) {
-        if (data.message) {
-            toast.error(data.message, {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-                theme: "colored",
-            });
+        if (data.message && data.message !== "" && data.message !== " " && data.message !== "null") {
+            let expludedRelativePath = ['/tasks/new/history','/tasks/new/comments']
+            if(!expludedRelativePath.includes(relativePath)) {
+                toast.error(data.message, {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
+            }
         }
         throw {status: response.status, details: data}
     }
@@ -58,7 +64,7 @@ async function send(method: any, relativePath: string, requestBody: any) {
         //options.mode = 'no-cors'
     }
     const response : Response = await fetch(apiBaseUrl + relativePath, options)
-    return getData(response)
+    return getData(response,relativePath)
 }
 
 export default Api

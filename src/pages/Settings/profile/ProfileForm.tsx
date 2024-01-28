@@ -186,10 +186,12 @@ export function ProfileForm(...props: any) {
                         <FormItem>
                             <FormLabel>Token de Github</FormLabel>
                             <FormControl>
+                                {/*@ts-ignore*/}
                                 <Input
                                     type={(userId != 'self') ? 'password' : 'text'}
                                     placeholder="githubToken"
                                     disabled={userId != 'self'}
+                                    {...field}
                                 />
                             </FormControl>
                                 <FormDescription className="flex items-center">
@@ -225,38 +227,42 @@ export function ProfileForm(...props: any) {
                         <FormMessage />
                     </FormItem>
                 )} />
-                <FormField control={form.control} name="enabled" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                            <FormLabel>Activat</FormLabel>
-                            <FormDescription>
-                                Si desactives el usuari no podrà entrar a la plataforma
-                            </FormDescription>
-                        </div>
-                        <FormControl>
-                            <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                        </FormControl>
-                    </FormItem>
-                )} />
-                <FormField control={form.control} name="changePassword" render={({ field }) => (
-                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
-                        <div className="space-y-0.5">
-                            <FormLabel>Forçar canvi de contrasenya</FormLabel>
-                            <FormDescription>
-                                Si actives aquesta opció el usuari haurà de canviar la contrasenya la propera vegada que entri a la plataforma
-                            </FormDescription>
-                        </div>
-                        <FormControl>
-                            <Switch
-                                checked={field.value}
-                                onCheckedChange={field.onChange}
-                            />
-                        </FormControl>
-                    </FormItem>
-                )} />
+                {userId != 'self' ? (
+                    <>
+                        <FormField control={form.control} name="enabled" render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                    <FormLabel>Activat</FormLabel>
+                                    <FormDescription>
+                                        Si desactives el usuari no podrà entrar a la plataforma
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )} />
+                        <FormField control={form.control} name="changePassword" render={({ field }) => (
+                            <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
+                                <div className="space-y-0.5">
+                                    <FormLabel>Forçar canvi de contrasenya</FormLabel>
+                                    <FormDescription>
+                                        Si actives aquesta opció el usuari haurà de canviar la contrasenya la propera vegada que entri a la plataforma
+                                    </FormDescription>
+                                </div>
+                                <FormControl>
+                                    <Switch
+                                        checked={field.value}
+                                        onCheckedChange={field.onChange}
+                                    />
+                                </FormControl>
+                            </FormItem>
+                        )} />
+                    </>
+                ) : null }
                 <Button type="submit">Actualitzar</Button>
             </form>
         </Form>

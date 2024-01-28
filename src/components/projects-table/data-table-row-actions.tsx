@@ -102,7 +102,7 @@ export function DataTableRowActions<TData>({
     var requestBody = {
       name: name,
       courseId: selectedCourse?.id,
-      qualification: nota
+      qualification: parseInt(nota)
     }
 
     // @ts-ignore
@@ -270,7 +270,7 @@ export function DataTableRowActions<TData>({
                     id="nota"
                     placeholder="Nota"
                     value={nota ? nota : ""}
-                    type="text"
+                    type="number"
                     autoCapitalize="none"
                     autoComplete="Nota"
                     autoCorrect="off"
