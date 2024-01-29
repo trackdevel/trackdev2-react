@@ -181,14 +181,15 @@ export default function TaskMainLayout(...props: any) {
     useEffect(() => {
         Api.get('/auth/self').then((res) => {
             setCurrentUserMail(res.email)
-            if(res.email == selectedTeamAssignee?.email) {
+            if(res.email == selectedTeam?.email) {
                 setIsAssignee(true)
             }
             if(taskId == 'new') {
                 setSelectedTeam(res)
+                setSelectedTeamAssignee(res)
             }
         }).catch((err) => {})
-    }, [selectedTeamAssignee,reloadTask]);
+    }, [selectedTeam,reloadTask]);
 
 
     async function onCreate(event: React.SyntheticEvent) {
@@ -362,20 +363,32 @@ export default function TaskMainLayout(...props: any) {
                                 <div className="hidden flex-col space-y-4 sm:flex md:order-2">
                                     <div className="grid gap-2">
                                         <TabsList className={"grid  " + (isuserstory ? 'grid-cols-4' : 'grid-cols-3')}>
-                                            <TabsTrigger value="information" onClick={ () => { setTab('Informació'); navigate('/project/' + projectId + '/' + taskId + '/information')}}>
+                                            <TabsTrigger value="information" onClick={() => {
+                                                setTab('Informació');
+                                                navigate('/project/' + projectId + '/' + taskId + '/information')
+                                            }}>
                                                 <span className="sr-only">Informació</span>
                                                 <Icons.Info className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="history" onClick={() => { setTab('Historial'); navigate('/project/' + projectId + '/' + taskId + '/history' )}}>
+                                            <TabsTrigger value="history" onClick={() => {
+                                                setTab('Historial');
+                                                navigate('/project/' + projectId + '/' + taskId + '/history')
+                                            }}>
                                                 <span className="sr-only">Historial</span>
                                                 <Icons.History className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="comments" onClick={() => { setTab('Comentaris'); navigate('/project/' + projectId + '/' + taskId + '/comments')}}>
+                                            <TabsTrigger value="comments" onClick={() => {
+                                                setTab('Comentaris');
+                                                navigate('/project/' + projectId + '/' + taskId + '/comments')
+                                            }}>
                                                 <span className="sr-only">Comentaris</span>
                                                 <Icons.messagesSquare className="h-5 w-5"/>
                                             </TabsTrigger>
                                             {isuserstory ? (
-                                                <TabsTrigger value="subtasks" onClick={() => { setTab('Tasques'); navigate('/project/' + projectId + '/' + taskId + '/subtasks')}}>
+                                                <TabsTrigger value="subtasks" onClick={() => {
+                                                    setTab('Tasques');
+                                                    navigate('/project/' + projectId + '/' + taskId + '/subtasks')
+                                                }}>
                                                     <span className="sr-only">Sub Tasques</span>
                                                     <Icons.Megaphone className="h-5 w-5"/>
                                                 </TabsTrigger>
@@ -386,7 +399,8 @@ export default function TaskMainLayout(...props: any) {
                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Data de creació
                                     </span>
-                                    <Popover open={false} onOpenChange={() => {}}>
+                                    <Popover open={false} onOpenChange={() => {
+                                    }}>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant={"outline"}
@@ -407,9 +421,71 @@ export default function TaskMainLayout(...props: any) {
                                             />
                                         </PopoverContent>
                                     </Popover>
-                                    <span
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Creador
+                                    </span>
+                                    <Dialog open={showNewTeamDialogAssignee}
+                                            onOpenChange={setShowNewTeamDialogAssignee}>
+                                        <Popover open={openAssignee} onOpenChange={setOpenAssignee}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={openAssignee}
+                                                    aria-label="Select a team"
+                                                    className="w-full justify-between"
+                                                >
+                                                    <Avatar className="mr-2 h-5 w-5">
+                                                        <AvatarFallback style={{
+                                                            fontSize: '10px',
+                                                            backgroundColor: selectedTeamAssignee?.color
+                                                        }}>{selectedTeamAssignee?.capitalLetters}</AvatarFallback>
+                                                    </Avatar>
+                                                    {selectedTeamAssignee?.username}
+                                                    <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-full p-0">
+                                                <Command>
+                                                    <CommandList>
+                                                        <CommandInput placeholder="Buscar usuari..."/>
+                                                        <CommandEmpty>No team found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {members.map((team) => (
+                                                                <CommandItem
+                                                                    key={team.username}
+                                                                    onSelect={() => {
+                                                                        setSelectedTeamAssignee(team)
+                                                                        setOpenAssignee(false)
+                                                                    }}
+                                                                    className="text-sm"
+                                                                >
+                                                                    <Avatar className="mr-2 h-5 w-5">
+                                                                        <AvatarImage className="grayscale"/>
+                                                                        <AvatarFallback style={{
+                                                                            fontSize: '10px',
+                                                                            backgroundColor: team?.color
+                                                                        }}>{team?.capitalLetters}</AvatarFallback>
+                                                                    </Avatar>
+                                                                    {team.username}
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "ml-auto h-4 w-4",
+                                                                            selectedTeamAssignee?.username === team.username
+                                                                                ? "opacity-100"
+                                                                                : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </Dialog>
+                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Asignat
                                     </span>
                                     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
                                         <Popover open={open} onOpenChange={setOpen}>
@@ -445,77 +521,22 @@ export default function TaskMainLayout(...props: any) {
                                                                     onSelect={() => {
                                                                         setSelectedTeam(team)
                                                                         setOpen(false)
+                                                                        setIsAssignee(team.email == currenUserMail)
                                                                     }}
                                                                     className="text-sm"
                                                                 >
                                                                     <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage className="grayscale" />
-                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
+                                                                        <AvatarImage className="grayscale"/>
+                                                                        <AvatarFallback style={{
+                                                                            fontSize: '10px',
+                                                                            backgroundColor: team?.color
+                                                                        }}>{team?.capitalLetters}</AvatarFallback>
                                                                     </Avatar>
                                                                     {team.username}
                                                                     <Check
                                                                         className={cn(
                                                                             "ml-auto h-4 w-4",
                                                                             selectedTeam?.username === team.username
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                    </Dialog>
-                                    <span
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Asignat
-                                    </span>
-                                    <Dialog open={showNewTeamDialogAssignee}
-                                            onOpenChange={setShowNewTeamDialogAssignee}>
-                                        <Popover open={openAssignee} onOpenChange={setOpenAssignee}>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={openAssignee}
-                                                    aria-label="Select a team"
-                                                    className="w-full justify-between"
-                                                >
-                                                    <Avatar className="mr-2 h-5 w-5">
-                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: selectedTeamAssignee?.color}}>{selectedTeamAssignee?.capitalLetters}</AvatarFallback>
-                                                    </Avatar>
-                                                    {selectedTeamAssignee?.username}
-                                                    <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-full p-0">
-                                                <Command>
-                                                    <CommandList>
-                                                        <CommandInput placeholder="Buscar usuari..."/>
-                                                        <CommandEmpty>No team found.</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {members.map((team) => (
-                                                                <CommandItem
-                                                                    key={team.username}
-                                                                    onSelect={() => {
-                                                                        setSelectedTeamAssignee(team)
-                                                                        setOpenAssignee(false)
-                                                                        setIsAssignee(team.email == currenUserMail)
-                                                                    }}
-                                                                    className="text-sm"
-                                                                >
-                                                                    <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage className="grayscale" />
-                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
-                                                                    </Avatar>
-                                                                    {team.username}
-                                                                    <Check
-                                                                        className={cn(
-                                                                            "ml-auto h-4 w-4",
-                                                                            selectedTeamAssignee?.username === team.username
                                                                                 ? "opacity-100"
                                                                                 : "opacity-0"
                                                                         )}
@@ -594,13 +615,15 @@ export default function TaskMainLayout(...props: any) {
                                                             <>
                                                                 <div className="flex items-center">
                                                                     <Avatar className="h-9 w-9">
-                                                                        <AvatarFallback  style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
+                                                                        <AvatarFallback
+                                                                            style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
                                                                     </Avatar>
                                                                     <div className="ml-4 space-y-1">
                                                                         <p className="text-sm font-medium leading-none">{item.user.username}</p>
                                                                         <p className="text-sm text-muted-foreground">{item.comment}</p>
                                                                     </div>
-                                                                    <div className="ml-auto font-medium">{item.points}</div>
+                                                                    <div
+                                                                        className="ml-auto font-medium">{item.points}</div>
                                                                 </div>
                                                                 {index !== pointsReviews.length - 1 && (
                                                                     <Separator/>

@@ -105,8 +105,6 @@ const columns: ColumnDef<Task>[] = [
     cell: ({ row }) => {
       const reporter = row?.original?.reporter ? row?.original?.reporter : ''
 
-      console.log(row?.original?.reporter.capitalLetters)
-
       if (!reporter) {
         return null
       }

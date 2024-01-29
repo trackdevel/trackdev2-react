@@ -32,6 +32,7 @@ async function getData(response: Response, relativePath: string) {
     if (!response.ok) {
         if (data.message && data.message !== "" && data.message !== " " && data.message !== "null") {
             let expludedRelativePath = ['/tasks/new/history','/tasks/new/comments']
+            console.log(expludedRelativePath,relativePath,expludedRelativePath.includes(relativePath))
             if(!expludedRelativePath.includes(relativePath)) {
                 toast.error(data.message, {
                     position: "bottom-right",
