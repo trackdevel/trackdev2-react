@@ -27,7 +27,8 @@ import {Dialog} from "../../registry/ui/dialog";
 import {DataTable} from "../tasks-table/data-table";
 import {columns} from "../tasks-table/columns"
 import {toast} from "react-toastify";
-import {useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
+import {columnsSubtask} from "../tasks-table/columns-subtask";
 
 export interface User {
     id: string
@@ -90,6 +91,7 @@ export default function TaskMainLayout(...props: any) {
     const [isAssignee, setIsAssignee] = React.useState<boolean>(false)
 
     const [reloadTask, setReloadTask] = React.useState<boolean>(false)
+    const location = useLocation();
 
     function taskChange(taskId: any) {
         setTaskId(taskId)
@@ -98,20 +100,31 @@ export default function TaskMainLayout(...props: any) {
     }
 
     useEffect(() => {
-        if(tabName == 'information') setTab('Informació')
-        else if(tabName == 'history') setTab('Historial')
-        else if(tabName == 'comments') setTab('Comentaris')
-        else if(tabName == 'subtasks') setTab('Tasques')
-    }, [tabName]);
+        if(isuserstory) {
+            if (tabName == 'information') setTab('Informació')
+            else if (tabName == 'history') setTab('Historial')
+            else if (tabName == 'comments') setTab('Comentaris')
+            else if (tabName == 'subtasks') setTab('Tasques')
+        }
+        else {
+            setTab('Informació')
+        }
+    }, []);
 
     useEffect(() => {
-        if(tab == 'Informació') setTabName('information')
-        else if(tab == 'Historial') setTabName('history')
-        else if(tab == 'Comentaris') setTabName('comments')
-        else if(tab == 'Tasques') setTabName('subtasks')
-        console.log('tab',tab)
+        if(isuserstory) {
+            if (tab == 'Informació') setTabName('information')
+            else if (tab == 'Historial') setTabName('history')
+            else if (tab == 'Comentaris') setTabName('comments')
+            else if (tab == 'Tasques') setTabName('subtasks')
+        }
+        else {
+            if (tab == 'Informació') setTabName('information')
+            else if (tab == 'Historial') setTabName('history')
+            else if (tab == 'Comentaris') setTabName('comments')
+            else  setTabName('information')
+        }
     }, [tab]);
-
 
     useEffect(() => {
         Api.get('/projects/' + projectId).then((res) => {
@@ -119,7 +132,6 @@ export default function TaskMainLayout(...props: any) {
             setSprints(z.array(courseSchema).parse(res.sprints))
         }).catch((err) => {})
     }, [reloadTask])
-
 
     useEffect(() => {
         if(taskId != 'new') {
@@ -231,10 +243,14 @@ export default function TaskMainLayout(...props: any) {
 
     }
 
+    function submitForm(event: React.SyntheticEvent) {
+        event.preventDefault()
+    }
+
     return (
         <>
             <div className="hidden h-full flex-col md:flex">
-                <form onSubmit={onCreate}>
+                <form onSubmit={submitForm}>
                     <div className="flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-30">
                         { /* <h2 className="text-3xl font-bold tracking-tight w-full ">Full task name</h2> */ }
                         <div className="w-full space-y-4">
@@ -332,9 +348,9 @@ export default function TaskMainLayout(...props: any) {
                                 </PopoverContent>
                             </Popover>
                             { taskId === 'new' ? (
-                                <Button >Crear</Button>
+                                <Button onClick={onCreate} >Crear</Button>
                             ) : (
-                                <Button>Guardar</Button>
+                                <Button onClick={onCreate} >Guardar</Button>
                             )}
                             {/* <TaskActions taskId={taskId} projectId={projectId}/> */}
                         </div>
@@ -619,7 +635,7 @@ export default function TaskMainLayout(...props: any) {
                                     <TabsContent value="subtasks" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
                                             <TaskContext.Provider value={taskChange}>
-                                                <DataTable data={subtasks} columns={columns}/>
+                                                <DataTable data={subtasks} columns={columnsSubtask}/>
                                             </TaskContext.Provider>
                                         </div>
                                     </TabsContent>

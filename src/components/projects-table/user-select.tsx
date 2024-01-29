@@ -102,7 +102,9 @@ export function UsersSelect(props: any) {
                         <CommandList>
                             <CommandEmpty>Cap usuari trobat.</CommandEmpty>
                             <CommandGroup className="p-2">
-                                {activeUsers.map((user: { id: any; email: any; avatar: any; username: any; color: any; }) => (
+                                {activeUsers.map((user: {
+                                    capitalLetters: React.ReactNode | undefined;
+                                    id: any; email: any; avatar: any; username: any; color: any; }) => (
                                     <CommandItem
                                         key={user.id}
                                         className="flex items-center px-2"
@@ -120,7 +122,7 @@ export function UsersSelect(props: any) {
                                     >
                                         <Avatar>
                                             <AvatarImage src={user.avatar} alt="Image" />
-                                            <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                                            <AvatarFallback style={{backgroundColor: user.color}}>{user.capitalLetters}</AvatarFallback>
                                         </Avatar>
                                         <div className="ml-2">
                                             <p className="text-sm font-medium leading-none">
@@ -147,7 +149,7 @@ export function UsersSelect(props: any) {
                                         className="inline-block border-2 border-background"
                                     >
                                         <AvatarImage src={user.avatar} />
-                                        <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                                        <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].capitalLetters}</AvatarFallback>
                                     </Avatar>
                                 ))}
                             </div>
