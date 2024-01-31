@@ -43,7 +43,6 @@ export default function SettingsLayout() {
 
     const [isAdmin, setIsAdmin] = React.useState<boolean>(false)
 
-
     useEffect(() => {
         Api.get('/users/checker/admin').then((res) => {
             setIsAdmin(true)
@@ -73,4 +72,5 @@ export default function SettingsLayout() {
             </div>
         </>
     )
+
 }

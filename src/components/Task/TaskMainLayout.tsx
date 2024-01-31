@@ -9,7 +9,7 @@ import {Icons} from "../ui/icons"
 import {TaskActions} from "./task-actions"
 import "./styles.css"
 import {Sprints} from "../data/task/Sprints";
-import React, {useEffect} from "react";
+import React, {createContext, useEffect} from "react";
 import Api from "../../utils/Api";
 import {Popover, PopoverContent, PopoverTrigger} from "../../registry/ui/popover";
 import {cn} from "../../lib/utils";
@@ -26,6 +26,9 @@ import {courseSchema} from "../data/courses/schema";
 import {Dialog} from "../../registry/ui/dialog";
 import {DataTable} from "../tasks-table/data-table";
 import {columns} from "../tasks-table/columns"
+import {toast} from "react-toastify";
+import {useLocation, useNavigate} from "react-router-dom";
+import {columnsSubtask} from "../tasks-table/columns-subtask";
 
 export interface User {
     id: string
@@ -35,8 +38,13 @@ export interface User {
     color: string
 }
 
+
+export const TaskContext = createContext({});
+
 export default function TaskMainLayout(...props: any) {
+    const [tabName, setTabName] = React.useState<any>(props[0].tabName)
     const [tab, setTab] = React.useState<string>('Informació')
+
 
     const [title, setTitle] = React.useState<string>('Full task name')
     const [information, setInformation] = React.useState<string>('')
@@ -54,6 +62,8 @@ export default function TaskMainLayout(...props: any) {
     const [typeopen, setTypeopen] = React.useState(false)
     const [isuserstory, setIsUserStory] = React.useState<boolean>(true)
     const [subtasks, setSubtasks] = React.useState<Array<any>>([])
+
+    const navigate = useNavigate();
 
     // task use state object
     const [task, setTask] = React.useState<any>({})
@@ -80,20 +90,52 @@ export default function TaskMainLayout(...props: any) {
     const [currenUserMail , setCurrentUserMail] = React.useState<string>('')
     const [isAssignee, setIsAssignee] = React.useState<boolean>(false)
 
+    const [reloadTask, setReloadTask] = React.useState<boolean>(false)
+    const location = useLocation();
+
+    function taskChange(taskId: any) {
+        setTaskId(taskId)
+        setTabName('information')
+        reloadTask ? setReloadTask(false) : setReloadTask(true)
+    }
+
+    useEffect(() => {
+        if(isuserstory) {
+            if (tabName == 'information') setTab('Informació')
+            else if (tabName == 'history') setTab('Historial')
+            else if (tabName == 'comments') setTab('Comentaris')
+            else if (tabName == 'subtasks') setTab('Tasques')
+        }
+        else {
+            setTab('Informació')
+        }
+    }, []);
+
+    useEffect(() => {
+        if(isuserstory) {
+            if (tab == 'Informació') setTabName('information')
+            else if (tab == 'Historial') setTabName('history')
+            else if (tab == 'Comentaris') setTabName('comments')
+            else if (tab == 'Tasques') setTabName('subtasks')
+        }
+        else {
+            if (tab == 'Informació') setTabName('information')
+            else if (tab == 'Historial') setTabName('history')
+            else if (tab == 'Comentaris') setTabName('comments')
+            else  setTabName('information')
+        }
+    }, [tab]);
 
     useEffect(() => {
         Api.get('/projects/' + projectId).then((res) => {
             setMembers(z.array(courseSchema).parse(res.members))
             setSprints(z.array(courseSchema).parse(res.sprints))
         }).catch((err) => {})
-    }, [])
-
+    }, [reloadTask])
 
     useEffect(() => {
         if(taskId != 'new') {
             Api.get('/tasks/' + taskId).then((res) => {
-                console.log(res.task)
-                console.log(res.task.createdAt)
                 setTask(taskSchema.parse(res.task))
                 setTitle(taskSchema.parse(res.task.name))
                 setDate(new Date(taskSchema.parse(res.task.createdAt)))
@@ -108,14 +150,14 @@ export default function TaskMainLayout(...props: any) {
                     setIsUserStory(false)
                 }
                 setPointsReviews(taskSchema.parse(res.pointsReview))
-                let current_review = taskSchema.parse(res).pointsReview.filter((item : any) => item.user.username === 'Admin user')
+                let current_review = taskSchema.parse(res).pointsReview.filter((item : any) => item.user.email === currenUserMail)
                 if(current_review.length > 0) {
                     setCurrentReview(current_review[0])
                 }
             }).catch((err) => {
             })
         }
-    }, []);
+    }, [reloadTask,currenUserMail]);
 
     useEffect(() => {
         if(isuserstory) var url = '/tasks/usstatus'
@@ -123,7 +165,9 @@ export default function TaskMainLayout(...props: any) {
         Api.get(url).then((res) => {
             setStatuses(res)
         }).catch((err) => {})
-    }, [isuserstory]);
+    }, [isuserstory,reloadTask]);
+
+
 
 
     useEffect(() => {
@@ -132,7 +176,7 @@ export default function TaskMainLayout(...props: any) {
         }).catch((err) => {
             setIsAdmin(false)
         })
-    }, []);
+    }, [reloadTask]);
 
     useEffect(() => {
         Api.get('/auth/self').then((res) => {
@@ -140,22 +184,29 @@ export default function TaskMainLayout(...props: any) {
             if(res.email == selectedTeam?.email) {
                 setIsAssignee(true)
             }
-        }).catch((err) => {
-        })
-    })
+            if(taskId == 'new') {
+                setSelectedTeam(res)
+                setSelectedTeamAssignee(res)
+            }
+        }).catch((err) => {})
+    }, [selectedTeam,reloadTask]);
 
 
     async function onCreate(event: React.SyntheticEvent) {
         event.preventDefault()
 
-        console.log(selectedTeam,selectedTeamAssignee)
+        var sendstatus = ''
+        Object.entries(statuses).forEach(([key, value]) => {
+            if(value == status) sendstatus = key
+        })
+
 
         let requestBody = {
             name: title,
             estimationPoints: estimationpoints,
             activeSprints: [sprint?.id], // no ho guarda
             // @ts-ignore
-            status: statuses[status],
+            status: sendstatus,
             // createdAt: date,
             assignee: selectedTeam?.email, // guarda el SeletedTeam sempre
             reporter: selectedTeamAssignee?.email, // guarda el SeletedTeam sempre
@@ -166,28 +217,41 @@ export default function TaskMainLayout(...props: any) {
             }
         }
 
-        console.log('/tasks/' + taskId,requestBody)
-
         if(taskId != 'new') {
             Api.patch('/tasks/' + taskId, requestBody).then((res) => {
-                console.log(res)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
+                toast.success('Tasca actualitzada correctament', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                    theme: "colored",
+                });
             }).catch((err) => {
-                console.log(err)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             })
         }
         else {
             Api.post('/projects/' + projectId + '/tasks', requestBody).then((res) => {
-                console.log(res)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             }).catch((err) => {
-                console.log(err)
+                reloadTask ? setReloadTask(false) : setReloadTask(true)
             })
         }
+
+    }
+
+    function submitForm(event: React.SyntheticEvent) {
+        event.preventDefault()
     }
 
     return (
         <>
             <div className="hidden h-full flex-col md:flex">
-                <form onSubmit={onCreate}>
+                <form onSubmit={submitForm}>
                     <div className="flex flex-col items-start justify-between space-y-2 py-4 sm:flex-row sm:items-center sm:space-y-0 md:h-30">
                         { /* <h2 className="text-3xl font-bold tracking-tight w-full ">Full task name</h2> */ }
                         <div className="w-full space-y-4">
@@ -285,34 +349,46 @@ export default function TaskMainLayout(...props: any) {
                                 </PopoverContent>
                             </Popover>
                             { taskId === 'new' ? (
-                                <Button >Crear</Button>
+                                <Button onClick={onCreate} >Crear</Button>
                             ) : (
-                                <Button>Guardar</Button>
+                                <Button onClick={onCreate} >Guardar</Button>
                             )}
                             {/* <TaskActions taskId={taskId} projectId={projectId}/> */}
                         </div>
                     </div>
                     <Separator />
-                    <Tabs defaultValue="information" className="flex-1">
+                    <Tabs value={tabName} className="flex-1">
                         <div className="h-full py-6">
                             <div className="grid h-full items-stretch gap-6 md:grid-cols-[1fr_350px]">
                                 <div className="hidden flex-col space-y-4 sm:flex md:order-2">
                                     <div className="grid gap-2">
                                         <TabsList className={"grid  " + (isuserstory ? 'grid-cols-4' : 'grid-cols-3')}>
-                                            <TabsTrigger value="information" onClick={() => setTab('Informació')}>
+                                            <TabsTrigger value="information" onClick={() => {
+                                                setTab('Informació');
+                                                navigate('/project/' + projectId + '/' + taskId + '/information')
+                                            }}>
                                                 <span className="sr-only">Informació</span>
                                                 <Icons.Info className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="history" onClick={() => setTab('Historial')}>
+                                            <TabsTrigger value="history" onClick={() => {
+                                                setTab('Historial');
+                                                navigate('/project/' + projectId + '/' + taskId + '/history')
+                                            }}>
                                                 <span className="sr-only">Historial</span>
                                                 <Icons.History className="h-5 w-5"/>
                                             </TabsTrigger>
-                                            <TabsTrigger value="comments" onClick={() => setTab('Comentaris')}>
+                                            <TabsTrigger value="comments" onClick={() => {
+                                                setTab('Comentaris');
+                                                navigate('/project/' + projectId + '/' + taskId + '/comments')
+                                            }}>
                                                 <span className="sr-only">Comentaris</span>
                                                 <Icons.messagesSquare className="h-5 w-5"/>
                                             </TabsTrigger>
                                             {isuserstory ? (
-                                                <TabsTrigger value="subtasks" onClick={() => setTab('Tasques')}>
+                                                <TabsTrigger value="subtasks" onClick={() => {
+                                                    setTab('Tasques');
+                                                    navigate('/project/' + projectId + '/' + taskId + '/subtasks')
+                                                }}>
                                                     <span className="sr-only">Sub Tasques</span>
                                                     <Icons.Megaphone className="h-5 w-5"/>
                                                 </TabsTrigger>
@@ -323,7 +399,8 @@ export default function TaskMainLayout(...props: any) {
                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Data de creació
                                     </span>
-                                    <Popover open={false} onOpenChange={() => {}}>
+                                    <Popover open={false} onOpenChange={() => {
+                                    }}>
                                         <PopoverTrigger asChild>
                                             <Button
                                                 variant={"outline"}
@@ -344,9 +421,71 @@ export default function TaskMainLayout(...props: any) {
                                             />
                                         </PopoverContent>
                                     </Popover>
-                                    <span
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Creador
+                                    </span>
+                                    <Dialog open={showNewTeamDialogAssignee}
+                                            onOpenChange={setShowNewTeamDialogAssignee}>
+                                        <Popover open={openAssignee} onOpenChange={setOpenAssignee}>
+                                            <PopoverTrigger asChild>
+                                                <Button
+                                                    variant="outline"
+                                                    role="combobox"
+                                                    aria-expanded={openAssignee}
+                                                    aria-label="Select a team"
+                                                    className="w-full justify-between"
+                                                >
+                                                    <Avatar className="mr-2 h-5 w-5">
+                                                        <AvatarFallback style={{
+                                                            fontSize: '10px',
+                                                            backgroundColor: selectedTeamAssignee?.color
+                                                        }}>{selectedTeamAssignee?.capitalLetters}</AvatarFallback>
+                                                    </Avatar>
+                                                    {selectedTeamAssignee?.username}
+                                                    <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
+                                                </Button>
+                                            </PopoverTrigger>
+                                            <PopoverContent className="w-full p-0">
+                                                <Command>
+                                                    <CommandList>
+                                                        <CommandInput placeholder="Buscar usuari..."/>
+                                                        <CommandEmpty>No team found.</CommandEmpty>
+                                                        <CommandGroup>
+                                                            {members.map((team) => (
+                                                                <CommandItem
+                                                                    key={team.username}
+                                                                    onSelect={() => {
+                                                                        setSelectedTeamAssignee(team)
+                                                                        setOpenAssignee(false)
+                                                                    }}
+                                                                    className="text-sm"
+                                                                >
+                                                                    <Avatar className="mr-2 h-5 w-5">
+                                                                        <AvatarImage className="grayscale"/>
+                                                                        <AvatarFallback style={{
+                                                                            fontSize: '10px',
+                                                                            backgroundColor: team?.color
+                                                                        }}>{team?.capitalLetters}</AvatarFallback>
+                                                                    </Avatar>
+                                                                    {team.username}
+                                                                    <Check
+                                                                        className={cn(
+                                                                            "ml-auto h-4 w-4",
+                                                                            selectedTeamAssignee?.username === team.username
+                                                                                ? "opacity-100"
+                                                                                : "opacity-0"
+                                                                        )}
+                                                                    />
+                                                                </CommandItem>
+                                                            ))}
+                                                        </CommandGroup>
+                                                    </CommandList>
+                                                </Command>
+                                            </PopoverContent>
+                                        </Popover>
+                                    </Dialog>
+                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Asignat
                                     </span>
                                     <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
                                         <Popover open={open} onOpenChange={setOpen}>
@@ -382,77 +521,22 @@ export default function TaskMainLayout(...props: any) {
                                                                     onSelect={() => {
                                                                         setSelectedTeam(team)
                                                                         setOpen(false)
+                                                                        setIsAssignee(team.email == currenUserMail)
                                                                     }}
                                                                     className="text-sm"
                                                                 >
                                                                     <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage className="grayscale" />
-                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
+                                                                        <AvatarImage className="grayscale"/>
+                                                                        <AvatarFallback style={{
+                                                                            fontSize: '10px',
+                                                                            backgroundColor: team?.color
+                                                                        }}>{team?.capitalLetters}</AvatarFallback>
                                                                     </Avatar>
                                                                     {team.username}
                                                                     <Check
                                                                         className={cn(
                                                                             "ml-auto h-4 w-4",
                                                                             selectedTeam?.username === team.username
-                                                                                ? "opacity-100"
-                                                                                : "opacity-0"
-                                                                        )}
-                                                                    />
-                                                                </CommandItem>
-                                                            ))}
-                                                        </CommandGroup>
-                                                    </CommandList>
-                                                </Command>
-                                            </PopoverContent>
-                                        </Popover>
-                                    </Dialog>
-                                    <span
-                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                        Asignat
-                                    </span>
-                                    <Dialog open={showNewTeamDialogAssignee}
-                                            onOpenChange={setShowNewTeamDialogAssignee}>
-                                        <Popover open={openAssignee} onOpenChange={setOpenAssignee}>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant="outline"
-                                                    role="combobox"
-                                                    aria-expanded={openAssignee}
-                                                    aria-label="Select a team"
-                                                    className="w-full justify-between"
-                                                >
-                                                    <Avatar className="mr-2 h-5 w-5">
-                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: selectedTeamAssignee?.color}}>{selectedTeamAssignee?.capitalLetters}</AvatarFallback>
-                                                    </Avatar>
-                                                    {selectedTeamAssignee?.username}
-                                                    <ChevronsUpDown className="ml-auto h-4 w-4 shrink-0 opacity-50"/>
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-full p-0">
-                                                <Command>
-                                                    <CommandList>
-                                                        <CommandInput placeholder="Buscar usuari..."/>
-                                                        <CommandEmpty>No team found.</CommandEmpty>
-                                                        <CommandGroup>
-                                                            {members.map((team) => (
-                                                                <CommandItem
-                                                                    key={team.username}
-                                                                    onSelect={() => {
-                                                                        setSelectedTeamAssignee(team)
-                                                                        setOpenAssignee(false)
-                                                                        setIsAssignee(team.email == currenUserMail)
-                                                                    }}
-                                                                    className="text-sm"
-                                                                >
-                                                                    <Avatar className="mr-2 h-5 w-5">
-                                                                        <AvatarImage className="grayscale" />
-                                                                        <AvatarFallback style={{fontSize: '10px', backgroundColor: team?.color}}>{team?.capitalLetters}</AvatarFallback>
-                                                                    </Avatar>
-                                                                    {team.username}
-                                                                    <Check
-                                                                        className={cn(
-                                                                            "ml-auto h-4 w-4",
-                                                                            selectedTeamAssignee?.username === team.username
                                                                                 ? "opacity-100"
                                                                                 : "opacity-0"
                                                                         )}
@@ -526,24 +610,26 @@ export default function TaskMainLayout(...props: any) {
                                                         className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                                         Llistat de revisions de punts
                                                     </span>
-                                                    {console.log(pointsReviews)}
                                                     {pointsReviews.map((item: any, index: any) => (
-
-                                                        <>
-                                                            <div className="flex items-center">
-                                                                <Avatar className="h-9 w-9">
-                                                                    <AvatarFallback  style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
-                                                                </Avatar>
-                                                                <div className="ml-4 space-y-1">
-                                                                    <p className="text-sm font-medium leading-none">{item.user.username}</p>
-                                                                    <p className="text-sm text-muted-foreground">{item.comment}</p>
+                                                        item.user.email !== currenUserMail ? (
+                                                            <>
+                                                                <div className="flex items-center">
+                                                                    <Avatar className="h-9 w-9">
+                                                                        <AvatarFallback
+                                                                            style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
+                                                                    </Avatar>
+                                                                    <div className="ml-4 space-y-1">
+                                                                        <p className="text-sm font-medium leading-none">{item.user.username}</p>
+                                                                        <p className="text-sm text-muted-foreground">{item.comment}</p>
+                                                                    </div>
+                                                                    <div
+                                                                        className="ml-auto font-medium">{item.points}</div>
                                                                 </div>
-                                                                <div className="ml-auto font-medium">{item.points}</div>
-                                                            </div>
-                                                            {index !== pointsReviews.length - 1 && (
-                                                                <Separator/>
-                                                            )}
-                                                        </>
+                                                                {index !== pointsReviews.length - 1 && (
+                                                                    <Separator/>
+                                                                )}
+                                                            </>
+                                                        ) : null
                                                     ))}
                                                 </>
                                             ) : null}
@@ -551,7 +637,7 @@ export default function TaskMainLayout(...props: any) {
                                     ) : null}
                                 </div>
                                 <div className="md:order-1">
-                                <TabsContent value="information" className="mt-0 border-0 p-0">
+                                    <TabsContent value="information" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
                                             <Textarea
                                                 placeholder="Informació"
@@ -571,7 +657,9 @@ export default function TaskMainLayout(...props: any) {
                                     </TabsContent>
                                     <TabsContent value="subtasks" className="mt-0 border-0 p-0">
                                         <div className="flex h-full flex-col space-y-4">
-                                            <DataTable data={subtasks} columns={columns}/>
+                                            <TaskContext.Provider value={taskChange}>
+                                                <DataTable data={subtasks} columns={columnsSubtask}/>
+                                            </TaskContext.Provider>
                                         </div>
                                     </TabsContent>
                                 </div>

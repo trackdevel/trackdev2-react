@@ -1,7 +1,7 @@
 "use client"
 
 import { Row } from "@tanstack/react-table"
-import {Check, ChevronsUpDown, EyeIcon, GraduationCapIcon, MoreHorizontal, Pen, Trash} from "lucide-react"
+import {Check, ChevronsUpDown, EyeIcon, GraduationCapIcon, MoreHorizontal, Pen, TableIcon, Trash} from "lucide-react"
 
 import { Button } from "../../registry/ui/button"
 import {
@@ -12,7 +12,7 @@ import {
   DropdownMenuTrigger,
 } from "../../registry/ui/dropdown-menu"
 import Api from "../../utils/Api";
-import {toast} from "../../registry/ui/use-toast";
+import {toast} from "react-toastify";
 import * as React from "react";
 import {
   AlertDialog,
@@ -70,10 +70,17 @@ export function DataTableRowActions<TData>({
     // @ts-ignore
     Api.delete('/projects/' + row.original.id ).then((res) => {
       setShowDeleteDialog(false)
-      toast({
-        description: "This preset has been deleted.",
-      })
       window.location.reload()
+      toast.success('Tasca eliminada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }).catch((err) => {
     })
   }
@@ -95,11 +102,21 @@ export function DataTableRowActions<TData>({
     var requestBody = {
       name: name,
       courseId: selectedCourse?.id,
-      qualification: nota
+      qualification: parseInt(nota)
     }
 
     // @ts-ignore
     Api.patch(`/projects/${row.original.id}`,requestBody).then((res) => {
+      toast.success('Tasca actualitzada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       setIsLoading(false)
       setShowEditDialog(false)
       window.location.reload()
@@ -139,6 +156,16 @@ export function DataTableRowActions<TData>({
                 "/project/" + row.original.id
             } >
               Veure
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem
+              onSelect={() => setShowDeleteDialog(true)}>
+            <TableIcon className="mr-2 h-3.5 w-3.5 text-muted-foreground/70" />
+            <Link to={
+              // @ts-ignore
+                "/sprints/" + row.original.id
+            } >
+              Sprints
             </Link>
           </DropdownMenuItem>
           <DropdownMenuItem
@@ -243,7 +270,7 @@ export function DataTableRowActions<TData>({
                     id="nota"
                     placeholder="Nota"
                     value={nota ? nota : ""}
-                    type="text"
+                    type="number"
                     autoCapitalize="none"
                     autoComplete="Nota"
                     autoCorrect="off"

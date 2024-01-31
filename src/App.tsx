@@ -21,8 +21,14 @@ import SettingsProfilePageAdmin from "./pages/Settings/profile/SettingsProfilePa
 import Recovery from "./pages/Auth/Recovery";
 import Sprints from "./pages/Sprints/Sprints";
 import SettingsNotesPage from "./pages/Settings/projects/SettingsNotesPage";
+import {toast, ToastContainer} from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import Error404 from "./pages/Generic/Error404";
+import {ForcedPasswordForm} from "./components/auth/forced-pasword-form";
+import ForcedPassword from "./pages/Auth/ForcedPassword";
 
 export function App() {
+
 
     const router = createBrowserRouter(
         createRoutesFromElements(
@@ -31,6 +37,7 @@ export function App() {
                     <Route path="/" element={<AuthGuard component={<Dashboard/>}/>}/>
                     <Route path="/project/:projectId" element={<AuthGuard component={<Project/>}/>}/>
                     <Route path="/project/:projectId/:taskId" element={<AuthGuard component={<Task/>}/>}/>
+                    <Route path="/project/:projectId/:taskId/:tabName" element={<AuthGuard component={<Task/>}/>}/>
                     <Route path="/sprints/:projectId" element={<AuthGuard component={<Sprints/>}/>}/>
                     <Route path="/settings" element={<AuthGuard component={<SettingsLayout/>}/>}>
                         <Route path="/settings/" element={<AuthGuard component={<SettingsProfilePage/>}/>}/>
@@ -47,8 +54,10 @@ export function App() {
                     <Route path="/auth/login" element={<Login/>}/>
                     <Route path="/auth/register" element={<Register/>}/>
                     <Route path="/auth/password" element={<Password/>}/>
+                    <Route path="/auth/forced-password" element={<ForcedPassword />}/>
                     <Route path="/auth/recovery" element={<Recovery/>}/>
                 </Route>
+                <Route path="*" element={<Error404 />} />
             </>
         )
     )
@@ -59,6 +68,9 @@ export function App() {
                 <head />
                 <body className={"min-h-screen bg-background font-sans antialiased"} >
                     <RouterProvider router={router}/>
+                    <>
+                        <ToastContainer />
+                    </>
                 </body>
             </html>
         </>

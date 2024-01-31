@@ -9,7 +9,10 @@ import {taskSchema} from "../../components/data/taskTable/schema";
 import data from "../../components/data/taskTable/tasks.json";
 import Api from "../../utils/Api";
 import {useNavigate, useParams} from "react-router-dom";
+import {createContext, useContext } from "react";
 
+
+export const ProjectContext = createContext({});
 
 const Project = () => {
     //const tasks_demo = getTasks()
@@ -19,13 +22,18 @@ const Project = () => {
     const [tasks, setTasks] = React.useState<Array<any>>([])
 
     const { projectId } = useParams();
+    const [ projectid, setProjectId ] = React.useState<string | undefined>(projectId)
     const [ name, setName ] = React.useState<string>('')
 
-    function toogleState() { setState(!state) }
+    const [reload, setReload] = React.useState<boolean>(false)
 
+
+    function projectChange(projectId: any) {
+        setProjectId(projectId)
+    }
 
     useEffect(() => {
-        Api.get(`/projects/${projectId}/tasks`).then((res) => {
+        Api.get(`/projects/${projectid}/tasks`).then((res) => {
             for (let i = 0; i < res.tasks.length; i++) {
                 res.tasks[i].projectId = res.projectId
             }
@@ -33,13 +41,13 @@ const Project = () => {
         }).catch((err) => {
             navigate('/auth/login');
         })
-    }, [])
+    }, [projectid])
 
     useEffect(() => {
-        Api.get('/projects/' + projectId).then((res) => {
+        Api.get('/projects/' + projectid).then((res) => {
             setName(res.name)
         }).catch((err) => {})
-    }, [])
+    }, [projectid])
 
 
     return (
@@ -50,12 +58,11 @@ const Project = () => {
                         <h2 className="text-2xl font-bold tracking-tight">
                             {name}
                         </h2>
-                        {/*<p className="text-muted-foreground">
-                            Here&apos;s a list of your tasks for this month!
-                        </p>*/}
                     </div>
                 </div>
-                <DataTable data={tasks} columns={columns} />
+                <ProjectContext.Provider value={projectChange}>
+                    <DataTable data={tasks} columns={columns} />
+                </ProjectContext.Provider>
             </div>
         </>
     )

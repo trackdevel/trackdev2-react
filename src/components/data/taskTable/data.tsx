@@ -52,6 +52,25 @@ export const statuses = [
   },
 ]
 
+
+export const taskstatuses = [
+  {
+    value: "FINALITZADA",
+    label: "DONE",
+    icon: HelpCircle,
+  },
+  {
+    value: "EN PROGRES",
+    label: "INPROGRESS",
+    icon: Circle,
+  },
+  {
+    value: "DEFINIDA",
+    label: "DEFINED",
+    icon: ArrowUpCircle,
+  }
+]
+
 export const priorities = [
   {
     label: "Low",

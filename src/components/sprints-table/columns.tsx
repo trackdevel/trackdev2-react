@@ -31,7 +31,6 @@ const columns: ColumnDef<SprintListItem>[] = [
         <DataTableColumnHeader column={column} title="Data d'inici" />
     ),
     cell: ({ row }) => {
-      console.log('startDate', row.original.startDate)
       return (
           <div className="flex space-x-2">
             <CalendarIcon className="mr-2 h-4 w-4"/>

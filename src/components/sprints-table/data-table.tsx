@@ -123,7 +123,6 @@ export function SprintsTable<TData, TValue>({columns,data,}: DataTableProps<TDat
       setState(false)
       window.location.reload()
     }).catch((err) => {
-      console.log(err)
     })
 
   }
@@ -139,7 +138,7 @@ export function SprintsTable<TData, TValue>({columns,data,}: DataTableProps<TDat
                   role="combobox"
                   aria-label="Load a preset..."
                   aria-expanded={openproject}
-                  className="flex-1 justify-between w-auto md:max-w-[250px] lg:max-w-[250px]"
+                  className="flex-1 justify-between w-auto"
               >
                 {project ? project.name : "Sel·lecciona un projecte"}
                 <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />

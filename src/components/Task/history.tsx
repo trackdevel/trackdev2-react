@@ -9,15 +9,16 @@ import {taskCommentSchema} from "../data/task/comment";
 
 
 var HistoryTexts = {
-    'rank_change': 'Rank Modificat',
-    'status_change': 'Estat Modificat',
-    'assignee_change': 'Usuari Asignat Modificat',
-    'priority_change': 'Prioritat Modificat',
-    'description_change': 'Descripció Modificat',
-    'title_change': 'Títol Modificat',
-    'project_change': 'Projecte Modificat',
-    'active_sprints_change': 'Sprints Actius Modificat',
-    'estimation_points_change': 'Punts d\'estimació Modificat',
+    'rank_change': 'Rank',
+    'status_change': 'Estat',
+    'assignee_change': 'Usuari Asignat',
+    'priority_change': 'Prioritat',
+    'description_change': 'Descripció',
+    'title_change': 'Títol',
+    'project_change': 'Projecte',
+    'active_sprints_change': 'Sprints Actius',
+    'estimation_points_change': 'Estimació de punts',
+    'name_change': 'Nom',
 }
 
 export function TaskHistory( ...props: any ) {

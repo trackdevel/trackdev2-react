@@ -50,7 +50,7 @@ const columns: ColumnDef<CourseListItem>[] = [
           <div className="flex space-x-2">
           <span className="max-w-[500px] truncate font-medium flex items-center space-x-1">
             <ExternalLink className="h-3 w-3" />
-            <Link to={"/github/" + row.getValue("githubOrganization")} target="_blank" className="max-w-[500px] truncate font-medium">
+            <Link to={"https://github.com/" + row.getValue("githubOrganization")} target="_blank" className="max-w-[500px] truncate font-medium">
                 {row.getValue("githubOrganization")}
             </Link>
           </span>

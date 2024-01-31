@@ -94,7 +94,7 @@ const columns: ColumnDef<ProjectListItem>[] = [
                     key={user.username}
                     className="inline-block border-2 border-background"
                 >
-                  <AvatarFallback style={{backgroundColor: user.color}}>{user.username[0].toUpperCase() + user.username[1].toUpperCase()}</AvatarFallback>
+                  <AvatarFallback style={{backgroundColor: user.color}}>{user.capitalLetters}</AvatarFallback>
                 </Avatar>
             ))}
             <UsersSelect row={row} users={users}/>

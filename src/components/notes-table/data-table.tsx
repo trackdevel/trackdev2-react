@@ -123,7 +123,6 @@ export function NotesTable<TData, TValue>({columns,data,}: DataTableProps<TData,
       setState(false)
       window.location.reload()
     }).catch((err) => {
-      console.log(err)
     })
 
   }

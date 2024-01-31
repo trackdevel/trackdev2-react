@@ -17,7 +17,6 @@ export default function SettingsNotesPage() {
             Object.keys(res).map((i) => res[i].mail = i)
             setNotes(Object.keys(res).map((i) => res[i]))
         }).catch((err) => {
-            console.log(err)
         })
         return;
     } ,[])

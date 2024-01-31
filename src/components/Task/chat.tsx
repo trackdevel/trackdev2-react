@@ -8,6 +8,7 @@ import {Input} from "../../registry/ui/input";
 import Api from "../../utils/Api";
 import {z} from "zod";
 import {taskCommentSchema} from "../data/task/comment";
+import {toast} from "react-toastify";
 
 export function CardsChat( ...props: any ) {
   const [currentUser, setCurrentUser] = React.useState<string>('1')
@@ -23,7 +24,7 @@ export function CardsChat( ...props: any ) {
 
   useEffect(() => {
     Api.get('/auth/self').then((res) => {
-      setCurrentUser(res.username)
+      setCurrentUser(res.id)
     }).catch((err) => {})
     return;
   }, [])
@@ -37,7 +38,18 @@ export function CardsChat( ...props: any ) {
     Api.patch('/tasks/' + taskId, requestBody).then((res) => {
       getMessages(taskId)
       setInput("")
-    }).catch((err) => {})
+      toast.success('Comentari enviat', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
+    }).catch((err) => {
+    })
   }
 
 
@@ -69,7 +81,7 @@ export function CardsChat( ...props: any ) {
                 key={index}
                 className={cn(
                   "flex w-max max-w-[75%] flex-col gap-2 rounded-lg px-3 py-2 text-sm",
-                  message.author === currentUser
+                    message.author.id == currentUser
                     ? "ml-auto bg-primary text-primary-foreground"
                     : "bg-muted"
                 )}

@@ -8,6 +8,7 @@ import {Input} from "../../registry/ui/input"
 import {Label} from "../../registry/ui/label"
 import {cn} from "../../lib/utils";
 import Api from "../../utils/Api";
+import {toast} from "react-toastify";
 
 interface UserAuthFormProps extends React.HTMLAttributes<HTMLDivElement> {}
 
@@ -33,6 +34,16 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
         Api.post('/auth/login',requestBody).then((res) => {
             localStorage.setItem('userdata',JSON.stringify(res.userdata))
             setIsLoading(false)
+            toast.success('Sessió iniciada correctament', {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+            });
             navigate('/');
         }).catch((err) => {
             setIsLoading(false)
@@ -49,7 +60,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         </Label>
                         <Input
                             id="username"
-                            placeholder="u1234567"
+                            placeholder="Correu electrònic"
                             type="text"
                             autoCapitalize="none"
                             autoComplete="username"
@@ -59,7 +70,7 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         />
                         <Input
                             id="password"
-                            placeholder="Password"
+                            placeholder="Contrasenya"
                             type="password"
                             autoCapitalize="none"
                             autoComplete="current-password"
@@ -72,12 +83,12 @@ export function LoginForm({ className, ...props }: UserAuthFormProps) {
                         {isLoading && (
                             <Icons.spinner className="mr-2 h-4 w-4 animate-spin"/>
                         )}
-                        Log In with Email
+                        Entrar a Trackdev
                     </Button>
                 </div>
             </form>
             <p className="px-8 text-center text-sm text-muted-foreground">
-                <a className="underline underline-offset-4 hover:text-primary" href="/auth/password">Recuperar contrasenya</a>
+                <a className="underline underline-offset-4 hover:text-primary" href="/auth/recovery">Recuperar contrasenya</a>
             </p>
         </div>
     )

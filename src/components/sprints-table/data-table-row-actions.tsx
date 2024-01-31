@@ -19,7 +19,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle
 } from "../../registry/ui/alert-dialog";
-import {toast} from "../../registry/ui/use-toast";
+import {toast} from "react-toastify";
 import * as React from "react";
 import Api from "../../utils/Api";
 import * as DialogPrimitive from "@radix-ui/react-dialog/dist";
@@ -79,9 +79,18 @@ export function DataTableRowActions<TData>({ row }: DataTableRowActionsProps<TDa
 
     // @ts-ignore
     Api.patch('/sprints/' + row.original.id, requestData).then((res) => {
-        window.location.reload()
+      window.location.reload()
+      toast.success('Tasca actualitzada correctament', {
+        position: "bottom-right",
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
     }).catch((err) => {
-      console.log(err)
     })
 
     setIsLoading(false)

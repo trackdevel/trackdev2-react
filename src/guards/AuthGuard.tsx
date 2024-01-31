@@ -7,33 +7,23 @@ interface AuthGuardProps {
 }
 
 const AuthGuard: React.FC<AuthGuardProps> = ({ component }) => {
-    // return <React.Fragment>{component}</React.Fragment>;
     const [status, setStatus] = useState(false);
     const navigate = useNavigate();
-    const auth = true;
-    const new_pasword = false;
 
     useEffect(() => {
-        if(auth) checkAuth();
-        else setStatus(true)
+        checkAuth();
     }, []);
 
     const checkAuth = async () => {
         Api.get('/auth/check').then((res) => {
             setStatus(true)
-            var userdata = localStorage.getItem('userdata')
-            var userdataJSON = JSON.parse(userdata ? userdata : '')
 
-            if(userdataJSON.username == '' || userdataJSON.username == undefined) {
+            Api.get('/auth/self').then((res) => {
+                if(res.changePassword) navigate('/auth/forced-password');
+            }).catch((err) => {
+                setStatus(false)
                 navigate('/auth/login');
-            }
-            else {
-                if(new_pasword) {
-                    if (userdataJSON.changePassword) {
-                        navigate('/auth/password');
-                    }
-                }
-            }
+            })
         }).catch((err) => {
             setStatus(false)
             navigate('/auth/login');

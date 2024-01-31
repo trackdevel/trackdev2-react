@@ -10,7 +10,7 @@ export default function Register() {
             <div className="container relative hidden h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
                 <Link to="/auth/login" className="absolute right-4 top-4 md:right-20 md:top-8">
                     <Button className={"absolute right-4 top-4 md:right-20 md:top-8 w-max"}>
-                        Log In
+                        Entrar a Trackdev
                     </Button>
                 </Link>
                 <div className="relative hidden h-full flex-col bg-muted p-10 text-white dark:border-r lg:flex">

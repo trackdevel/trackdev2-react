@@ -2,7 +2,7 @@
 
 import {ColumnDef} from "@tanstack/react-table"
 
-import {statuses} from "../data/taskTable/data"
+import {taskstatuses} from "../data/taskTable/data"
 import {Task} from "../data/taskTable/schema"
 import {DataTableColumnHeader} from "./data-table-column-header"
 import {DataTableRowActions} from "./data-table-row-actions"
@@ -11,7 +11,7 @@ import React, {useContext} from "react";
 import {Avatar, AvatarFallback} from "../../registry/ui/avatar";
 import {TaskContext} from "../Task/TaskMainLayout";
 
-const columns: ColumnDef<Task>[] = [
+const columnsSubtask: ColumnDef<Task>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
@@ -39,7 +39,7 @@ const columns: ColumnDef<Task>[] = [
       <DataTableColumnHeader column={column} title="Estat" />
     ),
     cell: ({ row }) => {
-      const status = statuses.find(
+      const status = taskstatuses.find(
         (status) => status.label === row.getValue("status")
       )
 
@@ -58,43 +58,6 @@ const columns: ColumnDef<Task>[] = [
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))
-    },
-  },
-  {
-    accessorKey: "sprint",
-    header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Sprint" />
-    ),
-    cell: ({ row }) => {
-      if (!row.original.activeSprints || row.original.activeSprints.length === 0) {
-        return null
-      }
-
-      let string = ''
-      row.original.activeSprints.forEach((sprint: { name: string }) => {
-        string += sprint.name
-        if (row.original.activeSprints.indexOf(sprint) !== row.original.activeSprints.length - 1) string += ', '
-      })
-
-      return (
-          <div className="flex w-[100px] items-center">
-            <span>{string}</span>
-          </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      let string = ''
-      row.original.activeSprints.forEach((sprint: { name: string }) => {
-        string += sprint.name
-        if (row.original.activeSprints.indexOf(sprint) !== row.original.activeSprints.length - 1) string += ', '
-      })
-
-      let includes = false
-      value.forEach((v: string) => {
-          if (string.includes(v)) includes = true
-      })
-
-      return includes
     },
   },
   {
@@ -156,30 +119,6 @@ const columns: ColumnDef<Task>[] = [
     },
   },
   {
-    accessorKey: "estimationpoints",
-    header: ({ column }) => (
-        <DataTableColumnHeader column={column} title="Estimació de punts" />
-    ),
-    cell: ({ row }) => {
-      const assignee = row?.original?.assignee ? row?.original?.assignee : ''
-
-      if (!assignee) {
-        return null
-      }
-
-      return (
-          <div className="flex space-x-2">
-            <div className="flex -space-x-2 overflow-hidden">
-              {row?.original?.estimationPoints ? row?.original?.estimationPoints : ''}
-            </div>
-          </div>
-      )
-    },
-    filterFn: (row, id, value) => {
-      return value.includes(row.getValue(id))
-    },
-  },
-  {
     accessorKey: "type",
     header: ({ column }) => (
         <DataTableColumnHeader column={column} title="Tipus" />
@@ -203,4 +142,4 @@ const columns: ColumnDef<Task>[] = [
   },
 ]
 
-export { columns }
+export { columnsSubtask }
