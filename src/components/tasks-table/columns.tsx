@@ -10,12 +10,17 @@ import {Link} from "react-router-dom";
 import React, {useContext} from "react";
 import {Avatar, AvatarFallback} from "../../registry/ui/avatar";
 import {TaskContext} from "../Task/TaskMainLayout";
+import {ChevronDown, ChevronRight, ChevronsLeft} from "lucide-react";
+import {TaskStatus} from "./task-status";
+
 
 const columns: ColumnDef<Task>[] = [
   {
     accessorKey: "name",
     header: ({ column }) => (
-      <DataTableColumnHeader column={column} title="Títol" />
+        <>
+          <DataTableColumnHeader column={column} title="Títol" />
+        </>
     ),
     cell: ({ row }) => {
       let projectID = (row?.original?.projectId) ? row?.original?.projectId : row?.original?.project?.id
@@ -26,7 +31,28 @@ const columns: ColumnDef<Task>[] = [
 
       return (
         <div className="flex space-x-2">
-          <span className="max-w-[500px] truncate font-medium">
+          <span
+              className="max-w-[500px] truncate font-medium flex items-center"
+              style={{
+                paddingLeft: `${row.depth * 2}rem`,
+              }}
+          >
+            {row.original.childTasks.length > 0 ? (
+                <button
+                    {...{
+                      onClick: row.getToggleExpandedHandler(),
+                      style: { cursor: 'pointer' },
+                    }}
+                >
+                  {row.getIsExpanded()  ? (
+                      <ChevronDown className="h-4 w-4 mr-4" />
+                  ) : (
+                      <ChevronRight className="h-4 w-4 mr-4" />
+                  )}
+                </button>
+            ) : (
+                <></>
+            )}
             {name}
           </span>
         </div>
@@ -43,18 +69,27 @@ const columns: ColumnDef<Task>[] = [
         (status) => status.label === row.getValue("status")
       )
 
+      //console.log(status?.value)
+
       if (!status) {
         return null
       }
 
       return (
+          <TaskStatus status={row.original.status} text={status.value} />
+      )
+
+      /*
+      return (
         <div className="flex w-[100px] items-center">
-          {/*status.icon && (
+          {*//*status.icon && (
             <status.icon className="mr-2 h-4 w-4 text-muted-foreground" />
-          )*/}
+          )*//*}
           <span>{status.value}</span>
+          <TaskStatus status={row.original.status} />
         </div>
       )
+      */
     },
     filterFn: (row, id, value) => {
       return value.includes(row.getValue(id))

@@ -17,6 +17,11 @@ module.exports = {
     },
     extend: {
       colors: {
+        bar_backlog: "#e2e5ec",
+        bar_todo: "#fa065e",
+        bar_inprogress: "#20b8f7",
+        bar_verify: "#fbc52d",
+        bar_done: "#27c06d",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
