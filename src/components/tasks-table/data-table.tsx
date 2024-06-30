@@ -3,9 +3,12 @@
 import * as React from "react"
 import {useContext,useEffect} from "react"
 import {
+  Column,
+  Table,
   ColumnDef,
   ColumnFiltersState,
   getCoreRowModel,
+  getExpandedRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
@@ -14,6 +17,7 @@ import {
   SortingState,
   useReactTable,
   VisibilityState,
+  flexRender, ExpandedState
 } from "@tanstack/react-table"
 
 import {DataTableToolbar} from "./data-table-toolbar";
@@ -36,6 +40,7 @@ import {Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTr
 import * as DialogPrimitive from "@radix-ui/react-dialog";
 import {Input} from "../../registry/ui/input";
 import {ProjectContext} from "../../pages/Project/Project";
+import {makeData} from "../new-tasks-table/makeData";
 
 
 interface DataTableProps<TData, TValue> {
@@ -55,16 +60,21 @@ export function DataTable<TData, TValue>({
     []
   )
   const [sorting, setSorting] = React.useState<SortingState>([])
+  const [expanded, setExpanded] = React.useState<ExpandedState>({})
 
   const table = useReactTable({
     data,
     columns,
     state: {
+      expanded,
       sorting,
       columnVisibility,
       rowSelection,
       columnFilters,
     },
+    onExpandedChange: setExpanded,
+    // @ts-ignore
+    getSubRows: row => row.childTasks,
     enableRowSelection: true,
     onRowSelectionChange: setRowSelection,
     onSortingChange: setSorting,
@@ -72,10 +82,12 @@ export function DataTable<TData, TValue>({
     onColumnVisibilityChange: setColumnVisibility,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
+    getExpandedRowModel: getExpandedRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFacetedRowModel: getFacetedRowModel(),
     getFacetedUniqueValues: getFacetedUniqueValues(),
+    debugTable: true,
   })
 
   const projectChange = useContext(ProjectContext);

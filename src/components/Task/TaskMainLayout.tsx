@@ -29,6 +29,8 @@ import {columns} from "../tasks-table/columns"
 import {toast} from "react-toastify";
 import {useLocation, useNavigate} from "react-router-dom";
 import {columnsSubtask} from "../tasks-table/columns-subtask";
+import { Checkbox } from "../../registry/ui/checkbox"
+import { Label } from "../../registry/ui/label"
 
 export interface User {
     id: string
@@ -49,7 +51,8 @@ export default function TaskMainLayout(...props: any) {
     const [title, setTitle] = React.useState<string>('Full task name')
     const [information, setInformation] = React.useState<string>('')
     const [estimationpoints, setEstimationpoints] = React.useState<number>()
-    const [date, setDate] = React.useState<Date>()
+    const current = new Date();
+    const [date, setDate] = React.useState<Date>(current)
 
     const [sprint, setSprint] = React.useState<Sprints>()
     const [sprintopen, setSprintopen] = React.useState(false)
@@ -62,6 +65,8 @@ export default function TaskMainLayout(...props: any) {
     const [typeopen, setTypeopen] = React.useState(false)
     const [isuserstory, setIsUserStory] = React.useState<boolean>(true)
     const [subtasks, setSubtasks] = React.useState<Array<any>>([])
+
+    const [includeEstimationPointsSubtasks, setIncludeEstimationPointsSubtasks] = React.useState<boolean>(false)
 
     const navigate = useNavigate();
 
@@ -89,6 +94,7 @@ export default function TaskMainLayout(...props: any) {
     const [isAdmin, setIsAdmin] = React.useState<boolean>(true)
     const [currenUserMail , setCurrentUserMail] = React.useState<string>('')
     const [isAssignee, setIsAssignee] = React.useState<boolean>(false)
+    const [isCreator, setIsCreator] = React.useState<boolean>(false)
 
     const [reloadTask, setReloadTask] = React.useState<boolean>(false)
     const location = useLocation();
@@ -183,6 +189,9 @@ export default function TaskMainLayout(...props: any) {
             setCurrentUserMail(res.email)
             if(res.email == selectedTeam?.email) {
                 setIsAssignee(true)
+            }
+            if(res.email == selectedTeamAssignee?.email) {
+                setIsCreator(true)
             }
             if(taskId == 'new') {
                 setSelectedTeam(res)
@@ -421,7 +430,8 @@ export default function TaskMainLayout(...props: any) {
                                             />
                                         </PopoverContent>
                                     </Popover>
-                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    <span
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Creador
                                     </span>
                                     <Dialog open={showNewTeamDialogAssignee}
@@ -434,6 +444,7 @@ export default function TaskMainLayout(...props: any) {
                                                     aria-expanded={openAssignee}
                                                     aria-label="Select a team"
                                                     className="w-full justify-between"
+                                                    disabled={!isCreator}
                                                 >
                                                     <Avatar className="mr-2 h-5 w-5">
                                                         <AvatarFallback style={{
@@ -484,10 +495,11 @@ export default function TaskMainLayout(...props: any) {
                                             </PopoverContent>
                                         </Popover>
                                     </Dialog>
-                                    <span className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                    <span
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
                                         Asignat
                                     </span>
-                                    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog}>
+                                    <Dialog open={showNewTeamDialog} onOpenChange={setShowNewTeamDialog} >
                                         <Popover open={open} onOpenChange={setOpen}>
                                             <PopoverTrigger asChild>
                                                 <Button
@@ -496,6 +508,7 @@ export default function TaskMainLayout(...props: any) {
                                                     aria-expanded={open}
                                                     aria-label="Select a team"
                                                     className="w-full justify-between"
+                                                    disabled={!isCreator}
                                                 >
                                                     <Avatar className="mr-2 h-5 w-5">
                                                         <AvatarFallback style={
@@ -549,98 +562,115 @@ export default function TaskMainLayout(...props: any) {
                                             </PopoverContent>
                                         </Popover>
                                     </Dialog>
-                                    {isuserstory ? (
-                                        <>
-                                            <span
-                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                Estimació de punts
-                                            </span>
+                                    <span
+                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                        Estimació de punts
+                                    </span>
+                                    <div className={"flex items-center gap-3"}>
+                                        <Input
+                                            id="estimationpoints"
+                                            placeholder="Estimació de punts"
+                                            value={estimationpoints}
+                                            type="number"
+                                            autoCapitalize="none"
+                                            autoComplete="name"
+                                            autoCorrect="off"
+                                            disabled={!isAssignee}
+                                            onChange={(e) => setEstimationpoints(parseInt(e.target.value))}
+                                        />
+                                        {includeEstimationPointsSubtasks ? (
                                             <Input
                                                 id="estimationpoints"
-                                                placeholder="Estimació de punts"
+                                                placeholder="Totals"
                                                 value={estimationpoints}
                                                 type="number"
                                                 autoCapitalize="none"
                                                 autoComplete="name"
                                                 autoCorrect="off"
-                                                disabled={!isAssignee}
+                                                disabled={true}
                                                 onChange={(e) => setEstimationpoints(parseInt(e.target.value))}
                                             />
-                                            {(!isAssignee) ? (
+                                        ) : null}
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Checkbox id="terms" disabled={!isAssignee} checked={includeEstimationPointsSubtasks} onCheckedChange={
+                                            (e : boolean) => setIncludeEstimationPointsSubtasks(e)
+                                        }/>
+                                        <Label htmlFor="terms">Incloure subtasques</Label>
+                                    </div>
+                                    {(!isAssignee) ? (
+                                        <>
+                                            <span
+                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                Revisió de punts
+                                            </span>
+                                            <Input
+                                                id="pointsreview"
+                                                placeholder="Punts"
+                                                value={currentReview.points}
+                                                type="number"
+                                                autoCapitalize="none"
+                                                autoComplete="name"
+                                                autoCorrect="off"
+                                                onChange={(e) => {
+                                                    setCurrentReview({
+                                                        ...currentReview,
+                                                        points: parseInt(e.target.value)
+                                                    })
+                                                }}
+                                            />
+                                            <Input
+                                                id="pointsreviewcomment"
+                                                placeholder="Commentari"
+                                                value={currentReview.comment}
+                                                type="text"
+                                                autoCapitalize="none"
+                                                autoComplete="name"
+                                                autoCorrect="off"
+                                                onChange={(e) => {
+                                                    setCurrentReview({
+                                                        ...currentReview,
+                                                        comment: e.target.value
+                                                    })
+                                                }}
+                                            />
+                                        </>
+                                    ) : null}
+                                    {isAdmin && pointsReviews.length > 0 ? (
+                                        <>
+                                            <span
+                                                className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+                                                Llistat de revisions de punts
+                                            </span>
+                                            {pointsReviews.map((item: any, index: any) => (
+                                                // item.user.email !== currenUserMail ? (
                                                 <>
-                                                    <span
-                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                        Revisió de punts
-                                                    </span>
-                                                    <Input
-                                                        id="pointsreview"
-                                                        placeholder="Punts"
-                                                        value={currentReview.points}
-                                                        type="number"
-                                                        autoCapitalize="none"
-                                                        autoComplete="name"
-                                                        autoCorrect="off"
-                                                        onChange={(e) => {
-                                                            setCurrentReview({
-                                                                ...currentReview,
-                                                                points: parseInt(e.target.value)
-                                                            })
-                                                        }}
-                                                    />
-                                                    <Input
-                                                        id="pointsreviewcomment"
-                                                        placeholder="Commentari"
-                                                        value={currentReview.comment}
-                                                        type="text"
-                                                        autoCapitalize="none"
-                                                        autoComplete="name"
-                                                        autoCorrect="off"
-                                                        onChange={(e) => {
-                                                            setCurrentReview({
-                                                                ...currentReview,
-                                                                comment: e.target.value
-                                                            })
-                                                        }}
-                                                    />
+                                                    <div className="flex items-center">
+                                                        <Avatar className="h-9 w-9">
+                                                            <AvatarFallback
+                                                                style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
+                                                        </Avatar>
+                                                        <div className="ml-4 space-y-1">
+                                                            <p className="text-sm font-medium leading-none">{item.user.username}</p>
+                                                            <p className="text-sm text-muted-foreground">{item.comment}</p>
+                                                        </div>
+                                                        <div
+                                                            className="ml-auto font-medium">{item.points}</div>
+                                                    </div>
+                                                    {index !== pointsReviews.length - 1 && (
+                                                        <Separator/>
+                                                    )}
                                                 </>
-                                            ) : null}
-                                            {isAdmin && pointsReviews.length > 0 ? (
-                                                <>
-                                                    <span
-                                                        className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                                                        Llistat de revisions de punts
-                                                    </span>
-                                                    {pointsReviews.map((item: any, index: any) => (
-                                                        item.user.email !== currenUserMail ? (
-                                                            <>
-                                                                <div className="flex items-center">
-                                                                    <Avatar className="h-9 w-9">
-                                                                        <AvatarFallback
-                                                                            style={{backgroundColor: item.user.color}}>{item.user.capitalLetters}</AvatarFallback>
-                                                                    </Avatar>
-                                                                    <div className="ml-4 space-y-1">
-                                                                        <p className="text-sm font-medium leading-none">{item.user.username}</p>
-                                                                        <p className="text-sm text-muted-foreground">{item.comment}</p>
-                                                                    </div>
-                                                                    <div
-                                                                        className="ml-auto font-medium">{item.points}</div>
-                                                                </div>
-                                                                {index !== pointsReviews.length - 1 && (
-                                                                    <Separator/>
-                                                                )}
-                                                            </>
-                                                        ) : null
-                                                    ))}
-                                                </>
-                                            ) : null}
+                                                // ) : null
+                                            ))}
                                         </>
                                     ) : null}
                                 </div>
                                 <div className="md:order-1">
                                     <TabsContent value="information" className="mt-0 border-0 p-0">
-                                        <div className="flex h-full flex-col space-y-4">
-                                            <Textarea
-                                                placeholder="Informació"
+                                    <div className="flex h-full flex-col space-y-4">
+                                        <Textarea
+                                            placeholder="Informació"
                                                 value={(information) ? information : ''}
                                                 onChange={(e) => setInformation(e.target.value)}
                                                 className="min-h-[200px] flex-1 p-4 md:min-h-[400px] lg:min-h-[400px]"

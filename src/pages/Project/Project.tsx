@@ -3,14 +3,14 @@
 import React, {useEffect} from "react";
 import {z} from "zod"
 
+import ReactDOM from "react-dom/client";
 import {columns} from "../../components/tasks-table/columns"
 import {DataTable} from "../../components/tasks-table/data-table"
 import {taskSchema} from "../../components/data/taskTable/schema";
-import data from "../../components/data/taskTable/tasks.json";
 import Api from "../../utils/Api";
 import {useNavigate, useParams} from "react-router-dom";
 import {createContext, useContext } from "react";
-
+import NewTasksTable from "../../components/new-tasks-table/new-tasks-table";
 
 export const ProjectContext = createContext({});
 
